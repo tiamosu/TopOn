@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
+import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.bean.NativeStrategy
 
@@ -65,6 +66,8 @@ class NativeLoader(private val context: Context, private val placementId: String
             val localMap: MutableMap<String, Any> = mutableMapOf()
             localMap[TTATConst.NATIVE_AD_IMAGE_WIDTH] = nativeWidth
             localMap[TTATConst.NATIVE_AD_IMAGE_HEIGHT] = nativeHeight
+            localMap[MintegralATConst.AUTO_RENDER_NATIVE_WIDTH] = nativeWidth
+            localMap[MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT] = nativeHeight
             atNative?.setLocalExtra(localMap)
         }
 

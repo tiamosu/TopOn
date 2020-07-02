@@ -23,7 +23,7 @@ class NativeAdActivity : BaseActivity() {
 
     override fun initEvent() {
         nativeAd_adRequest1.setOnClickListener {
-            val strategy = NativeStrategy(200.dp2px, 150.dp2px)
+            val strategy = NativeStrategy(350.dp2px, 300.dp2px)
             TopOn.loadNative(
                 this,
                 PLACEMENT_ID_CSJ
@@ -38,7 +38,7 @@ class NativeAdActivity : BaseActivity() {
         }
 
         nativeAd_adShow1.setOnClickListener {
-            val strategy = NativeStrategy(200.dp2px, 150.dp2px)
+            val strategy = NativeStrategy(350.dp2px, 300.dp2px)
             TopOn.loadNative(
                 this,
                 PLACEMENT_ID_CSJ
