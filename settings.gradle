@@ -1,0 +1,4 @@
+rootProject.name = "TopOn"
+
+include ':app'
+include ':topon'
