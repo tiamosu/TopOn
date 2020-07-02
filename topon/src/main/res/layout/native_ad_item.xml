@@ -1,82 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#ffffff"
-    android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/native_self_adlogo"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginLeft="2dp"
-        android:src="@drawable/ad_logo" />
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:ignore="all">
 
     <FrameLayout
-        android:id="@+id/native_ad_image"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:scaleType="fitCenter" />
+        android:id="@+id/nativeAdItem_flAd"
+        android:layout_width="0pt"
+        android:layout_height="0pt"
+        android:layout_marginBottom="10pt"
+        app:layout_constraintBottom_toTopOf="@+id/nativeAdItem_flImage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginBottom="0pt" />
 
-    <TextView
-        android:id="@+id/native_ad_install_btn"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nativeAdItem_tvFrom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/native_ad_image"
-        android:layout_alignBottom="@id/native_ad_image"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="2pt"
+        android:background="#888888"
+        android:gravity="center"
+        android:paddingLeft="2pt"
+        android:paddingRight="2pt"
+        android:textColor="#ffffff"
+        android:textSize="6pt"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/nativeAdItem_ivLogo"
+        android:layout_width="10pt"
+        android:layout_height="10pt"
+        android:layout_marginLeft="2pt"
+        android:src="@drawable/ad_logo"
+        app:layout_constraintBottom_toBottomOf="@+id/nativeAdItem_tvFrom"
+        app:layout_constraintLeft_toRightOf="@+id/nativeAdItem_tvFrom"
+        app:layout_constraintTop_toTopOf="@+id/nativeAdItem_tvFrom" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/nativeAdItem_ivChoiceLogo"
+        android:layout_width="10pt"
+        android:layout_height="10pt"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/nativeAdItem_flImage"
+        android:layout_width="45pt"
+        android:layout_height="45pt"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nativeAdItem_tvInstall"
+        android:layout_width="wrap_content"
+        android:layout_height="0pt"
         android:background="#2095F1"
         android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:textColor="#ffffff" />
+        android:paddingLeft="20pt"
+        android:paddingRight="20pt"
+        android:textColor="#ffffff"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nativeAdItem_flImage"
+        tools:text="查看"
+        tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/native_ad_title"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nativeAdItem_tvTitle"
+        android:layout_width="0pt"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/native_ad_image"
-        android:layout_toLeftOf="@id/native_ad_install_btn"
-        android:layout_toRightOf="@id/native_ad_image"
+        android:layout_marginLeft="10pt"
+        android:layout_marginRight="10pt"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="#000000"
-        android:textSize="15dp"
-        android:textStyle="bold" />
+        android:textSize="15pt"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/nativeAdItem_tvDesc"
+        app:layout_constraintLeft_toRightOf="@+id/nativeAdItem_flImage"
+        app:layout_constraintRight_toLeftOf="@+id/nativeAdItem_tvInstall"
+        app:layout_constraintTop_toTopOf="@+id/nativeAdItem_flImage"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        tools:visibility="visible" />
 
-    <TextView
-        android:id="@+id/native_ad_desc"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nativeAdItem_tvDesc"
+        android:layout_width="0pt"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/native_ad_image"
-        android:layout_toLeftOf="@id/native_ad_install_btn"
-        android:layout_toRightOf="@id/native_ad_image"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="#777777"
-        android:textSize="12dp" />
-
-    <FrameLayout
-        android:id="@+id/native_ad_content_image_area"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/native_ad_image" />
-
-    <TextView
-        android:id="@+id/native_ad_from"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="2dp"
-        android:layout_marginRight="2dp"
-        android:layout_toLeftOf="@id/native_self_adlogo"
-        android:background="#888888"
-        android:gravity="center"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:textColor="#ffffff"
-        android:textSize="6dp" />
-</RelativeLayout>
+        android:textSize="12pt"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@+id/nativeAdItem_tvTitle"
+        app:layout_constraintRight_toRightOf="@+id/nativeAdItem_tvTitle"
+        app:layout_constraintTop_toBottomOf="@+id/nativeAdItem_tvTitle"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>

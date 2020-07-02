@@ -1,16 +1,16 @@
 package com.beemans.topon.demo
 
-import android.app.Application
 import android.os.Build
 import android.webkit.WebView
 import com.anythink.core.api.ATSDK
+import com.tiamosu.fly.base.BaseFlyApplication
 
 /**
  * @author tiamosu
  * @date 2020/7/2.
  */
 @Suppress("unused")
-class MyApp : Application() {
+class MyApp : BaseFlyApplication() {
 
     override fun onCreate() {
         super.onCreate()

@@ -13,7 +13,11 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup">
 
-        <activity android:name=".MainActivity">
+        <meta-data
+            android:name="com.beemans.topon.demo.config.GlobalConfiguration"
+            android:value="ConfigModule" />
+
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,6 +25,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".NativeAdActivity" />
+        <activity android:name=".activities.NativeAdActivity" />
     </application>
 </manifest>
