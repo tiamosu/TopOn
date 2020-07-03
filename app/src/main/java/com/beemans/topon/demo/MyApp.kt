@@ -26,6 +26,7 @@ class MyApp : BaseFlyApplication() {
         //开启日志功能
         ATSDK.setNetworkLogDebug(true)
         ATSDK.integrationChecking(applicationContext)
-        ATSDK.init(this, "a5aa1f9deda26d", "4f7b9ac17decb9babec83aac078742c7")
+//        ATSDK.init(this, "a5aa1f9deda26d", "4f7b9ac17decb9babec83aac078742c7")
+        ATSDK.init(this, "a5efef38f5807f", "ce96a01d3a436ca15d2785a61b9701d7")
     }
 }

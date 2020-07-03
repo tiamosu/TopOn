@@ -7,13 +7,25 @@ android {
     compileSdkVersion Android.compileSdkVersion
     buildToolsVersion Android.buildToolsVersion
     defaultConfig {
-        applicationId "com.beemans.topon.demo"
+//        applicationId "com.beemans.topon.demo"
+        applicationId "com.beemans.weather.live"
         minSdkVersion Android.minSdkVersion
         targetSdkVersion Android.targetSdkVersion
         versionCode Android.versionCode
         versionName Android.versionName
     }
+    signingConfigs {
+        config {
+            storeFile file('F:\\workspace\\TopOn\\sign\\king.jks')
+            storePassword 'king123'
+            keyAlias 'key0'
+            keyPassword 'king123'
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.config
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

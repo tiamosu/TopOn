@@ -1,7 +1,6 @@
 package com.beemans.topon
 
 import android.content.Context
-import com.beemans.topon.bean.AdWrapper
 import com.beemans.topon.nativead.NativeLoader
 
 /**
@@ -18,13 +17,17 @@ class TopOn {
             TopOn()
         }
 
-        fun loadNative(context: Context, placementId: String): NativeLoader {
-            val key = AdWrapper(context.javaClass.simpleName, placementId).toString()
-            var nativeLoader: NativeLoader?
-            if (instance.nativeLoaders[key].also { nativeLoader = it } != null) {
-                return nativeLoader!!
-            }
-            return NativeLoader(context, placementId).also { instance.nativeLoaders[key] = it }
-        }
+//        fun loadNative(context: Context, placementId: String): NativeLoader {
+//            return NativeLoader(context, placementId)
+//        }
+
+//        fun loadNative(context: Context, placementId: String): NativeLoader {
+//            val key = AdWrapper(context.javaClass.simpleName, placementId).toString()
+//            var nativeLoader: NativeLoader?
+//            if (instance.nativeLoaders[key].also { nativeLoader = it } != null) {
+//                return nativeLoader!!
+//            }
+//            return NativeLoader(context, placementId).also { instance.nativeLoaders[key] = it }
+//        }
     }
 }

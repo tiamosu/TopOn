@@ -1,20 +1,22 @@
 package com.beemans.topon.nativead
 
-import android.content.Context
 import android.util.Log
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
+import com.anythink.nativead.unitgroup.api.CustomNativeAd
 import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
+import com.beemans.topon.bean.AdWrapper
 import com.beemans.topon.bean.NativeStrategy
 
 /**
  * @author tiamosu
  * @date 2020/7/2.
  */
-class NativeLoader(private val context: Context, private val placementId: String) :
+class NativeLoader(private val activity: FragmentActivity, private val placementId: String) :
     ATNativeNetworkListener,
     ATNativeEventListener,
     ATNativeDislikeListener() {
@@ -24,10 +26,7 @@ class NativeLoader(private val context: Context, private val placementId: String
 
     //用于实现广告渲染
     private val nativeAdRender by lazy { NativeAdRender() }
-    private val atNativeAdView by lazy { ATNativeAdView(context) }
-
-    //广告配置策略
-    private var nativeStrategy: NativeStrategy? = null
+    private val atNativeAdView by lazy { ATNativeAdView(activity) }
 
     //广告回调
     private var nativeCallback: (NativeCallback.() -> Unit)? = null
@@ -46,29 +45,37 @@ class NativeLoader(private val context: Context, private val placementId: String
 
     fun init(
         nativeStrategy: NativeStrategy,
+        nativeAdRender: () -> ATNativeAdRenderer<CustomNativeAd>? = { null },
         nativeCallback: NativeCallback.() -> Unit = {}
     ): NativeLoader {
-        this.nativeStrategy = nativeStrategy
         this.nativeCallback = nativeCallback
         this.isUsePreload = nativeStrategy.isUsePreload
         this.nativeWidth = nativeStrategy.nativeWidth
         this.nativeHeight = nativeStrategy.nativeHeight
 
         initNative()
+        NativeManager.eventLiveData.observe(activity) {
+            if (isShowAfterLoaded) {
+                isPreloading = false
+                show()
+            }
+        }
         return this
     }
 
     private fun initNative() {
-        if (atNative == null) {
-            atNative = ATNative(context, placementId, this)
-
-            //配置广告宽高
-            val localMap: MutableMap<String, Any> = mutableMapOf()
-            localMap[TTATConst.NATIVE_AD_IMAGE_WIDTH] = nativeWidth
-            localMap[TTATConst.NATIVE_AD_IMAGE_HEIGHT] = nativeHeight
-            localMap[MintegralATConst.AUTO_RENDER_NATIVE_WIDTH] = nativeWidth
-            localMap[MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT] = nativeHeight
-            atNative?.setLocalExtra(localMap)
+        val key = AdWrapper(activity.javaClass.simpleName, placementId).toString()
+        if (NativeManager.atNatives[key].also { atNative = it } == null) {
+            atNative = ATNative(activity, placementId, this).apply {
+                //配置广告宽高
+                val localMap: MutableMap<String, Any> = mutableMapOf()
+                localMap.apply {
+                    put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
+                    put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
+                    put(MintegralATConst.AUTO_RENDER_NATIVE_WIDTH, nativeWidth)
+                    put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
+                }.let(this::setLocalExtra)
+            }.also { NativeManager.atNatives[key] = it }
         }
 
         preLoadNative()
@@ -88,7 +95,7 @@ class NativeLoader(private val context: Context, private val placementId: String
      * 广告加载显示
      */
     fun show(): NativeLoader {
-        this.isShowAfterLoaded = true
+        isShowAfterLoaded = true
         if (isPreloading) {
             return this
         }
@@ -97,14 +104,14 @@ class NativeLoader(private val context: Context, private val placementId: String
             return this
         }
 
-        this.isShowAfterLoaded = false
+        isShowAfterLoaded = false
         nativeAd?.apply {
             setNativeEventListener(this@NativeLoader)
             setDislikeCallbackListener(this@NativeLoader)
             renderAdView(atNativeAdView, nativeAdRender)
             prepare(atNativeAdView)
+            nativeRenderSuc()
         }
-        nativeRenderSuc()
         return this
     }
 
@@ -122,7 +129,7 @@ class NativeLoader(private val context: Context, private val placementId: String
      * 广告渲染成功
      */
     private fun nativeRenderSuc() {
-        this.nativeCallback?.let {
+        nativeCallback?.let {
             val layoutParams = ViewGroup.LayoutParams(nativeWidth, nativeHeight)
             NativeCallback().apply(it).onNativeRenderSuc?.invoke(atNativeAdView, layoutParams)
         }
@@ -169,9 +176,9 @@ class NativeLoader(private val context: Context, private val placementId: String
      * 广告加载失败，可通过AdError.printStackTrace()获取全部错误信息
      */
     override fun onNativeAdLoadFail(error: AdError?) {
-        Log.e("xia", "onNativeAdLoadFail:${error?.printStackTrace()}")
-        this.isPreloading = false
-        this.nativeCallback?.let { NativeCallback().apply(it).onNativeAdLoadFail?.invoke(error) }
+        isPreloading = false
+        Log.e("xia", "onNativeAdLoadFail:${error?.printStackTrace()}   isPreloading:$isPreloading")
+        nativeCallback?.let { NativeCallback().apply(it).onNativeAdLoadFail?.invoke(error) }
     }
 
     /**
@@ -179,12 +186,13 @@ class NativeLoader(private val context: Context, private val placementId: String
      */
     override fun onNativeAdLoaded() {
         Log.e("xia", "onNativeAdLoaded:$isPreloading")
-        this.isPreloading = false
-        this.nativeCallback?.let { NativeCallback().apply(it).onNativeAdLoaded?.invoke() }
+        isPreloading = false
+        nativeCallback?.let { NativeCallback().apply(it).onNativeAdLoaded?.invoke() }
 
         if (isShowAfterLoaded) {
             show()
         }
+        NativeManager.eventLiveData.value = true
     }
 
     /**
@@ -206,7 +214,7 @@ class NativeLoader(private val context: Context, private val placementId: String
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e("xia", "onAdClicked")
-        this.nativeCallback?.let { NativeCallback().apply(it).onNativeClicked?.invoke() }
+        nativeCallback?.let { NativeCallback().apply(it).onNativeClicked?.invoke() }
     }
 
     /**
@@ -227,6 +235,6 @@ class NativeLoader(private val context: Context, private val placementId: String
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e("xia", "onAdCloseButtonClick")
         (view?.parent as? ViewGroup)?.removeView(view)
-        this.nativeCallback?.let { NativeCallback().apply(it).onNativeCloseClicked?.invoke() }
+        nativeCallback?.let { NativeCallback().apply(it).onNativeCloseClicked?.invoke() }
     }
 }
