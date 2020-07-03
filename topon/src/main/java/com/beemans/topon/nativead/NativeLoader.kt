@@ -23,6 +23,7 @@ class NativeLoader(
     ATNativeEventListener,
     ATNativeDislikeListener() {
 
+    private val tag by lazy { this.javaClass.simpleName }
     private var atNative: ATNative? = null
     private var nativeAd: NativeAd? = null
 
@@ -168,8 +169,8 @@ class NativeLoader(
      * 广告加载失败，可通过AdError.printStackTrace()获取全部错误信息
      */
     override fun onNativeAdLoadFail(error: AdError?) {
+        Log.e(tag, "onNativeAdLoadFail:${error?.printStackTrace()}")
         isPreloading = false
-        Log.e("xia", "onNativeAdLoadFail:${error?.printStackTrace()}   isPreloading:$isPreloading")
         NativeCallback().apply(nativeCallback).onNativeAdLoadFail?.invoke(error)
     }
 
@@ -177,7 +178,7 @@ class NativeLoader(
      * 广告加载成功
      */
     override fun onNativeAdLoaded() {
-        Log.e("xia", "onNativeAdLoaded:$isPreloading")
+        Log.e(tag, "onNativeAdLoaded")
         isPreloading = false
         NativeCallback().apply(nativeCallback).onNativeAdLoaded?.invoke()
 
@@ -191,21 +192,21 @@ class NativeLoader(
      * 广告视频播放开始（仅部分广告平台存在）
      */
     override fun onAdVideoStart(view: ATNativeAdView?) {
-        Log.e("xia", "onAdVideoStart")
+        Log.e(tag, "onAdVideoStart")
     }
 
     /**
      * 广告视频播放进度（仅部分广告平台存在）
      */
     override fun onAdVideoProgress(view: ATNativeAdView?, progress: Int) {
-        Log.e("xia", "onAdVideoProgress")
+        Log.e(tag, "onAdVideoProgress")
     }
 
     /**
      * 广告点击回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e("xia", "onAdClicked")
+        Log.e(tag, "onAdClicked")
         NativeCallback().apply(nativeCallback).onNativeClicked?.invoke()
     }
 
@@ -213,19 +214,19 @@ class NativeLoader(
      * 广告视频播放结束（仅部分广告平台存在）
      */
     override fun onAdVideoEnd(view: ATNativeAdView?) {
-        Log.e("xia", "onAdVideoEnd")
+        Log.e(tag, "onAdVideoEnd")
     }
 
     /**
      * 广告展示回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e("xia", "onAdImpressed")
+        Log.e(tag, "onAdImpressed")
         preLoadNative()
     }
 
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e("xia", "onAdCloseButtonClick")
+        Log.e(tag, "onAdCloseButtonClick")
         (view?.parent as? ViewGroup)?.removeView(view)
         NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke()
     }
