@@ -123,10 +123,8 @@ class NativeLoader(
      * 广告渲染成功
      */
     private fun nativeRenderSuc() {
-        nativeCallback?.let {
-            val layoutParams = ViewGroup.LayoutParams(nativeWidth, nativeHeight)
-            NativeCallback().apply(it).onNativeRenderSuc?.invoke(atNativeAdView, layoutParams)
-        }
+        val params = ViewGroup.LayoutParams(nativeWidth, nativeHeight)
+        NativeCallback().apply(nativeCallback).onNativeRenderSuc?.invoke(atNativeAdView, params)
     }
 
     /**
@@ -172,7 +170,7 @@ class NativeLoader(
     override fun onNativeAdLoadFail(error: AdError?) {
         isPreloading = false
         Log.e("xia", "onNativeAdLoadFail:${error?.printStackTrace()}   isPreloading:$isPreloading")
-        nativeCallback?.let { NativeCallback().apply(it).onNativeAdLoadFail?.invoke(error) }
+        NativeCallback().apply(nativeCallback).onNativeAdLoadFail?.invoke(error)
     }
 
     /**
@@ -181,7 +179,7 @@ class NativeLoader(
     override fun onNativeAdLoaded() {
         Log.e("xia", "onNativeAdLoaded:$isPreloading")
         isPreloading = false
-        nativeCallback?.let { NativeCallback().apply(it).onNativeAdLoaded?.invoke() }
+        NativeCallback().apply(nativeCallback).onNativeAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show()
@@ -208,7 +206,7 @@ class NativeLoader(
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e("xia", "onAdClicked")
-        nativeCallback?.let { NativeCallback().apply(it).onNativeClicked?.invoke() }
+        NativeCallback().apply(nativeCallback).onNativeClicked?.invoke()
     }
 
     /**
@@ -229,6 +227,6 @@ class NativeLoader(
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e("xia", "onAdCloseButtonClick")
         (view?.parent as? ViewGroup)?.removeView(view)
-        nativeCallback?.let { NativeCallback().apply(it).onNativeCloseClicked?.invoke() }
+        NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke()
     }
 }
