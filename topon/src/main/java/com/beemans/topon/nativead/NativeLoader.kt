@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentActivity
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
-import com.anythink.nativead.unitgroup.api.CustomNativeAd
 import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.bean.AdWrapper
@@ -16,8 +15,11 @@ import com.beemans.topon.bean.NativeStrategy
  * @author tiamosu
  * @date 2020/7/2.
  */
-class NativeLoader(private val activity: FragmentActivity, private val placementId: String) :
-    ATNativeNetworkListener,
+class NativeLoader(
+    private val activity: FragmentActivity,
+    private val nativeStrategy: NativeStrategy,
+    private val nativeCallback: NativeCallback.() -> Unit,
+) : ATNativeNetworkListener,
     ATNativeEventListener,
     ATNativeDislikeListener() {
 
@@ -27,9 +29,6 @@ class NativeLoader(private val activity: FragmentActivity, private val placement
     //用于实现广告渲染
     private val nativeAdRender by lazy { NativeAdRender() }
     private val atNativeAdView by lazy { ATNativeAdView(activity) }
-
-    //广告回调
-    private var nativeCallback: (NativeCallback.() -> Unit)? = null
 
     private var nativeWidth = 0
     private var nativeHeight = 0
@@ -43,12 +42,7 @@ class NativeLoader(private val activity: FragmentActivity, private val placement
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    fun init(
-        nativeStrategy: NativeStrategy,
-        nativeAdRender: () -> ATNativeAdRenderer<CustomNativeAd>? = { null },
-        nativeCallback: NativeCallback.() -> Unit = {}
-    ): NativeLoader {
-        this.nativeCallback = nativeCallback
+    init {
         this.isUsePreload = nativeStrategy.isUsePreload
         this.nativeWidth = nativeStrategy.nativeWidth
         this.nativeHeight = nativeStrategy.nativeHeight
@@ -60,10 +54,10 @@ class NativeLoader(private val activity: FragmentActivity, private val placement
                 show()
             }
         }
-        return this
     }
 
     private fun initNative() {
+        val placementId = nativeStrategy.placementId
         val key = AdWrapper(activity.javaClass.simpleName, placementId).toString()
         if (NativeManager.atNatives[key].also { atNative = it } == null) {
             atNative = ATNative(activity, placementId, this).apply {

@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  * @date 2020/7/2.
  */
 @Parcelize
-data class AdWrapper(
+internal data class AdWrapper(
     val pageTag: String,
     val placementId: String,
 ) : Parcelable
