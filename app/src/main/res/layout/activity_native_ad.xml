@@ -12,20 +12,12 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/nativeAd_adRequest1"
+            android:id="@+id/nativeAd_adRequest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="请求广告1"
+            android:text="预加载广告"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/nativeAd_adRequest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="请求广告2"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nativeAd_adRequest1" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/nativeAd_adShow1"
