@@ -40,12 +40,6 @@ class NativeLoader(
     //是否进行广告预加载
     private val isUsePreload by lazy { nativeStrategy.isUsePreload }
 
-    //是否正在进行广告预加载
-    private var isPreloading = false
-
-    //是否在广告加载完成进行播放
-    private var isShowAfterLoaded = false
-
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
         var liveData = NativeManager.loadedLiveDataMap[placementId]
@@ -55,6 +49,12 @@ class NativeLoader(
         }
         liveData
     }
+
+    //是否在广告加载完成进行播放
+    private var isShowAfterLoaded = false
+
+    //广告请求中
+    private var isRequesting = false
 
     init {
         initNative()
@@ -90,9 +90,7 @@ class NativeLoader(
      * 广告请求
      */
     fun request(): NativeLoader {
-        if (getNativeAd() == null) {
-            makeAdRequest()
-        }
+        makeAdRequest()
         return this
     }
 
@@ -101,11 +99,7 @@ class NativeLoader(
      */
     fun show(): NativeLoader {
         isShowAfterLoaded = true
-        if (isPreloading) {
-            return this
-        }
-        if (getNativeAd().also { nativeAd = it } == null) {
-            makeAdRequest()
+        if (makeAdRequest()) {
             return this
         }
 
@@ -124,8 +118,7 @@ class NativeLoader(
      * 广告预加载
      */
     private fun preLoadNative() {
-        if (isUsePreload && getNativeAd() == null) {
-            isPreloading = true
+        if (isUsePreload) {
             makeAdRequest()
         }
     }
@@ -164,8 +157,13 @@ class NativeLoader(
     /**
      * 发起Native广告请求
      */
-    private fun makeAdRequest() {
-        atNative?.makeAdRequest()
+    private fun makeAdRequest(): Boolean {
+        isRequesting = NativeManager.isRequesting()
+        if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
+            NativeManager.updateRequestStatus(this.toString(), true)
+            atNative?.makeAdRequest()
+        }
+        return isRequesting
     }
 
     /**
@@ -180,7 +178,7 @@ class NativeLoader(
      */
     override fun onNativeAdLoadFail(error: AdError?) {
         Log.e(tag, "onNativeAdLoadFail:${error?.printStackTrace()}")
-        isPreloading = false
+        NativeManager.updateRequestStatus(this.toString(), false)
         NativeCallback().apply(nativeCallback).onNativeAdLoadFail?.invoke(error)
     }
 
@@ -189,7 +187,7 @@ class NativeLoader(
      */
     override fun onNativeAdLoaded() {
         Log.e(tag, "onNativeAdLoaded")
-        isPreloading = false
+        NativeManager.updateRequestStatus(this.toString(), false)
         NativeCallback().apply(nativeCallback).onNativeAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
@@ -235,6 +233,9 @@ class NativeLoader(
         preLoadNative()
     }
 
+    /**
+     * 广告Dislike监听回调
+     */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(tag, "onAdCloseButtonClick")
         (view?.parent as? ViewGroup)?.removeView(view)
