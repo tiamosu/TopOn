@@ -8,8 +8,8 @@ import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
 import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
-import com.beemans.topon.bean.AdWrapper
 import com.beemans.topon.bean.NativeStrategy
+import com.tiamosu.fly.callback.EventLiveData
 
 /**
  * @author tiamosu
@@ -31,11 +31,14 @@ class NativeLoader(
     private val nativeAdRender by lazy { NativeAdRender() }
     private val atNativeAdView by lazy { ATNativeAdView(activity) }
 
-    private var nativeWidth = 0
-    private var nativeHeight = 0
+    //广告位ID
+    private val placementId by lazy { nativeStrategy.placementId }
+
+    private val nativeWidth by lazy { nativeStrategy.nativeWidth }
+    private val nativeHeight by lazy { nativeStrategy.nativeHeight }
 
     //是否进行广告预加载
-    private var isUsePreload = false
+    private val isUsePreload by lazy { nativeStrategy.isUsePreload }
 
     //是否正在进行广告预加载
     private var isPreloading = false
@@ -43,24 +46,23 @@ class NativeLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    init {
-        this.isUsePreload = nativeStrategy.isUsePreload
-        this.nativeWidth = nativeStrategy.nativeWidth
-        this.nativeHeight = nativeStrategy.nativeHeight
-
-        initNative()
-        NativeManager.eventLiveData.observe(activity) {
-            if (isShowAfterLoaded) {
-                isPreloading = false
-                show()
-            }
+    //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
+    private val loadedLiveData: EventLiveData<Boolean> by lazy {
+        var liveData = NativeManager.loadedLiveDataMap[placementId]
+        if (liveData == null) {
+            liveData = EventLiveData()
+            NativeManager.loadedLiveDataMap[placementId] = liveData
         }
+        liveData
+    }
+
+    init {
+        initNative()
+        createObserve()
     }
 
     private fun initNative() {
-        val placementId = nativeStrategy.placementId
-        val key = AdWrapper(activity.javaClass.simpleName, placementId).toString()
-        if (NativeManager.atNatives[key].also { atNative = it } == null) {
+        if (atNative == null) {
             atNative = ATNative(activity, placementId, this).apply {
                 //配置广告宽高
                 val localMap: MutableMap<String, Any> = mutableMapOf()
@@ -70,10 +72,18 @@ class NativeLoader(
                     put(MintegralATConst.AUTO_RENDER_NATIVE_WIDTH, nativeWidth)
                     put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
                 }.let(this::setLocalExtra)
-            }.also { NativeManager.atNatives[key] = it }
+            }
         }
 
         preLoadNative()
+    }
+
+    private fun createObserve() {
+        loadedLiveData.observe(activity) {
+            if (isShowAfterLoaded) {
+                show()
+            }
+        }
     }
 
     /**
@@ -185,7 +195,7 @@ class NativeLoader(
         if (isShowAfterLoaded) {
             show()
         }
-        NativeManager.eventLiveData.value = true
+        loadedLiveData.value = true
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.beemans.topon.demo.activities
 
+import android.util.Log
 import com.beemans.topon.TopOn
 import com.beemans.topon.bean.NativeStrategy
 import com.beemans.topon.demo.R
@@ -34,6 +35,9 @@ class NativeAdActivity : BaseActivity() {
                     }
                     nativeAd_flAd.addView(atNativeAdView, layoutParams)
                 }
+                onNativeAdLoadFail {
+                    Log.e("xia", "show1:${it?.printStackTrace()}")
+                }
             }.show()
         }
 
@@ -45,6 +49,9 @@ class NativeAdActivity : BaseActivity() {
                         nativeAd_flAd2.removeAllViews()
                     }
                     nativeAd_flAd2.addView(atNativeAdView, layoutParams)
+                }
+                onNativeAdLoadFail {
+                    Log.e("xia", "show2:${it?.printStackTrace()}")
                 }
             }.show()
         }

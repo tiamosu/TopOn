@@ -7,7 +7,6 @@ android {
     compileSdkVersion Android.compileSdkVersion
     buildToolsVersion Android.buildToolsVersion
     defaultConfig {
-//        applicationId "com.beemans.topon.demo"
         applicationId "com.beemans.weather.live"
         minSdkVersion Android.minSdkVersion
         targetSdkVersion Android.targetSdkVersion
@@ -16,7 +15,7 @@ android {
     }
     signingConfigs {
         config {
-            storeFile file('F:\\workspace\\TopOn\\sign\\king.jks')
+            storeFile file("${rootDir.path}/sign/king.jks")
             storePassword 'king123'
             keyAlias 'key0'
             keyPassword 'king123'
