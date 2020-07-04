@@ -17,14 +17,11 @@ internal object NativeManager {
     fun updateRequestStatus(placementId: String, tag: String, isRequesting: Boolean) {
         (requestingMap[placementId] ?: mutableMapOf()).apply {
             put(tag, isRequesting)
-        }.also {
-            requestingMap[placementId] = it
+            requestingMap[placementId] = this
         }
     }
 
     fun release(placementId: String, tag: String) {
-        (requestingMap[placementId])?.apply {
-            this.remove(tag)
-        }
+        (requestingMap[placementId])?.remove(tag)
     }
 }
