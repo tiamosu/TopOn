@@ -8,18 +8,23 @@ import com.tiamosu.fly.callback.EventLiveData
  */
 internal object NativeManager {
     val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
-    private val requestingMap: MutableMap<String, Boolean> by lazy { mutableMapOf() }
+    private val requestingMap: MutableMap<String, MutableMap<String, Boolean>> by lazy { mutableMapOf() }
 
-    fun isRequesting(): Boolean {
-        for (isRequesting in requestingMap.values) {
-            if (isRequesting) {
-                return true
-            }
-        }
-        return false
+    fun isRequesting(placementId: String): Boolean {
+        return ((requestingMap[placementId] ?: mutableMapOf()).values).contains(true)
     }
 
-    fun updateRequestStatus(tag: String, isRequesting: Boolean) {
-        requestingMap[tag] = isRequesting
+    fun updateRequestStatus(placementId: String, tag: String, isRequesting: Boolean) {
+        (requestingMap[placementId] ?: mutableMapOf()).apply {
+            put(tag, isRequesting)
+        }.also {
+            requestingMap[placementId] = it
+        }
+    }
+
+    fun release(placementId: String, tag: String) {
+        (requestingMap[placementId])?.apply {
+            this.remove(tag)
+        }
     }
 }

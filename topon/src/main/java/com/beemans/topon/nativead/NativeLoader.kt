@@ -23,7 +23,9 @@ class NativeLoader(
     ATNativeEventListener,
     ATNativeDislikeListener() {
 
-    private val tag by lazy { this.javaClass.simpleName }
+    private val logTag by lazy { this.javaClass.simpleName }
+    private val loaderTag by lazy { this.toString() }
+
     private var atNative: ATNative? = null
     private var nativeAd: NativeAd? = null
 
@@ -55,6 +57,8 @@ class NativeLoader(
 
     //广告请求中
     private var isRequesting = false
+
+    private var isDestroyed = false
 
     init {
         initNative()
@@ -99,10 +103,9 @@ class NativeLoader(
      */
     fun show(): NativeLoader {
         isShowAfterLoaded = true
-        if (makeAdRequest()) {
+        if (isDestroyed || makeAdRequest()) {
             return this
         }
-
         isShowAfterLoaded = false
         nativeAd?.apply {
             setNativeEventListener(this@NativeLoader)
@@ -150,7 +153,8 @@ class NativeLoader(
      * 销毁当前的广告对象（执行之后该广告无法再进行展示）
      */
     fun onDestroy() {
-        nativeAd?.clear(atNativeAdView)
+        isDestroyed = true
+        NativeManager.release(placementId, loaderTag)
         nativeAd?.destory()
     }
 
@@ -158,9 +162,9 @@ class NativeLoader(
      * 发起Native广告请求
      */
     private fun makeAdRequest(): Boolean {
-        isRequesting = NativeManager.isRequesting()
-        if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
-            NativeManager.updateRequestStatus(this.toString(), true)
+        isRequesting = NativeManager.isRequesting(placementId)
+        if (!isRequesting && getNativeAd().also { nativeAd = it } == null && !isDestroyed) {
+            NativeManager.updateRequestStatus(placementId, loaderTag, true)
             atNative?.makeAdRequest()
         }
         return isRequesting
@@ -177,8 +181,9 @@ class NativeLoader(
      * 广告加载失败，可通过AdError.printStackTrace()获取全部错误信息
      */
     override fun onNativeAdLoadFail(error: AdError?) {
-        Log.e(tag, "onNativeAdLoadFail:${error?.printStackTrace()}")
-        NativeManager.updateRequestStatus(this.toString(), false)
+        if (isDestroyed) return
+        Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeCallback().apply(nativeCallback).onNativeAdLoadFail?.invoke(error)
     }
 
@@ -186,8 +191,9 @@ class NativeLoader(
      * 广告加载成功
      */
     override fun onNativeAdLoaded() {
-        Log.e(tag, "onNativeAdLoaded")
-        NativeManager.updateRequestStatus(this.toString(), false)
+        if (isDestroyed) return
+        Log.e(logTag, "onNativeAdLoaded")
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeCallback().apply(nativeCallback).onNativeAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
@@ -200,21 +206,21 @@ class NativeLoader(
      * 广告视频播放开始（仅部分广告平台存在）
      */
     override fun onAdVideoStart(view: ATNativeAdView?) {
-        Log.e(tag, "onAdVideoStart")
+        Log.e(logTag, "onAdVideoStart")
     }
 
     /**
      * 广告视频播放进度（仅部分广告平台存在）
      */
     override fun onAdVideoProgress(view: ATNativeAdView?, progress: Int) {
-        Log.e(tag, "onAdVideoProgress")
+        Log.e(logTag, "onAdVideoProgress")
     }
 
     /**
      * 广告点击回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(tag, "onAdClicked")
+        Log.e(logTag, "onAdClicked")
         NativeCallback().apply(nativeCallback).onNativeClicked?.invoke()
     }
 
@@ -222,14 +228,14 @@ class NativeLoader(
      * 广告视频播放结束（仅部分广告平台存在）
      */
     override fun onAdVideoEnd(view: ATNativeAdView?) {
-        Log.e(tag, "onAdVideoEnd")
+        Log.e(logTag, "onAdVideoEnd")
     }
 
     /**
      * 广告展示回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(tag, "onAdImpressed")
+        Log.e(logTag, "onAdImpressed")
         preLoadNative()
     }
 
@@ -237,7 +243,7 @@ class NativeLoader(
      * 广告Dislike监听回调
      */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(tag, "onAdCloseButtonClick")
+        Log.e(logTag, "onAdCloseButtonClick")
         (view?.parent as? ViewGroup)?.removeView(view)
         NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke()
     }
