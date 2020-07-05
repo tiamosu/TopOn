@@ -15,19 +15,4 @@ class MainActivity : BaseActivity() {
         val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
         TopOn.loadNative(getContext(), nativeStrategy)
     }
-
-    override fun onResume() {
-        TopOn.onResume(this)
-        super.onResume()
-    }
-
-    override fun onPause() {
-        TopOn.onPause(this)
-        super.onPause()
-    }
-
-    override fun onDestroy() {
-        TopOn.release(this)
-        super.onDestroy()
-    }
 }

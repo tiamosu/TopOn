@@ -9,6 +9,7 @@ import com.beemans.topon.demo.constant.Constant
 import com.beemans.topon.demo.ext.dp2px
 import com.beemans.topon.demo.ui.activities.NativeAdActivity
 import com.beemans.topon.nativead.NativeLoader
+import com.blankj.utilcode.util.ActivityUtils
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -38,6 +39,10 @@ class HomeFragment : BaseFragment() {
                 }
             }
             nativeLoader?.show()
+        }
+
+        home_startNativeAd.setOnClickListener {
+            ActivityUtils.startActivity(NativeAdActivity::class.java)
         }
     }
 }

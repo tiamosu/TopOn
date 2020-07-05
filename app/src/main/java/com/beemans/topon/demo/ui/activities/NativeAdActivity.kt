@@ -64,21 +64,4 @@ class NativeAdActivity : BaseActivity() {
             nativeLoader?.show()
         }
     }
-
-    override fun doBusiness() {}
-
-    override fun onResume() {
-        TopOn.onResume(this)
-        super.onResume()
-    }
-
-    override fun onPause() {
-        TopOn.onPause(this)
-        super.onPause()
-    }
-
-    override fun onDestroy() {
-        TopOn.release(this)
-        super.onDestroy()
-    }
 }

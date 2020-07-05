@@ -2,7 +2,12 @@ package com.beemans.topon.nativead
 
 import android.util.Log
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
@@ -15,17 +20,32 @@ import com.tiamosu.fly.callback.EventLiveData
  * @author tiamosu
  * @date 2020/7/2.
  */
+@Suppress("unused", "UNUSED_PARAMETER")
 class NativeLoader(
-    private val activity: FragmentActivity,
+    private val owner: LifecycleOwner,
     private val nativeStrategy: NativeStrategy,
     private val nativeCallback: NativeCallback.() -> Unit,
-) : ATNativeNetworkListener,
+) : LifecycleObserver,
+    ATNativeNetworkListener,
     ATNativeEventListener,
     ATNativeDislikeListener() {
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
 
+    private val activity by lazy {
+        when (owner) {
+            is Fragment -> {
+                owner.requireActivity()
+            }
+            is FragmentActivity -> {
+                owner
+            }
+            else -> {
+                throw IllegalArgumentException("owner must be Fragment or FragmentActivity！")
+            }
+        }
+    }
     private var atNative: ATNative? = null
     private var nativeAd: NativeAd? = null
 
@@ -61,6 +81,7 @@ class NativeLoader(
     private var isDestroyed = false
 
     init {
+        owner.lifecycle.addObserver(this)
         initNative()
         createObserve()
     }
@@ -83,7 +104,7 @@ class NativeLoader(
     }
 
     private fun createObserve() {
-        loadedLiveData.observe(activity) {
+        loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
                 show()
             }
@@ -137,14 +158,14 @@ class NativeLoader(
     /**
      * 在Activity的onResume时调用（主要针对部分广告平台的视频广告）
      */
-    fun onResume() {
+    private fun onResume() {
         nativeAd?.onResume()
     }
 
     /**
      * 在Activity的onPause时调用（主要针对部分广告平台的视频广告）
      */
-    fun onPause() {
+    private fun onPause() {
         nativeAd?.onPause()
     }
 
@@ -152,7 +173,7 @@ class NativeLoader(
      * 移除广告对view的绑定
      * 销毁当前的广告对象（执行之后该广告无法再进行展示）
      */
-    fun onDestroy() {
+    private fun onDestroy() {
         isDestroyed = true
         NativeManager.release(placementId, loaderTag)
         nativeAd?.destory()
@@ -246,5 +267,21 @@ class NativeLoader(
         Log.e(logTag, "onAdCloseButtonClick")
         (view?.parent as? ViewGroup)?.removeView(view)
         NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onResume(owner: LifecycleOwner) {
+        onResume()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun onPause(owner: LifecycleOwner) {
+        onPause()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy(owner: LifecycleOwner) {
+        owner.lifecycle.removeObserver(this)
+        onDestroy()
     }
 }
