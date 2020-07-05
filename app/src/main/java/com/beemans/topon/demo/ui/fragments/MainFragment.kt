@@ -1,6 +1,5 @@
 package com.beemans.topon.demo.ui.fragments
 
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -34,15 +33,5 @@ class MainFragment : BaseFragment() {
                 override fun getItemCount() = fragments.size
             }
         }.let(main_tabBarLayout::setViewPager2)
-    }
-
-    override fun initEvent() {
-        main_tabBarLayout.setOnItemSelectedListener(onItemSelected = { position, prePosition ->
-            Log.e("xia", "onItemSelected:$position  prePosition:$prePosition")
-        }, onItemUnselected = { position ->
-            Log.e("xia", "onItemUnselected:$position")
-        }, onItemReselected = { position ->
-            Log.e("xia", "onItemReselected:$position")
-        })
     }
 }
