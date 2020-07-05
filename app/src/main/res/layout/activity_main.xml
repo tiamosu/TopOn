@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:ignore="all">
+    android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/main_nativeAd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NATIVE_AD" />
-</androidx.appcompat.widget.LinearLayoutCompat>
+    <fragment
+        android:id="@+id/main_fragment_host"
+        android:name="com.tiamosu.fly.navigation.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_navigation"
+        tools:ignore="FragmentTagUsage" />
+</FrameLayout>

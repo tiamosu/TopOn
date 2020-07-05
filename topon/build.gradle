@@ -36,7 +36,6 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     api Deps.fly
-    api Deps.fly_http
     api Deps.fly_imageloader_glide
     api Deps.androidx_constraint_layout
     debugImplementation Deps.leakcanary_android

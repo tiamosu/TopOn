@@ -24,6 +24,7 @@ object Deps {
 
     // androidx
     const val androidx_constraint_layout = "androidx.constraintlayout:constraintlayout:1.1.3"
+    const val androidx_viewpager2 = "androidx.viewpager2:viewpager2:1.0.0"
 
     // leakcanary 检测内存泄漏
     const val leakcanary_android =

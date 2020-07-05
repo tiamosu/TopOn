@@ -17,7 +17,7 @@
             android:name="com.beemans.topon.demo.config.GlobalConfiguration"
             android:value="ConfigModule" />
 
-        <activity android:name=".activities.MainActivity">
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,6 +25,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.NativeAdActivity" />
+        <activity android:name=".ui.activities.NativeAdActivity" />
     </application>
 </manifest>

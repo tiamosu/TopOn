@@ -14,14 +14,14 @@ internal object NativeManager {
         return ((requestingMap[placementId] ?: mutableMapOf()).values).contains(true)
     }
 
-    fun updateRequestStatus(placementId: String, tag: String, isRequesting: Boolean) {
+    fun updateRequestStatus(placementId: String, nativeLoaderTag: String, isRequesting: Boolean) {
         (requestingMap[placementId] ?: mutableMapOf()).apply {
-            put(tag, isRequesting)
+            put(nativeLoaderTag, isRequesting)
             requestingMap[placementId] = this
         }
     }
 
-    fun release(placementId: String, tag: String) {
-        (requestingMap[placementId])?.remove(tag)
+    fun release(placementId: String, nativeLoaderTag: String) {
+        (requestingMap[placementId])?.remove(nativeLoaderTag)
     }
 }
