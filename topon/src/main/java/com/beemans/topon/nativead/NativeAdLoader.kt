@@ -79,6 +79,10 @@ class NativeAdLoader(
 
     private var isDestroyed = false
 
+    private val layoutParams by lazy {
+        ViewGroup.LayoutParams(nativeWidth, nativeHeight)
+    }
+
     init {
         owner.lifecycle.addObserver(this)
         initNative()
@@ -104,7 +108,7 @@ class NativeAdLoader(
 
     private fun createObserve() {
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded) {
+            if (isShowAfterLoaded && !isDestroyed) {
                 show()
             }
         }
@@ -123,7 +127,7 @@ class NativeAdLoader(
      */
     fun show(): NativeAdLoader {
         isShowAfterLoaded = true
-        if (isDestroyed || makeAdRequest()) {
+        if (makeAdRequest()) {
             return this
         }
         isShowAfterLoaded = false
@@ -155,8 +159,10 @@ class NativeAdLoader(
      * 广告渲染成功
      */
     private fun nativeRenderSuc() {
-        val params = ViewGroup.LayoutParams(nativeWidth, nativeHeight)
-        NativeAdCallback().apply(nativeAdCallback).onNativeRenderSuc?.invoke(atNativeAdView, params)
+        NativeAdCallback().apply(nativeAdCallback).onNativeRenderSuc?.invoke(
+            atNativeAdView,
+            layoutParams
+        )
     }
 
     /**
@@ -179,6 +185,7 @@ class NativeAdLoader(
      */
     private fun onDestroy() {
         isDestroyed = true
+        (atNativeAdView.parent as? ViewGroup)?.removeView(atNativeAdView)
         NativeAdManager.release(placementId, loaderTag)
         nativeAd?.destory()
     }

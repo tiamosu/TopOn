@@ -14,5 +14,5 @@ data class NativeBannerConfig(
     val placementId: String,
     val nativeWidth: Int,
     val nativeHeight: Int,
-    val atNativeBannerConfig: @RawValue ATNativeBannerConfig,
+    val atNativeBannerConfig: @RawValue ATNativeBannerConfig = ATNativeBannerConfig(),
 ) : Parcelable
