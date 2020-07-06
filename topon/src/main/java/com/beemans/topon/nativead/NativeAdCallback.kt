@@ -8,7 +8,7 @@ import com.anythink.nativead.api.ATNativeAdView
  * @author tiamosu
  * @date 2020/7/2.
  */
-class NativeCallback {
+class NativeAdCallback {
 
     internal var onNativeAdLoadFail: ((adError: AdError?) -> Unit)? = null
 

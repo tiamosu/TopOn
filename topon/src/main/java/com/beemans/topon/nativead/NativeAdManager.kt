@@ -6,7 +6,7 @@ import com.tiamosu.fly.callback.EventLiveData
  * @author tiamosu
  * @date 2020/7/3.
  */
-internal object NativeManager {
+internal object NativeAdManager {
     val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
     private val requestingMap: MutableMap<String, MutableMap<String, Boolean>> by lazy { mutableMapOf() }
 

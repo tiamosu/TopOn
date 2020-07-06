@@ -21,11 +21,11 @@ import com.tiamosu.fly.callback.EventLiveData
  * @date 2020/7/2.
  */
 @Suppress("unused", "UNUSED_PARAMETER")
-class NativeLoader(
+class NativeAdLoader(
     private val owner: LifecycleOwner,
     private val nativeStrategy: NativeStrategy,
-    private val nativeAdRender: BaseNativeAdRender = NativeAdRender(),
-    private val nativeCallback: NativeCallback.() -> Unit,
+    private val nativeAdRender: BaseNativeAdRender = DefaultNativeAdRender(),
+    private val nativeAdCallback: NativeAdCallback.() -> Unit,
 ) : LifecycleObserver,
     ATNativeNetworkListener,
     ATNativeEventListener,
@@ -43,7 +43,7 @@ class NativeLoader(
                 owner
             }
             else -> {
-                throw IllegalArgumentException("owner must be Fragment or FragmentActivity！")
+                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
             }
         }
     }
@@ -64,10 +64,10 @@ class NativeLoader(
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
-        var liveData = NativeManager.loadedLiveDataMap[placementId]
+        var liveData = NativeAdManager.loadedLiveDataMap[placementId]
         if (liveData == null) {
             liveData = EventLiveData()
-            NativeManager.loadedLiveDataMap[placementId] = liveData
+            NativeAdManager.loadedLiveDataMap[placementId] = liveData
         }
         liveData
     }
@@ -114,7 +114,7 @@ class NativeLoader(
     /**
      * 广告请求
      */
-    fun request(): NativeLoader {
+    fun request(): NativeAdLoader {
         makeAdRequest()
         return this
     }
@@ -122,15 +122,15 @@ class NativeLoader(
     /**
      * 广告加载显示
      */
-    fun show(): NativeLoader {
+    fun show(): NativeAdLoader {
         isShowAfterLoaded = true
         if (isDestroyed || makeAdRequest()) {
             return this
         }
         isShowAfterLoaded = false
         nativeAd?.apply {
-            setNativeEventListener(this@NativeLoader)
-            setDislikeCallbackListener(this@NativeLoader)
+            setNativeEventListener(this@NativeAdLoader)
+            setDislikeCallbackListener(this@NativeAdLoader)
             renderAdView(atNativeAdView, nativeAdRender)
 
             if (nativeAdRender.clickView.isNotEmpty()) {
@@ -157,7 +157,7 @@ class NativeLoader(
      */
     private fun nativeRenderSuc() {
         val params = ViewGroup.LayoutParams(nativeWidth, nativeHeight)
-        NativeCallback().apply(nativeCallback).onNativeRenderSuc?.invoke(atNativeAdView, params)
+        NativeAdCallback().apply(nativeAdCallback).onNativeRenderSuc?.invoke(atNativeAdView, params)
     }
 
     /**
@@ -180,7 +180,7 @@ class NativeLoader(
      */
     private fun onDestroy() {
         isDestroyed = true
-        NativeManager.release(placementId, loaderTag)
+        NativeAdManager.release(placementId, loaderTag)
         nativeAd?.destory()
     }
 
@@ -188,9 +188,9 @@ class NativeLoader(
      * 发起Native广告请求
      */
     private fun makeAdRequest(): Boolean {
-        isRequesting = NativeManager.isRequesting(placementId)
+        isRequesting = NativeAdManager.isRequesting(placementId)
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null && !isDestroyed) {
-            NativeManager.updateRequestStatus(placementId, loaderTag, true)
+            NativeAdManager.updateRequestStatus(placementId, loaderTag, true)
             atNative?.makeAdRequest()
         }
         return isRequesting
@@ -210,8 +210,8 @@ class NativeLoader(
         if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
         isShowAfterLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeCallback().apply(nativeCallback).onNativeAdLoadFail?.invoke(error)
+        NativeAdManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeAdCallback().apply(nativeAdCallback).onNativeAdLoadFail?.invoke(error)
     }
 
     /**
@@ -220,8 +220,8 @@ class NativeLoader(
     override fun onNativeAdLoaded() {
         if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoaded")
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeCallback().apply(nativeCallback).onNativeAdLoaded?.invoke()
+        NativeAdManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeAdCallback().apply(nativeAdCallback).onNativeAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show()
@@ -248,7 +248,7 @@ class NativeLoader(
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdClicked")
-        NativeCallback().apply(nativeCallback).onNativeClicked?.invoke()
+        NativeAdCallback().apply(nativeAdCallback).onNativeClicked?.invoke()
     }
 
     /**
@@ -271,7 +271,7 @@ class NativeLoader(
      */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdCloseButtonClick")
-        if (NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke() == true) {
+        if (NativeAdCallback().apply(nativeAdCallback).onNativeCloseClicked?.invoke() == true) {
             (view?.parent as? ViewGroup)?.removeView(view)
         }
     }

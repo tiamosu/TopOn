@@ -16,7 +16,7 @@ import com.beemans.topon.utils.Utils
  * @author tiamosu
  * @date 2020/7/2.
  */
-class NativeAdRender : BaseNativeAdRender() {
+class DefaultNativeAdRender : BaseNativeAdRender() {
     private var developView: View? = null
     private var networkType = 0
 

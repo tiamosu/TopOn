@@ -8,7 +8,7 @@ import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
 import com.beemans.topon.demo.ext.dp2px
 import com.beemans.topon.demo.ui.activities.NativeAdActivity
-import com.beemans.topon.nativead.NativeLoader
+import com.beemans.topon.nativead.NativeAdLoader
 import com.blankj.utilcode.util.ActivityUtils
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -17,15 +17,15 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * @date 2020/7/5.
  */
 class HomeFragment : BaseFragment() {
-    private var nativeLoader: NativeLoader? = null
+    private var nativeAdLoader: NativeAdLoader? = null
 
     override fun getLayoutId() = R.layout.fragment_home
 
     override fun initEvent() {
         home_btnNativeAd.setOnClickListener {
-            if (nativeLoader == null) {
+            if (nativeAdLoader == null) {
                 val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-                nativeLoader = TopOn.loadNative(this, nativeStrategy) {
+                nativeAdLoader = TopOn.loadNative(this, nativeStrategy) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (home_flAd.childCount > 0) {
                             home_flAd.removeAllViews()
@@ -38,7 +38,7 @@ class HomeFragment : BaseFragment() {
                     onNativeCloseClicked { true }
                 }
             }
-            nativeLoader?.show()
+            nativeAdLoader?.show()
         }
 
         home_startNativeAd.setOnClickListener {

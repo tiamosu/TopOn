@@ -3,9 +3,9 @@ package com.beemans.topon
 import androidx.lifecycle.LifecycleOwner
 import com.beemans.topon.bean.NativeStrategy
 import com.beemans.topon.nativead.BaseNativeAdRender
-import com.beemans.topon.nativead.NativeAdRender
-import com.beemans.topon.nativead.NativeCallback
-import com.beemans.topon.nativead.NativeLoader
+import com.beemans.topon.nativead.DefaultNativeAdRender
+import com.beemans.topon.nativead.NativeAdCallback
+import com.beemans.topon.nativead.NativeAdLoader
 
 /**
  * @author tiamosu
@@ -16,9 +16,9 @@ object TopOn {
     fun loadNative(
         owner: LifecycleOwner,
         nativeStrategy: NativeStrategy,
-        nativeAdRender: BaseNativeAdRender = NativeAdRender(),
-        nativeCallback: NativeCallback.() -> Unit = {}
-    ): NativeLoader {
-        return NativeLoader(owner, nativeStrategy, nativeAdRender, nativeCallback)
+        nativeAdRender: BaseNativeAdRender = DefaultNativeAdRender(),
+        nativeAdCallback: NativeAdCallback.() -> Unit = {}
+    ): NativeAdLoader {
+        return NativeAdLoader(owner, nativeStrategy, nativeAdRender, nativeAdCallback)
     }
 }
