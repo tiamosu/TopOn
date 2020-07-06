@@ -5,7 +5,7 @@ import com.anythink.nativead.banner.api.ATNativeBannerSize
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
-import com.beemans.topon.demo.ext.dp2px
+import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.nativead.banner.NativeBannerConfig
 import com.beemans.topon.nativead.banner.NativeBannerLoader
 import kotlinx.android.synthetic.main.fragment_native_banner.*
@@ -36,7 +36,7 @@ class NativeBannerFragment : BaseFragment() {
                 isCloseBtnShow = true
             }
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, 160.dp2px, 30.dp2px, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID, 160.pt2px, 30.pt2px, bannerConfig)
             nativeBannerLoader = NativeBannerLoader(this, config) {
                 onAdLoaded { atNativeBannerView, layoutParams ->
                     if (nativeBanner_flBanner.childCount > 0) {
@@ -56,7 +56,7 @@ class NativeBannerFragment : BaseFragment() {
                 isCloseBtnShow = true
             }
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, 320.dp2px, 75.dp2px, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID, 320.pt2px, 75.pt2px, bannerConfig)
             nativeBannerLoader2 = NativeBannerLoader(this, config) {
                 onAdLoaded { atNativeBannerView, layoutParams ->
                     if (nativeBanner_flBanner2.childCount > 0) {
@@ -76,7 +76,7 @@ class NativeBannerFragment : BaseFragment() {
                 isCloseBtnShow = true
             }
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, 350.dp2px, 270.dp2px, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px, bannerConfig)
             nativeBannerLoader3 = NativeBannerLoader(this, config) {
                 onAdLoaded { atNativeBannerView, layoutParams ->
                     if (nativeBanner_flBanner3.childCount > 0) {

@@ -44,5 +44,14 @@
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
             app:tbi_textSize="12dp" />
+
+        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+            android:layout_width="0pt"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:tbi_text="信息流-Splash"
+            app:tbi_textNormalColor="@android:color/white"
+            app:tbi_textSelectedColor="@color/colorAccent"
+            app:tbi_textSize="12dp" />
     </com.beemans.topon.demo.ui.view.tabview.TabBarLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

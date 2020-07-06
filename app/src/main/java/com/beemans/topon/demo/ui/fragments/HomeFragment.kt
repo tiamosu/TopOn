@@ -6,7 +6,7 @@ import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
-import com.beemans.topon.demo.ext.dp2px
+import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.demo.ui.activities.NativeAdActivity
 import com.beemans.topon.nativead.NativeAdLoader
 import com.blankj.utilcode.util.ActivityUtils
@@ -24,7 +24,7 @@ class HomeFragment : BaseFragment() {
     override fun initEvent() {
         home_btnNativeAd.setOnClickListener {
             if (nativeAdLoader == null) {
-                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 270.dp2px)
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
                 nativeAdLoader = TopOn.loadNativeAd(this, config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (home_flAd.childCount > 0) {
