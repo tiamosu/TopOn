@@ -17,6 +17,7 @@ class MainFragment : BaseFragment() {
         arrayListOf<Class<out Fragment>>().apply {
             add(HomeFragment::class.java)
             add(NativeAdFragment::class.java)
+            add(NativeBannerFragment::class.java)
         }
     }
 
