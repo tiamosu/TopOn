@@ -49,6 +49,9 @@ class NativeBannerLoader(
         ViewGroup.LayoutParams(nativeWidth, nativeHeight)
     }
 
+    //广告正在进行请求
+    private var isRequesting = false
+
     init {
         owner.lifecycle.addObserver(this)
         initNative()
@@ -72,6 +75,8 @@ class NativeBannerLoader(
     }
 
     fun show(): NativeBannerLoader {
+        if (isRequesting) return this
+        isRequesting = true
         atNativeBannerView.loadAd(null)
         return this
     }
@@ -99,6 +104,7 @@ class NativeBannerLoader(
 
     override fun onAdLoaded() {
         Log.e(loaderTag, "onAdLoaded")
+        isRequesting = false
         NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke(
             atNativeBannerView,
             layoutParams
@@ -107,6 +113,7 @@ class NativeBannerLoader(
 
     override fun onAdError(errorMsg: String?) {
         Log.e(loaderTag, "onAdError:$errorMsg")
+        isRequesting = false
         NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
     }
 
