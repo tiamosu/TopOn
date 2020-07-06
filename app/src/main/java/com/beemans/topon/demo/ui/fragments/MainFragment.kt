@@ -27,8 +27,8 @@ class MainFragment : BaseFragment() {
     override fun initView(rootView: View?) {
         main_viewPager.apply {
             //是否可滑动
-            this.isUserInputEnabled = isUserInputEnabled
-            this.offscreenPageLimit = offscreenPageLimit
+            this.isUserInputEnabled = true
+            this.offscreenPageLimit = fragments.size
             //设置适配器
             adapter = object : FragmentStateAdapter(this@MainFragment) {
                 override fun createFragment(position: Int) = fragments[position].newInstance()
