@@ -110,10 +110,12 @@ class NativeSplashLoader(
         Log.e(logTag, "onNoAdError:$errorMsg")
         isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeSplashCallback().apply(splashCallback).onNoAdError?.invoke(errorMsg)
     }
 
     override fun onAdSkip() {
         Log.e(logTag, "onAdSkip")
+        NativeSplashCallback().apply(splashCallback).onAdSkip?.invoke()
     }
 
     override fun onAdShow(info: ATAdInfo?) {
@@ -122,14 +124,17 @@ class NativeSplashLoader(
 
     override fun onAdClick(info: ATAdInfo?) {
         Log.e(logTag, "onAdClick")
+        NativeSplashCallback().apply(splashCallback).onAdClick?.invoke()
     }
 
     override fun onAdTick(tickTime: Long) {
         Log.e(logTag, "onAdTick")
+        NativeSplashCallback().apply(splashCallback).onAdTick?.invoke(tickTime)
     }
 
     override fun onAdTimeOver() {
         Log.e(logTag, "onAdTimeOver")
+        NativeSplashCallback().apply(splashCallback).onAdTimeOver?.invoke()
     }
 
     override fun onAdLoaded() {
