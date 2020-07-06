@@ -23,7 +23,7 @@ class NativeAdFragment : BaseFragment() {
         nativeAd_btnNativeAd.setOnClickListener {
             if (nativeAdLoader == null) {
                 val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID2, 350.dp2px, 300.dp2px)
-                nativeAdLoader = TopOn.loadNative(this, nativeStrategy) {
+                nativeAdLoader = TopOn.loadNativeAd(this, nativeStrategy) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd.childCount > 0) {
                             nativeAd_flAd.removeAllViews()

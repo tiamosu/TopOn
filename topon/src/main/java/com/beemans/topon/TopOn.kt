@@ -13,7 +13,7 @@ import com.beemans.topon.nativead.NativeAdLoader
  */
 object TopOn {
 
-    fun loadNative(
+    fun loadNativeAd(
         owner: LifecycleOwner,
         nativeStrategy: NativeStrategy,
         nativeAdRender: BaseNativeAdRender = DefaultNativeAdRender(),

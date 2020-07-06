@@ -23,14 +23,14 @@ class NativeAdActivity : BaseActivity() {
     override fun initEvent() {
         nativeAd_adRequest.setOnClickListener {
             val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-            TopOn.loadNative(getContext(), nativeStrategy)
+            TopOn.loadNativeAd(getContext(), nativeStrategy)
         }
 
         nativeAd_adShow1.setOnClickListener {
             var nativeLoader = nativeAdLoaders[nativeAd_adShow1.toString()]
             if (nativeLoader == null) {
                 val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-                nativeLoader = TopOn.loadNative(getContext(), nativeStrategy) {
+                nativeLoader = TopOn.loadNativeAd(getContext(), nativeStrategy) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd.childCount > 0) {
                             nativeAd_flAd.removeAllViews()
@@ -49,7 +49,7 @@ class NativeAdActivity : BaseActivity() {
             var nativeLoader = nativeAdLoaders[nativeAd_adShow2.toString()]
             if (nativeLoader == null) {
                 val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-                nativeLoader = TopOn.loadNative(getContext(), nativeStrategy) {
+                nativeLoader = TopOn.loadNativeAd(getContext(), nativeStrategy) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd2.childCount > 0) {
                             nativeAd_flAd2.removeAllViews()
