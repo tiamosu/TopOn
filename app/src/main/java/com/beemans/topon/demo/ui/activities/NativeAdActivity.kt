@@ -2,7 +2,7 @@ package com.beemans.topon.demo.ui.activities
 
 import android.util.Log
 import com.beemans.topon.TopOn
-import com.beemans.topon.bean.NativeStrategy
+import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseActivity
 import com.beemans.topon.demo.constant.Constant
@@ -22,15 +22,15 @@ class NativeAdActivity : BaseActivity() {
 
     override fun initEvent() {
         nativeAd_adRequest.setOnClickListener {
-            val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-            TopOn.loadNativeAd(getContext(), nativeStrategy)
+            val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
+            TopOn.loadNativeAd(getContext(), config)
         }
 
         nativeAd_adShow1.setOnClickListener {
             var nativeLoader = nativeAdLoaders[nativeAd_adShow1.toString()]
             if (nativeLoader == null) {
-                val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-                nativeLoader = TopOn.loadNativeAd(getContext(), nativeStrategy) {
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
+                nativeLoader = TopOn.loadNativeAd(getContext(), config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd.childCount > 0) {
                             nativeAd_flAd.removeAllViews()
@@ -48,8 +48,8 @@ class NativeAdActivity : BaseActivity() {
         nativeAd_adShow2.setOnClickListener {
             var nativeLoader = nativeAdLoaders[nativeAd_adShow2.toString()]
             if (nativeLoader == null) {
-                val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
-                nativeLoader = TopOn.loadNativeAd(getContext(), nativeStrategy) {
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
+                nativeLoader = TopOn.loadNativeAd(getContext(), config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd2.childCount > 0) {
                             nativeAd_flAd2.removeAllViews()

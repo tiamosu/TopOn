@@ -13,7 +13,6 @@ import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
 import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
-import com.beemans.topon.bean.NativeStrategy
 import com.tiamosu.fly.callback.EventLiveData
 
 /**
@@ -23,7 +22,7 @@ import com.tiamosu.fly.callback.EventLiveData
 @Suppress("unused", "UNUSED_PARAMETER")
 class NativeAdLoader(
     private val owner: LifecycleOwner,
-    private val nativeStrategy: NativeStrategy,
+    private val nativeAdConfig: NativeAdConfig,
     private val nativeAdRender: BaseNativeAdRender = DefaultNativeAdRender(),
     private val nativeAdCallback: NativeAdCallback.() -> Unit,
 ) : LifecycleObserver,
@@ -54,13 +53,13 @@ class NativeAdLoader(
     private val atNativeAdView by lazy { ATNativeAdView(activity) }
 
     //广告位ID
-    private val placementId by lazy { nativeStrategy.placementId }
+    private val placementId by lazy { nativeAdConfig.placementId }
 
-    private val nativeWidth by lazy { nativeStrategy.nativeWidth }
-    private val nativeHeight by lazy { nativeStrategy.nativeHeight }
+    private val nativeWidth by lazy { nativeAdConfig.nativeWidth }
+    private val nativeHeight by lazy { nativeAdConfig.nativeHeight }
 
     //是否进行广告预加载
-    private val isUsePreload by lazy { nativeStrategy.isUsePreload }
+    private val isUsePreload by lazy { nativeAdConfig.isUsePreload }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {

@@ -2,7 +2,7 @@ package com.beemans.topon.demo.ui.fragments
 
 import android.util.Log
 import com.beemans.topon.TopOn
-import com.beemans.topon.bean.NativeStrategy
+import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
@@ -22,8 +22,8 @@ class NativeAdFragment : BaseFragment() {
     override fun initEvent() {
         nativeAd_btnNativeAd.setOnClickListener {
             if (nativeAdLoader == null) {
-                val nativeStrategy = NativeStrategy(Constant.NATIVE_AD_ID2, 350.dp2px, 300.dp2px)
-                nativeAdLoader = TopOn.loadNativeAd(this, nativeStrategy) {
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID2, 350.dp2px, 300.dp2px)
+                nativeAdLoader = TopOn.loadNativeAd(this, config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd.childCount > 0) {
                             nativeAd_flAd.removeAllViews()

@@ -1,4 +1,4 @@
-package com.beemans.topon.bean
+package com.beemans.topon.nativead
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
  * @date 2020/7/2.
  */
 @Parcelize
-data class NativeStrategy(
+data class NativeAdConfig(
     var placementId: String,            //广告位ID
     var nativeWidth: Int,               //广告宽度
     var nativeHeight: Int,              //广告高度

@@ -1,7 +1,6 @@
 package com.beemans.topon.nativead
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -97,8 +96,6 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         //获取广告大图的渲染容器（仅部分广告平台会存在），有可能是静态图和视频。
         //参数描述：view：广告父容器, width: MediaView的宽度配置 (目前仅Inmobi需要这两个参数，其他可以传null)
         val mediaView = ad.getAdMediaView(flAd, flAd.width)
-        Log.e("xia", "mediaView:$mediaView   imageUrl:${ad.mainImageUrl}")
-
         val mediaLp = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
         )
