@@ -24,6 +24,7 @@ import com.tiamosu.fly.callback.EventLiveData
 class NativeLoader(
     private val owner: LifecycleOwner,
     private val nativeStrategy: NativeStrategy,
+    private val nativeAdRender: BaseNativeAdRender = NativeAdRender(),
     private val nativeCallback: NativeCallback.() -> Unit,
 ) : LifecycleObserver,
     ATNativeNetworkListener,
@@ -50,7 +51,6 @@ class NativeLoader(
     private var nativeAd: NativeAd? = null
 
     //用于实现广告渲染
-    private val nativeAdRender by lazy { NativeAdRender() }
     private val atNativeAdView by lazy { ATNativeAdView(activity) }
 
     //广告位ID
@@ -132,7 +132,12 @@ class NativeLoader(
             setNativeEventListener(this@NativeLoader)
             setDislikeCallbackListener(this@NativeLoader)
             renderAdView(atNativeAdView, nativeAdRender)
-            prepare(atNativeAdView)
+
+            if (nativeAdRender.clickView.isNotEmpty()) {
+                prepare(atNativeAdView, nativeAdRender.clickView, null)
+            } else {
+                prepare(atNativeAdView)
+            }
             nativeRenderSuc()
         }
         return this
@@ -266,8 +271,9 @@ class NativeLoader(
      */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdCloseButtonClick")
-        (view?.parent as? ViewGroup)?.removeView(view)
-        NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke()
+        if (NativeCallback().apply(nativeCallback).onNativeCloseClicked?.invoke() == true) {
+            (view?.parent as? ViewGroup)?.removeView(view)
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)

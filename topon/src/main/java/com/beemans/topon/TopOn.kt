@@ -2,6 +2,8 @@ package com.beemans.topon
 
 import androidx.lifecycle.LifecycleOwner
 import com.beemans.topon.bean.NativeStrategy
+import com.beemans.topon.nativead.BaseNativeAdRender
+import com.beemans.topon.nativead.NativeAdRender
 import com.beemans.topon.nativead.NativeCallback
 import com.beemans.topon.nativead.NativeLoader
 
@@ -14,8 +16,9 @@ object TopOn {
     fun loadNative(
         owner: LifecycleOwner,
         nativeStrategy: NativeStrategy,
+        nativeAdRender: BaseNativeAdRender = NativeAdRender(),
         nativeCallback: NativeCallback.() -> Unit = {}
     ): NativeLoader {
-        return NativeLoader(owner, nativeStrategy, nativeCallback)
+        return NativeLoader(owner, nativeStrategy, nativeAdRender, nativeCallback)
     }
 }

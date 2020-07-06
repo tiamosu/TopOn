@@ -8,18 +8,15 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
-import com.anythink.nativead.api.ATNativeAdRenderer
 import com.anythink.nativead.unitgroup.api.CustomNativeAd
 import com.beemans.topon.R
 import com.beemans.topon.utils.Utils
-import java.util.*
 
 /**
  * @author tiamosu
  * @date 2020/7/2.
  */
-class NativeAdRender : ATNativeAdRenderer<CustomNativeAd> {
-    private var clickView: MutableList<View> = ArrayList()
+class NativeAdRender : BaseNativeAdRender() {
     private var developView: View? = null
     private var networkType = 0
 

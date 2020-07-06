@@ -21,7 +21,7 @@ class NativeCallback {
 
     internal var onNativeClicked: (() -> Unit)? = null
 
-    internal var onNativeCloseClicked: (() -> Unit)? = null
+    internal var onNativeCloseClicked: (() -> Boolean)? = null
 
     /**
      * 广告加载失败
@@ -59,7 +59,7 @@ class NativeCallback {
     /**
      * 对广告不感兴趣等，进行广告关闭点击
      */
-    fun onNativeCloseClicked(onNativeCloseClicked: () -> Unit) {
+    fun onNativeCloseClicked(onNativeCloseClicked: () -> Boolean) {
         this.onNativeCloseClicked = onNativeCloseClicked
     }
 }
