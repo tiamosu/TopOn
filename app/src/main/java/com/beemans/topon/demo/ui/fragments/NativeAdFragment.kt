@@ -22,7 +22,7 @@ class NativeAdFragment : BaseFragment() {
     override fun initEvent() {
         nativeAd_btnNativeAd.setOnClickListener {
             if (nativeAdLoader == null) {
-                val config = NativeAdConfig(Constant.NATIVE_AD_ID2, 350.dp2px, 300.dp2px)
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID2, 350.dp2px, 270.dp2px)
                 nativeAdLoader = TopOn.loadNativeAd(this, config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd.childCount > 0) {

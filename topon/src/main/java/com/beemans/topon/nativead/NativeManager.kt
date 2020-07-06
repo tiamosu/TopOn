@@ -6,7 +6,7 @@ import com.tiamosu.fly.callback.EventLiveData
  * @author tiamosu
  * @date 2020/7/3.
  */
-internal object NativeAdManager {
+internal object NativeManager {
     val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
     private val requestingMap: MutableMap<String, MutableMap<String, Boolean>> by lazy { mutableMapOf() }
 
@@ -21,7 +21,7 @@ internal object NativeAdManager {
         }
     }
 
-    fun release(placementId: String, nativeLoaderTag: String) {
-        (requestingMap[placementId])?.remove(nativeLoaderTag)
+    fun release(placementId: String) {
+        (requestingMap[placementId])?.clear()
     }
 }

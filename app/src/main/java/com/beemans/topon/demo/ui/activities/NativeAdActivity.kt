@@ -22,14 +22,14 @@ class NativeAdActivity : BaseActivity() {
 
     override fun initEvent() {
         nativeAd_adRequest.setOnClickListener {
-            val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
+            val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 270.dp2px)
             TopOn.loadNativeAd(getContext(), config)
         }
 
         nativeAd_adShow1.setOnClickListener {
             var nativeLoader = nativeAdLoaders[nativeAd_adShow1.toString()]
             if (nativeLoader == null) {
-                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 270.dp2px)
                 nativeLoader = TopOn.loadNativeAd(getContext(), config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd.childCount > 0) {
@@ -48,7 +48,7 @@ class NativeAdActivity : BaseActivity() {
         nativeAd_adShow2.setOnClickListener {
             var nativeLoader = nativeAdLoaders[nativeAd_adShow2.toString()]
             if (nativeLoader == null) {
-                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 300.dp2px)
+                val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 270.dp2px)
                 nativeLoader = TopOn.loadNativeAd(getContext(), config) {
                     onNativeRenderSuc { atNativeAdView, layoutParams ->
                         if (nativeAd_flAd2.childCount > 0) {

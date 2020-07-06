@@ -63,10 +63,10 @@ class NativeAdLoader(
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
-        var liveData = NativeAdManager.loadedLiveDataMap[placementId]
+        var liveData = NativeManager.loadedLiveDataMap[placementId]
         if (liveData == null) {
             liveData = EventLiveData()
-            NativeAdManager.loadedLiveDataMap[placementId] = liveData
+            NativeManager.loadedLiveDataMap[placementId] = liveData
         }
         liveData
     }
@@ -186,7 +186,7 @@ class NativeAdLoader(
     private fun onDestroy() {
         isDestroyed = true
         (atNativeAdView.parent as? ViewGroup)?.removeView(atNativeAdView)
-        NativeAdManager.release(placementId, loaderTag)
+        NativeManager.release(placementId)
         nativeAd?.destory()
     }
 
@@ -194,9 +194,9 @@ class NativeAdLoader(
      * 发起Native广告请求
      */
     private fun makeAdRequest(): Boolean {
-        isRequesting = NativeAdManager.isRequesting(placementId)
+        isRequesting = NativeManager.isRequesting(placementId)
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null && !isDestroyed) {
-            NativeAdManager.updateRequestStatus(placementId, loaderTag, true)
+            NativeManager.updateRequestStatus(placementId, loaderTag, true)
             atNative?.makeAdRequest()
         }
         return isRequesting
@@ -216,7 +216,7 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
         isShowAfterLoaded = true
-        NativeAdManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeAdCallback().apply(nativeAdCallback).onNativeAdLoadFail?.invoke(error)
     }
 
@@ -226,7 +226,7 @@ class NativeAdLoader(
     override fun onNativeAdLoaded() {
         if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoaded")
-        NativeAdManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeAdCallback().apply(nativeAdCallback).onNativeAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
