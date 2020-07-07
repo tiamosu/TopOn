@@ -11,8 +11,9 @@ import kotlinx.android.parcel.RawValue
  */
 @Parcelize
 data class NativeBannerConfig(
-    val placementId: String,
-    val nativeWidth: Int,
-    val nativeHeight: Int,
-    val atNativeBannerConfig: @RawValue ATNativeBannerConfig = ATNativeBannerConfig(),
+    val placementId: String,        //广告位ID
+    val nativeWidth: Int,           //广告视图宽度
+    val nativeHeight: Int = 0,      //广告视图高度
+    val atBannerConfig:
+    @RawValue ATNativeBannerConfig = ATNativeBannerConfig(),    //NativeBanner的本地设置项
 ) : Parcelable

@@ -49,7 +49,8 @@ class NativeBannerLoader(
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
 
     private val layoutParams by lazy {
-        ViewGroup.LayoutParams(nativeWidth, nativeHeight)
+        val height = if (nativeHeight != 0) nativeHeight else ViewGroup.LayoutParams.WRAP_CONTENT
+        ViewGroup.LayoutParams(nativeWidth, height)
     }
 
     //广告正在进行请求
@@ -90,7 +91,7 @@ class NativeBannerLoader(
                 put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
             }.let(this::setLocalExtra)
 
-            setBannerConfig(bannerConfig.atNativeBannerConfig)
+            setBannerConfig(bannerConfig.atBannerConfig)
             setUnitId(placementId)
             setAdListener(this@NativeBannerLoader)
         }
@@ -113,6 +114,29 @@ class NativeBannerLoader(
             atNativeBannerView.loadAd(null)
         }
         return this
+    }
+
+    /**
+     * 广告加载成功回调
+     */
+    override fun onAdLoaded() {
+        Log.e(logTag, "onAdLoaded")
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke(
+            atNativeBannerView,
+            layoutParams
+        )
+        loadedLiveData.value = true
+    }
+
+    /**
+     * 广告加载失败回调
+     */
+    override fun onAdError(errorMsg: String?) {
+        Log.e(logTag, "onAdError:$errorMsg")
+        isShowAfterLoaded = true
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
     }
 
     /**
@@ -149,29 +173,6 @@ class NativeBannerLoader(
      */
     override fun onAdClose() {
         Log.e(logTag, "onAdClose")
-    }
-
-    /**
-     * 广告加载成功回调
-     */
-    override fun onAdLoaded() {
-        Log.e(logTag, "onAdLoaded")
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke(
-            atNativeBannerView,
-            layoutParams
-        )
-        loadedLiveData.value = true
-    }
-
-    /**
-     * 广告加载失败回调
-     */
-    override fun onAdError(errorMsg: String?) {
-        Log.e(logTag, "onAdError:$errorMsg")
-        isShowAfterLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
     }
 
     @Suppress("unused")

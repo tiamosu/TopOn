@@ -110,10 +110,32 @@ class NativeSplashLoader(
         if (!isRequesting) {
             isShowAfterLoaded = false
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
-            ATNativeSplash(activity, frameLayout, null, placementId, localMap, this)
+            ATNativeSplash(
+                activity,
+                frameLayout,
+                null,
+                placementId,
+                localMap,
+                splashConfig.requestTimeOut,
+                splashConfig.fetchDelay,
+                this
+            )
         }
     }
 
+    /**
+     * 广告加载成功回调
+     */
+    override fun onAdLoaded() {
+        Log.e(logTag, "onAdLoaded")
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke(frameLayout)
+        loadedLiveData.value = true
+    }
+
+    /**
+     * 广告加载失败回调
+     */
     override fun onNoAdError(errorMsg: String?) {
         Log.e(logTag, "onNoAdError:$errorMsg")
         isShowAfterLoaded = true
@@ -121,35 +143,43 @@ class NativeSplashLoader(
         NativeSplashCallback().apply(splashCallback).onNoAdError?.invoke(errorMsg)
     }
 
+    /**
+     * Skip按钮点击回调
+     */
     override fun onAdSkip() {
         Log.e(logTag, "onAdSkip")
         NativeSplashCallback().apply(splashCallback).onAdSkip?.invoke()
     }
 
+    /**
+     * 广告展示回调
+     */
     override fun onAdShow(info: ATAdInfo?) {
         Log.e(logTag, "onAdShow")
     }
 
+    /**
+     * 广告点击回调
+     */
     override fun onAdClick(info: ATAdInfo?) {
         Log.e(logTag, "onAdClick")
         NativeSplashCallback().apply(splashCallback).onAdClick?.invoke()
     }
 
+    /**
+     * 广告的倒计时回调，用于倒计时秒数的刷新，返回单位：毫秒
+     */
     override fun onAdTick(tickTime: Long) {
         Log.e(logTag, "onAdTick")
         NativeSplashCallback().apply(splashCallback).onAdTick?.invoke(tickTime)
     }
 
+    /**
+     * 广告的倒计时结束，可在这里关闭NativeSplash广告的Activity
+     */
     override fun onAdTimeOver() {
         Log.e(logTag, "onAdTimeOver")
         NativeSplashCallback().apply(splashCallback).onAdTimeOver?.invoke()
-    }
-
-    override fun onAdLoaded() {
-        Log.e(logTag, "onAdLoaded")
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke(frameLayout)
-        loadedLiveData.value = true
     }
 
     @Suppress("unused")

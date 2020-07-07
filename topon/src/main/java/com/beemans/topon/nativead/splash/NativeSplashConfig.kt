@@ -9,7 +9,9 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class NativeSplashConfig(
-    val placementId: String,
-    val nativeWidth: Int = 0,
-    val nativeHeight: Int = 0
+    val placementId: String,            //广告位ID
+    val nativeWidth: Int,               //广告视图宽度
+    val nativeHeight: Int = 0,          //广告视图高度，可传0进行自适应
+    val requestTimeOut: Long = 5000,    //请求超时时间
+    val fetchDelay: Long = 5000         //广告展示的倒计时总时长
 ) : Parcelable

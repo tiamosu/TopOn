@@ -17,7 +17,7 @@ class NativeSplashFragment : BaseFragment() {
     override fun getLayoutId() = R.layout.fragment_native_splash
 
     override fun onFlySupportVisible() {
-        val config = NativeSplashConfig(Constant.NATIVE_AD_ID, 375.pt2px, 800.pt2px)
+        val config = NativeSplashConfig(Constant.NATIVE_AD_ID, 350.pt2px)
         TopOn.loadNativeSplash(this, config) {
             onAdLoaded { frameLayout ->
                 if (nativeSplash_flAd.childCount > 0) {
