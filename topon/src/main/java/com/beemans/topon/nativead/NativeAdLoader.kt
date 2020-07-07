@@ -2,6 +2,7 @@ package com.beemans.topon.nativead
 
 import android.util.Log
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -78,6 +79,12 @@ class NativeAdLoader(
     private var isRequesting = false
 
     private var isDestroyed = false
+
+    private val flAd by lazy {
+        FrameLayout(activity).apply {
+            layoutParams = this@NativeAdLoader.layoutParams
+        }
+    }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
@@ -158,10 +165,17 @@ class NativeAdLoader(
      * 广告渲染成功
      */
     private fun nativeRenderSuc() {
-        NativeAdCallback().apply(nativeAdCallback).onNativeRenderSuc?.invoke(
-            atNativeAdView,
-            layoutParams
-        )
+        clearView()
+        flAd.addView(atNativeAdView, layoutParams)
+
+        NativeAdCallback().apply(nativeAdCallback).onNativeRenderSuc?.invoke(flAd)
+    }
+
+    private fun clearView() {
+        (flAd.parent as? ViewGroup)?.removeView(flAd)
+        if (flAd.childCount > 0) {
+            flAd.removeAllViews()
+        }
     }
 
     /**
@@ -184,7 +198,7 @@ class NativeAdLoader(
      */
     private fun onDestroy() {
         isDestroyed = true
-        (atNativeAdView.parent as? ViewGroup)?.removeView(atNativeAdView)
+        clearView()
         NativeManager.release(placementId)
         nativeAd?.destory()
     }
@@ -278,7 +292,7 @@ class NativeAdLoader(
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdCloseButtonClick")
         if (NativeAdCallback().apply(nativeAdCallback).onNativeCloseClicked?.invoke() == true) {
-            (view?.parent as? ViewGroup)?.removeView(view)
+            clearView()
         }
     }
 

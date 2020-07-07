@@ -30,11 +30,11 @@ class NativeAdActivity : BaseActivity() {
             if (nativeLoader == null) {
                 val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
                 nativeLoader = TopOn.loadNativeAd(getContext(), config) {
-                    onNativeRenderSuc { atNativeAdView, layoutParams ->
+                    onNativeRenderSuc { flAd ->
                         if (nativeAd_flAd.childCount > 0) {
                             nativeAd_flAd.removeAllViews()
                         }
-                        nativeAd_flAd.addView(atNativeAdView, layoutParams)
+                        nativeAd_flAd.addView(flAd)
                     }
                     onNativeAdLoadFail {
                         Log.e("xia", "show1:${it?.printStackTrace()}")
@@ -49,11 +49,11 @@ class NativeAdActivity : BaseActivity() {
             if (nativeLoader == null) {
                 val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
                 nativeLoader = TopOn.loadNativeAd(getContext(), config) {
-                    onNativeRenderSuc { atNativeAdView, layoutParams ->
+                    onNativeRenderSuc { flAd ->
                         if (nativeAd_flAd2.childCount > 0) {
                             nativeAd_flAd2.removeAllViews()
                         }
-                        nativeAd_flAd2.addView(atNativeAdView, layoutParams)
+                        nativeAd_flAd2.addView(flAd)
                     }
                     onNativeAdLoadFail {
                         Log.e("xia", "show2:${it?.printStackTrace()}")

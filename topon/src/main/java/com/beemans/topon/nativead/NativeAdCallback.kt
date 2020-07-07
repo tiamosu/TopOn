@@ -1,8 +1,7 @@
 package com.beemans.topon.nativead
 
-import android.view.ViewGroup
+import android.widget.FrameLayout
 import com.anythink.core.api.AdError
-import com.anythink.nativead.api.ATNativeAdView
 
 /**
  * @author tiamosu
@@ -14,10 +13,7 @@ class NativeAdCallback {
 
     internal var onNativeAdLoaded: (() -> Unit)? = null
 
-    internal var onNativeRenderSuc: ((
-        atNativeAdView: ATNativeAdView,
-        layoutParams: ViewGroup.LayoutParams
-    ) -> Unit)? = null
+    internal var onNativeRenderSuc: ((flAd: FrameLayout) -> Unit)? = null
 
     internal var onNativeClicked: (() -> Unit)? = null
 
@@ -40,12 +36,7 @@ class NativeAdCallback {
     /**
      * 广告渲染成功
      */
-    fun onNativeRenderSuc(
-        onNativeRenderSuc: (
-            atNativeAdView: ATNativeAdView,
-            layoutParams: ViewGroup.LayoutParams
-        ) -> Unit
-    ) {
+    fun onNativeRenderSuc(onNativeRenderSuc: (flAd: FrameLayout) -> Unit) {
         this.onNativeRenderSuc = onNativeRenderSuc
     }
 
