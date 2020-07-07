@@ -56,6 +56,9 @@ class NativeSplashLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
+    //广告正在播放中
+    private var isAdPlaying = false
+
     private var isDestroyed = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
@@ -119,7 +122,7 @@ class NativeSplashLoader(
     fun show() {
         isShowAfterLoaded = true
         isRequesting = NativeManager.isRequesting(placementId)
-        if (!isRequesting && !isDestroyed) {
+        if (!isRequesting && !isDestroyed && !isAdPlaying) {
             isShowAfterLoaded = false
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
             ATNativeSplash(
@@ -172,6 +175,7 @@ class NativeSplashLoader(
      */
     override fun onAdSkip() {
         Log.e(logTag, "onAdSkip")
+        isAdPlaying = false
         if (NativeSplashCallback().apply(splashCallback).onAdSkip?.invoke() == true) {
             clearView()
         }
@@ -183,6 +187,7 @@ class NativeSplashLoader(
     override fun onAdShow(info: ATAdInfo?) {
         if (isDestroyed) return
         Log.e(logTag, "onAdShow")
+        isAdPlaying = true
     }
 
     /**
@@ -208,6 +213,7 @@ class NativeSplashLoader(
     override fun onAdTimeOver() {
         if (isDestroyed) return
         Log.e(logTag, "onAdTimeOver")
+        isAdPlaying = false
         NativeSplashCallback().apply(splashCallback).onAdTimeOver?.invoke()
     }
 
