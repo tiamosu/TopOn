@@ -47,16 +47,6 @@ class NativeSplashLoader(
     private val nativeWidth by lazy { splashConfig.nativeWidth }
     private val nativeHeight by lazy { splashConfig.nativeHeight }
 
-    private val frameLayout by lazy {
-        FrameLayout(activity).apply {
-            val layoutParams = ViewGroup.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT,
-            )
-            this.layoutParams = layoutParams
-        }
-    }
-
     //广告正在进行请求
     private var isRequesting = false
 
@@ -80,6 +70,24 @@ class NativeSplashLoader(
 
     //配置广告宽高
     private val localMap: MutableMap<String, Any> by lazy { mutableMapOf() }
+
+    private val frameLayout by lazy {
+        FrameLayout(activity).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+            )
+        }
+    }
+
+    private val flAd by lazy {
+        FrameLayout(activity).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        }
+    }
 
     init {
         initAd()
@@ -111,7 +119,7 @@ class NativeSplashLoader(
     fun show() {
         isShowAfterLoaded = true
         isRequesting = NativeManager.isRequesting(placementId)
-        if (!isRequesting) {
+        if (!isRequesting && !isDestroyed) {
             isShowAfterLoaded = false
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
             ATNativeSplash(
@@ -127,13 +135,24 @@ class NativeSplashLoader(
         }
     }
 
+    private fun clearView() {
+        (flAd.parent as? ViewGroup)?.removeView(flAd)
+        if (flAd.childCount > 0) {
+            flAd.removeAllViews()
+        }
+    }
+
     /**
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
+        if (isDestroyed) return
         Log.e(logTag, "onAdLoaded")
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke(frameLayout)
+
+        clearView()
+        flAd.addView(frameLayout)
+        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke(flAd)
         loadedLiveData.value = true
     }
 
@@ -141,6 +160,7 @@ class NativeSplashLoader(
      * 广告加载失败回调
      */
     override fun onNoAdError(errorMsg: String?) {
+        if (isDestroyed) return
         Log.e(logTag, "onNoAdError:$errorMsg")
         isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
@@ -152,13 +172,16 @@ class NativeSplashLoader(
      */
     override fun onAdSkip() {
         Log.e(logTag, "onAdSkip")
-        NativeSplashCallback().apply(splashCallback).onAdSkip?.invoke()
+        if (NativeSplashCallback().apply(splashCallback).onAdSkip?.invoke() == true) {
+            clearView()
+        }
     }
 
     /**
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdShow")
     }
 
@@ -174,6 +197,7 @@ class NativeSplashLoader(
      * 广告的倒计时回调，用于倒计时秒数的刷新，返回单位：毫秒
      */
     override fun onAdTick(tickTime: Long) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdTick")
         NativeSplashCallback().apply(splashCallback).onAdTick?.invoke(tickTime)
     }
@@ -182,6 +206,7 @@ class NativeSplashLoader(
      * 广告的倒计时结束，可在这里关闭NativeSplash广告的Activity
      */
     override fun onAdTimeOver() {
+        if (isDestroyed) return
         Log.e(logTag, "onAdTimeOver")
         NativeSplashCallback().apply(splashCallback).onAdTimeOver?.invoke()
     }
@@ -191,7 +216,7 @@ class NativeSplashLoader(
     fun onDestroy(owner: LifecycleOwner) {
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
-        (frameLayout.parent as? ViewGroup)?.removeView(frameLayout)
+        clearView()
         NativeManager.release(placementId)
     }
 }

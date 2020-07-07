@@ -38,11 +38,8 @@ class NativeBannerFragment : BaseFragment() {
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 160.pt2px, 35.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
-                onAdLoaded { atNativeBannerView, layoutParams ->
-                    if (nativeBanner_flBanner.childCount > 0) {
-                        nativeBanner_flBanner.removeAllViews()
-                    }
-                    nativeBanner_flBanner.addView(atNativeBannerView, layoutParams)
+                onAdLoaded { flAd ->
+                    nativeBanner_flBanner.addView(flAd)
                 }
             }.also { bannerLoaders["1"] = it }
         }
@@ -59,11 +56,8 @@ class NativeBannerFragment : BaseFragment() {
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 320.pt2px, 70.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
-                onAdLoaded { atNativeBannerView, layoutParams ->
-                    if (nativeBanner_flBanner2.childCount > 0) {
-                        nativeBanner_flBanner2.removeAllViews()
-                    }
-                    nativeBanner_flBanner2.addView(atNativeBannerView, layoutParams)
+                onAdLoaded { flAd ->
+                    nativeBanner_flBanner2.addView(flAd)
                 }
             }.also { bannerLoaders["2"] = it }
         }
@@ -80,11 +74,8 @@ class NativeBannerFragment : BaseFragment() {
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
-                onAdLoaded { atNativeBannerView, layoutParams ->
-                    if (nativeBanner_flBanner3.childCount > 0) {
-                        nativeBanner_flBanner3.removeAllViews()
-                    }
-                    nativeBanner_flBanner3.addView(atNativeBannerView, layoutParams)
+                onAdLoaded { flAd ->
+                    nativeBanner_flBanner3.addView(flAd)
                 }
             }.also { bannerLoaders["3"] = it }
         }

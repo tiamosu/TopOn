@@ -62,6 +62,14 @@ class NativeAdLoader(
     //是否进行广告预加载
     private val isUsePreload by lazy { nativeAdConfig.isUsePreload }
 
+    //是否在广告加载完成进行播放
+    private var isShowAfterLoaded = false
+
+    //广告请求中
+    private var isRequesting = false
+
+    private var isDestroyed = false
+
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
         var liveData = NativeManager.loadedLiveDataMap[placementId]
@@ -71,14 +79,6 @@ class NativeAdLoader(
         }
         liveData
     }
-
-    //是否在广告加载完成进行播放
-    private var isShowAfterLoaded = false
-
-    //广告请求中
-    private var isRequesting = false
-
-    private var isDestroyed = false
 
     private val flAd by lazy {
         FrameLayout(activity).apply {
@@ -118,14 +118,6 @@ class NativeAdLoader(
                 show()
             }
         }
-    }
-
-    /**
-     * 广告请求
-     */
-    fun request(): NativeAdLoader {
-        makeAdRequest()
-        return this
     }
 
     /**
@@ -197,7 +189,6 @@ class NativeAdLoader(
      * 销毁当前的广告对象（执行之后该广告无法再进行展示）
      */
     private fun onDestroy() {
-        isDestroyed = true
         clearView()
         NativeManager.release(placementId)
         nativeAd?.destory()
@@ -253,6 +244,7 @@ class NativeAdLoader(
      * 广告视频播放开始（仅部分广告平台存在）
      */
     override fun onAdVideoStart(view: ATNativeAdView?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdVideoStart")
     }
 
@@ -260,6 +252,7 @@ class NativeAdLoader(
      * 广告视频播放进度（仅部分广告平台存在）
      */
     override fun onAdVideoProgress(view: ATNativeAdView?, progress: Int) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdVideoProgress")
     }
 
@@ -275,6 +268,7 @@ class NativeAdLoader(
      * 广告视频播放结束（仅部分广告平台存在）
      */
     override fun onAdVideoEnd(view: ATNativeAdView?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdVideoEnd")
     }
 
@@ -282,6 +276,7 @@ class NativeAdLoader(
      * 广告展示回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdImpressed")
         preLoadNative()
     }
@@ -308,6 +303,7 @@ class NativeAdLoader(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun onDestroy(owner: LifecycleOwner) {
+        isDestroyed = true
         owner.lifecycle.removeObserver(this)
         onDestroy()
     }

@@ -27,9 +27,6 @@ class HomeFragment : BaseFragment() {
                 val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
                 nativeAdLoader = TopOn.loadNativeAd(this, config) {
                     onNativeRenderSuc { flAd ->
-                        if (home_flAd.childCount > 0) {
-                            home_flAd.removeAllViews()
-                        }
                         home_flAd.addView(flAd)
                     }
                     onNativeAdLoadFail {

@@ -25,6 +25,7 @@ class NativeSplashFragment : BaseFragment() {
                 }
                 nativeSplash_flAd.addView(frameLayout)
             }
+            onAdSkip { true }
         }.show()
     }
 }

@@ -31,9 +31,6 @@ class NativeAdActivity : BaseActivity() {
                 val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
                 nativeLoader = TopOn.loadNativeAd(getContext(), config) {
                     onNativeRenderSuc { flAd ->
-                        if (nativeAd_flAd.childCount > 0) {
-                            nativeAd_flAd.removeAllViews()
-                        }
                         nativeAd_flAd.addView(flAd)
                     }
                     onNativeAdLoadFail {
@@ -50,9 +47,6 @@ class NativeAdActivity : BaseActivity() {
                 val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
                 nativeLoader = TopOn.loadNativeAd(getContext(), config) {
                     onNativeRenderSuc { flAd ->
-                        if (nativeAd_flAd2.childCount > 0) {
-                            nativeAd_flAd2.removeAllViews()
-                        }
                         nativeAd_flAd2.addView(flAd)
                     }
                     onNativeAdLoadFail {

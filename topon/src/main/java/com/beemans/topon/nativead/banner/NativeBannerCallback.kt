@@ -1,7 +1,6 @@
 package com.beemans.topon.nativead.banner
 
-import android.view.ViewGroup
-import com.anythink.nativead.banner.api.ATNativeBannerView
+import android.widget.FrameLayout
 
 /**
  * @author tiamosu
@@ -9,24 +8,18 @@ import com.anythink.nativead.banner.api.ATNativeBannerView
  */
 class NativeBannerCallback {
 
-    internal var onAdLoaded: ((
-        atNativeBannerView: ATNativeBannerView,
-        layoutParams: ViewGroup.LayoutParams,
-    ) -> Unit)? = null
+    internal var onAdLoaded: ((flAd: FrameLayout) -> Unit)? = null
 
     internal var onAdError: ((errorMsg: String?) -> Unit)? = null
 
     internal var onAdClick: (() -> Unit)? = null
 
+    internal var onAdClose: (() -> Boolean)? = null
+
     /**
      * 广告加载成功
      */
-    fun onAdLoaded(
-        onAdLoaded: (
-            atNativeBannerView: ATNativeBannerView,
-            layoutParams: ViewGroup.LayoutParams
-        ) -> Unit
-    ) {
+    fun onAdLoaded(onAdLoaded: (flAd: FrameLayout) -> Unit) {
         this.onAdLoaded = onAdLoaded
     }
 
@@ -42,5 +35,12 @@ class NativeBannerCallback {
      */
     fun onAdClick(onAdClick: () -> Unit) {
         this.onAdClick = onAdClick
+    }
+
+    /**
+     * 关闭广告
+     */
+    fun onAdClose(onAdClose: () -> Boolean) {
+        this.onAdClose = onAdClose
     }
 }

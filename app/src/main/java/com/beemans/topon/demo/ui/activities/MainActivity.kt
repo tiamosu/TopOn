@@ -12,7 +12,7 @@ class MainActivity : BaseActivity() {
     override fun getLayoutId() = R.layout.activity_main
 
     override fun doBusiness() {
-        val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
-        TopOn.loadNativeAd(this, config)
+//        val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
+//        TopOn.loadNativeAd(this, config)
     }
 }
