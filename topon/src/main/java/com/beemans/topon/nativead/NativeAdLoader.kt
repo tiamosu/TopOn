@@ -200,6 +200,7 @@ class NativeAdLoader(
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null && !isDestroyed) {
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
             atNative?.makeAdRequest()
+            return true
         }
         return isRequesting
     }

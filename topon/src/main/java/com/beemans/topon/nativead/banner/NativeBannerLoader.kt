@@ -24,7 +24,7 @@ class NativeBannerLoader(
     private val owner: LifecycleOwner,
     private val bannerConfig: NativeBannerConfig,
     private val bannerCallback: NativeBannerCallback.() -> Unit
-) : ATNativeBannerListener, LifecycleObserver {
+) : LifecycleObserver, ATNativeBannerListener {
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
@@ -106,6 +106,9 @@ class NativeBannerLoader(
         }
     }
 
+    /**
+     * 广告加载显示
+     */
     fun show(): NativeBannerLoader {
         isShowAfterLoaded = true
         isRequesting = NativeManager.isRequesting(placementId)

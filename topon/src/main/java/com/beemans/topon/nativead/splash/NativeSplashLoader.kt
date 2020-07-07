@@ -25,7 +25,7 @@ class NativeSplashLoader(
     private val owner: LifecycleOwner,
     private val splashConfig: NativeSplashConfig,
     private val splashCallback: NativeSplashCallback.() -> Unit
-) : ATNativeSplashListener, LifecycleObserver {
+) : LifecycleObserver, ATNativeSplashListener {
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
@@ -79,7 +79,7 @@ class NativeSplashLoader(
     }
 
     //配置广告宽高
-    private val localMap: MutableMap<String, Any> = mutableMapOf()
+    private val localMap: MutableMap<String, Any> by lazy { mutableMapOf() }
 
     init {
         initAd()
@@ -105,6 +105,9 @@ class NativeSplashLoader(
         }
     }
 
+    /**
+     * 广告加载显示
+     */
     fun show() {
         isShowAfterLoaded = true
         isRequesting = NativeManager.isRequesting(placementId)
