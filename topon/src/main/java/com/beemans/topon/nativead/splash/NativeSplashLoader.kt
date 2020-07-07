@@ -47,20 +47,13 @@ class NativeSplashLoader(
     private val nativeWidth by lazy { splashConfig.nativeWidth }
     private val nativeHeight by lazy { splashConfig.nativeHeight }
 
-    private val layoutParams by lazy {
-        if (nativeWidth != 0 && nativeHeight != 0) {
-            ViewGroup.LayoutParams(nativeWidth, nativeHeight)
-        } else {
-            ViewGroup.LayoutParams(
+    private val frameLayout by lazy {
+        FrameLayout(activity).apply {
+            val layoutParams = ViewGroup.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,
             )
-        }
-    }
-
-    private val frameLayout by lazy {
-        FrameLayout(activity).apply {
-            layoutParams = this@NativeSplashLoader.layoutParams
+            this.layoutParams = layoutParams
         }
     }
 
@@ -155,7 +148,7 @@ class NativeSplashLoader(
     override fun onAdLoaded() {
         Log.e(logTag, "onAdLoaded")
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke(frameLayout, layoutParams)
+        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke(frameLayout)
         loadedLiveData.value = true
     }
 

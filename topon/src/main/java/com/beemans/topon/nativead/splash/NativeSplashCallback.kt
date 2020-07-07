@@ -1,6 +1,5 @@
 package com.beemans.topon.nativead.splash
 
-import android.view.ViewGroup
 import android.widget.FrameLayout
 
 /**
@@ -9,10 +8,7 @@ import android.widget.FrameLayout
  */
 class NativeSplashCallback {
 
-    internal var onAdLoaded: ((
-        frameLayout: FrameLayout,
-        layoutParams: ViewGroup.LayoutParams
-    ) -> Unit)? = null
+    internal var onAdLoaded: ((frameLayout: FrameLayout) -> Unit)? = null
 
     internal var onNoAdError: ((errorMsg: String?) -> Unit)? = null
 
@@ -27,12 +23,7 @@ class NativeSplashCallback {
     /**
      * 广告加载成功
      */
-    fun onAdLoaded(
-        onAdLoaded: (
-            frameLayout: FrameLayout,
-            layoutParams: ViewGroup.LayoutParams
-        ) -> Unit
-    ) {
+    fun onAdLoaded(onAdLoaded: (frameLayout: FrameLayout) -> Unit) {
         this.onAdLoaded = onAdLoaded
     }
 

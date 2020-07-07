@@ -90,8 +90,8 @@ class NativeBannerLoader(
                 put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
             }.let(this::setLocalExtra)
 
-            setUnitId(placementId)
             setBannerConfig(bannerConfig.atNativeBannerConfig)
+            setUnitId(placementId)
             setAdListener(this@NativeBannerLoader)
         }
     }
@@ -115,27 +115,45 @@ class NativeBannerLoader(
         return this
     }
 
+    /**
+     * 广告刷新回调
+     */
     override fun onAutoRefresh(info: ATAdInfo?) {
         Log.e(logTag, "onAutoRefresh")
     }
 
+    /**
+     * 广告展示回调
+     */
     override fun onAdShow(info: ATAdInfo?) {
         Log.e(logTag, "onAdShow")
     }
 
+    /**
+     * 广告点击
+     */
     override fun onAdClick(info: ATAdInfo?) {
         Log.e(logTag, "onAdClick")
         NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke()
     }
 
+    /**
+     * 广告刷新失败回调
+     */
     override fun onAutoRefreshFail(errorMsg: String?) {
         Log.e(logTag, "onAutoRefreshFail")
     }
 
+    /**
+     * 广告关闭回调（部分广告平台有该回调），可在此处执行移除view的操作
+     */
     override fun onAdClose() {
         Log.e(logTag, "onAdClose")
     }
 
+    /**
+     * 广告加载成功回调
+     */
     override fun onAdLoaded() {
         Log.e(logTag, "onAdLoaded")
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
@@ -146,6 +164,9 @@ class NativeBannerLoader(
         loadedLiveData.value = true
     }
 
+    /**
+     * 广告加载失败回调
+     */
     override fun onAdError(errorMsg: String?) {
         Log.e(logTag, "onAdError:$errorMsg")
         isShowAfterLoaded = true
