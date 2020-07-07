@@ -3,6 +3,7 @@ package com.beemans.topon.nativead.splash
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
@@ -21,13 +22,27 @@ import com.tiamosu.fly.callback.EventLiveData
  * @date 2020/7/6.
  */
 class NativeSplashLoader(
-    private val activity: FragmentActivity,
+    private val owner: LifecycleOwner,
     private val splashConfig: NativeSplashConfig,
     private val splashCallback: NativeSplashCallback.() -> Unit
 ) : ATNativeSplashListener, LifecycleObserver {
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
+
+    private val activity by lazy {
+        when (owner) {
+            is Fragment -> {
+                owner.requireActivity()
+            }
+            is FragmentActivity -> {
+                owner
+            }
+            else -> {
+                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
+            }
+        }
+    }
 
     private val nativeWidth by lazy { splashConfig.nativeWidth }
     private val nativeHeight by lazy { splashConfig.nativeHeight }
@@ -74,7 +89,7 @@ class NativeSplashLoader(
     private val localMap: MutableMap<String, Any> = mutableMapOf()
 
     init {
-        activity.lifecycle.addObserver(this)
+        owner.lifecycle.addObserver(this)
         initNative()
         createObserve()
     }
@@ -89,7 +104,7 @@ class NativeSplashLoader(
     }
 
     private fun createObserve() {
-        loadedLiveData.observe(activity) {
+        loadedLiveData.observe(owner) {
             if (isShowAfterLoaded && !isDestroyed) {
                 show()
             }

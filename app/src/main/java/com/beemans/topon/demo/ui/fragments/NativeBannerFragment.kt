@@ -2,6 +2,7 @@ package com.beemans.topon.demo.ui.fragments
 
 import com.anythink.nativead.banner.api.ATNativeBannerConfig
 import com.anythink.nativead.banner.api.ATNativeBannerSize
+import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
@@ -15,9 +16,7 @@ import kotlinx.android.synthetic.main.fragment_native_banner.*
  * @date 2020/7/6.
  */
 class NativeBannerFragment : BaseFragment() {
-    private var nativeBannerLoader: NativeBannerLoader? = null
-    private var nativeBannerLoader2: NativeBannerLoader? = null
-    private var nativeBannerLoader3: NativeBannerLoader? = null
+    private val bannerLoaders: MutableMap<String, NativeBannerLoader> by lazy { mutableMapOf() }
 
     override fun getLayoutId() = R.layout.fragment_native_banner
 
@@ -30,62 +29,65 @@ class NativeBannerFragment : BaseFragment() {
     }
 
     private fun loadNativeBanner1() {
-        if (nativeBannerLoader == null) {
+        var loader = bannerLoaders["1"]
+        if (loader == null) {
             val bannerConfig = ATNativeBannerConfig().apply {
                 bannerSize = ATNativeBannerSize.BANNER_SIZE_320x50
                 isCloseBtnShow = true
             }
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 160.pt2px, 30.pt2px, bannerConfig)
-            nativeBannerLoader = NativeBannerLoader(this, config) {
+            loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { atNativeBannerView, layoutParams ->
                     if (nativeBanner_flBanner.childCount > 0) {
                         nativeBanner_flBanner.removeAllViews()
                     }
                     nativeBanner_flBanner.addView(atNativeBannerView, layoutParams)
                 }
-            }
+            }.also { bannerLoaders["1"] = it }
         }
-        nativeBannerLoader?.show()
+        loader.show()
     }
 
     private fun loadNativeBanner2() {
-        if (nativeBannerLoader2 == null) {
+        var loader = bannerLoaders["2"]
+        if (loader == null) {
             val bannerConfig = ATNativeBannerConfig().apply {
                 bannerSize = ATNativeBannerSize.BANNER_SIZE_640x150
                 isCloseBtnShow = true
             }
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 320.pt2px, 75.pt2px, bannerConfig)
-            nativeBannerLoader2 = NativeBannerLoader(this, config) {
+            loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { atNativeBannerView, layoutParams ->
                     if (nativeBanner_flBanner2.childCount > 0) {
                         nativeBanner_flBanner2.removeAllViews()
                     }
                     nativeBanner_flBanner2.addView(atNativeBannerView, layoutParams)
                 }
-            }
+            }.also { bannerLoaders["2"] = it }
         }
-        nativeBannerLoader2?.show()
+        loader.show()
     }
 
     private fun loadNativeBanner3() {
-        if (nativeBannerLoader3 == null) {
+        var loader = bannerLoaders["3"]
+        if (loader == null) {
             val bannerConfig = ATNativeBannerConfig().apply {
                 bannerSize = ATNativeBannerSize.BANNER_SIZE_AUTO
                 isCloseBtnShow = true
             }
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px, bannerConfig)
-            nativeBannerLoader3 = NativeBannerLoader(this, config) {
+            loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { atNativeBannerView, layoutParams ->
                     if (nativeBanner_flBanner3.childCount > 0) {
                         nativeBanner_flBanner3.removeAllViews()
                     }
                     nativeBanner_flBanner3.addView(atNativeBannerView, layoutParams)
                 }
-            }
+            }.also { bannerLoaders["3"] = it }
         }
-        nativeBannerLoader3?.show()
+        loader.show()
     }
 }

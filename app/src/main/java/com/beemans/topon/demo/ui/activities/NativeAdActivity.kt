@@ -2,11 +2,11 @@ package com.beemans.topon.demo.ui.activities
 
 import android.util.Log
 import com.beemans.topon.TopOn
-import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseActivity
 import com.beemans.topon.demo.constant.Constant
 import com.beemans.topon.demo.ext.pt2px
+import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.nativead.NativeAdLoader
 import kotlinx.android.synthetic.main.activity_native_ad.*
 
@@ -15,10 +15,9 @@ import kotlinx.android.synthetic.main.activity_native_ad.*
  * @date 2020/7/2.
  */
 class NativeAdActivity : BaseActivity() {
+    private val nativeAdLoaders: MutableMap<String, NativeAdLoader> by lazy { mutableMapOf() }
 
     override fun getLayoutId() = R.layout.activity_native_ad
-
-    private val nativeAdLoaders: MutableMap<String, NativeAdLoader> by lazy { mutableMapOf() }
 
     override fun initEvent() {
         nativeAd_adRequest.setOnClickListener {
