@@ -200,7 +200,7 @@ class NativeBannerLoader(
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy(owner: LifecycleOwner) {
+    private fun onDestroy(owner: LifecycleOwner) {
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         clearView()

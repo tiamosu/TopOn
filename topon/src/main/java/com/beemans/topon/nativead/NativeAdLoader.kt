@@ -292,17 +292,17 @@ class NativeAdLoader(
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    fun onResume(owner: LifecycleOwner) {
+    private fun onResume(owner: LifecycleOwner) {
         onResume()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    fun onPause(owner: LifecycleOwner) {
+    private fun onPause(owner: LifecycleOwner) {
         onPause()
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun onDestroy(owner: LifecycleOwner) {
+    private fun onDestroy(owner: LifecycleOwner) {
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         onDestroy()

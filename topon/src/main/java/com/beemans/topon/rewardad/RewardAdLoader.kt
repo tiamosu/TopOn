@@ -208,6 +208,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayEnd?.invoke()
+        preloadReward()
     }
 
     /**
