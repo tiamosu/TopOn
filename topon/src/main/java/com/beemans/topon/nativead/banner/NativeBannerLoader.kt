@@ -75,12 +75,11 @@ class NativeBannerLoader(
     }
 
     init {
-        owner.lifecycle.addObserver(this)
-        initNative()
+        initAd()
         createObserve()
     }
 
-    private fun initNative() {
+    private fun initAd() {
         atNativeBannerView.apply {
             //配置广告宽高
             val localMap: MutableMap<String, Any> = mutableMapOf()
@@ -98,6 +97,8 @@ class NativeBannerLoader(
     }
 
     private fun createObserve() {
+        owner.lifecycle.addObserver(this)
+
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded && !isDestroyed) {
                 show()

@@ -82,12 +82,11 @@ class NativeSplashLoader(
     private val localMap: MutableMap<String, Any> = mutableMapOf()
 
     init {
-        owner.lifecycle.addObserver(this)
-        initNative()
+        initAd()
         createObserve()
     }
 
-    private fun initNative() {
+    private fun initAd() {
         localMap.apply {
             put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
             put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
@@ -97,6 +96,8 @@ class NativeSplashLoader(
     }
 
     private fun createObserve() {
+        owner.lifecycle.addObserver(this)
+
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded && !isDestroyed) {
                 show()

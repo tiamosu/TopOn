@@ -85,12 +85,11 @@ class NativeAdLoader(
     }
 
     init {
-        owner.lifecycle.addObserver(this)
-        initNative()
+        initAd()
         createObserve()
     }
 
-    private fun initNative() {
+    private fun initAd() {
         if (atNative == null) {
             atNative = ATNative(activity, placementId, this).apply {
                 //配置广告宽高
@@ -108,6 +107,8 @@ class NativeAdLoader(
     }
 
     private fun createObserve() {
+        owner.lifecycle.addObserver(this)
+
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded && !isDestroyed) {
                 show()
