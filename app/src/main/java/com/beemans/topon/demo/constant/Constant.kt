@@ -15,4 +15,5 @@ object Constant {
     const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
     const val NATIVE_AD_ID = "b5c2c97629da0d"
     const val NATIVE_AD_ID2 = "b5d148f9f2e47d"
+    const val REWARD_ID = "b5b728e7a08cd4"
 }

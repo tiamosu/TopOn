@@ -218,8 +218,8 @@ class NativeAdLoader(
      * 广告加载失败，可通过AdError.printStackTrace()获取全部错误信息
      */
     override fun onNativeAdLoadFail(error: AdError?) {
-        if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
+        if (isDestroyed) return
         isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeAdCallback().apply(nativeAdCallback).onNativeAdLoadFail?.invoke(error)
@@ -229,8 +229,8 @@ class NativeAdLoader(
      * 广告加载成功
      */
     override fun onNativeAdLoaded() {
-        if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoaded")
+        if (isDestroyed) return
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeAdCallback().apply(nativeAdCallback).onNativeAdLoaded?.invoke()
 
@@ -244,16 +244,16 @@ class NativeAdLoader(
      * 广告视频播放开始（仅部分广告平台存在）
      */
     override fun onAdVideoStart(view: ATNativeAdView?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdVideoStart")
+        if (isDestroyed) return
     }
 
     /**
      * 广告视频播放进度（仅部分广告平台存在）
      */
     override fun onAdVideoProgress(view: ATNativeAdView?, progress: Int) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdVideoProgress")
+        if (isDestroyed) return
     }
 
     /**
@@ -268,16 +268,16 @@ class NativeAdLoader(
      * 广告视频播放结束（仅部分广告平台存在）
      */
     override fun onAdVideoEnd(view: ATNativeAdView?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdVideoEnd")
+        if (isDestroyed) return
     }
 
     /**
      * 广告展示回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdImpressed")
+        if (isDestroyed) return
         preLoadNative()
     }
 

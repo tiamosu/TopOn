@@ -135,8 +135,8 @@ class NativeBannerLoader(
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
-        if (isDestroyed) return
         Log.e(logTag, "onAdLoaded")
+        if (isDestroyed) return
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
 
         clearView()
@@ -149,8 +149,8 @@ class NativeBannerLoader(
      * 广告加载失败回调
      */
     override fun onAdError(errorMsg: String?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdError:$errorMsg")
+        if (isDestroyed) return
         isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
@@ -160,16 +160,16 @@ class NativeBannerLoader(
      * 广告刷新回调
      */
     override fun onAutoRefresh(info: ATAdInfo?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAutoRefresh")
+        if (isDestroyed) return
     }
 
     /**
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdShow")
+        if (isDestroyed) return
     }
 
     /**
@@ -184,8 +184,8 @@ class NativeBannerLoader(
      * 广告刷新失败回调
      */
     override fun onAutoRefreshFail(errorMsg: String?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAutoRefreshFail")
+        if (isDestroyed) return
     }
 
     /**

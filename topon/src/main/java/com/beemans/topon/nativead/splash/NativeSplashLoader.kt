@@ -56,7 +56,7 @@ class NativeSplashLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告正在播放中
+    //广告正在播放
     private var isAdPlaying = false
 
     private var isDestroyed = false
@@ -149,8 +149,8 @@ class NativeSplashLoader(
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
-        if (isDestroyed) return
         Log.e(logTag, "onAdLoaded")
+        if (isDestroyed) return
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
 
         clearView()
@@ -163,8 +163,8 @@ class NativeSplashLoader(
      * 广告加载失败回调
      */
     override fun onNoAdError(errorMsg: String?) {
-        if (isDestroyed) return
         Log.e(logTag, "onNoAdError:$errorMsg")
+        if (isDestroyed) return
         isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeSplashCallback().apply(splashCallback).onNoAdError?.invoke(errorMsg)
@@ -185,8 +185,8 @@ class NativeSplashLoader(
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdShow")
+        if (isDestroyed) return
         isAdPlaying = true
     }
 
@@ -202,8 +202,8 @@ class NativeSplashLoader(
      * 广告的倒计时回调，用于倒计时秒数的刷新，返回单位：毫秒
      */
     override fun onAdTick(tickTime: Long) {
-        if (isDestroyed) return
         Log.e(logTag, "onAdTick")
+        if (isDestroyed) return
         NativeSplashCallback().apply(splashCallback).onAdTick?.invoke(tickTime)
     }
 
@@ -211,8 +211,8 @@ class NativeSplashLoader(
      * 广告的倒计时结束，可在这里关闭NativeSplash广告的Activity
      */
     override fun onAdTimeOver() {
-        if (isDestroyed) return
         Log.e(logTag, "onAdTimeOver")
+        if (isDestroyed) return
         isAdPlaying = false
         NativeSplashCallback().apply(splashCallback).onAdTimeOver?.invoke()
     }
