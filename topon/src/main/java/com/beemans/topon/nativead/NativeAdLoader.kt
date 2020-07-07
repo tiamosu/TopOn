@@ -79,10 +79,7 @@ class NativeAdLoader(
 
     private var isDestroyed = false
 
-    private val layoutParams by lazy {
-        val height = if (nativeHeight != 0) nativeHeight else ViewGroup.LayoutParams.WRAP_CONTENT
-        ViewGroup.LayoutParams(nativeWidth, height)
-    }
+    private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
     init {
         initAd()

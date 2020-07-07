@@ -48,10 +48,7 @@ class NativeBannerLoader(
     private val nativeWidth by lazy { bannerConfig.nativeWidth }
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
 
-    private val layoutParams by lazy {
-        val height = if (nativeHeight != 0) nativeHeight else ViewGroup.LayoutParams.WRAP_CONTENT
-        ViewGroup.LayoutParams(nativeWidth, height)
-    }
+    private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
     //广告正在进行请求
     private var isRequesting = false

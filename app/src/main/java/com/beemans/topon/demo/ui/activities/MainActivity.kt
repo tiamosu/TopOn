@@ -13,6 +13,6 @@ class MainActivity : BaseActivity() {
 
     override fun doBusiness() {
         val config = NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px)
-        TopOn.loadNativeAd(getContext(), config)
+        TopOn.loadNativeAd(this, config)
     }
 }
