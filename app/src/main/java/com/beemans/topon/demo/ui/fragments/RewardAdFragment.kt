@@ -1,5 +1,6 @@
 package com.beemans.topon.demo.ui.fragments
 
+import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
@@ -19,8 +20,8 @@ class RewardAdFragment : BaseFragment() {
     override fun initEvent() {
         rewardAd_btnLoad.setOnClickListener {
             if (rewardAdLoader == null) {
-                val config = RewardAdConfig(Constant.REWARD_ID)
-                rewardAdLoader = RewardAdLoader(this, config) {}
+                val config = RewardAdConfig(Constant.REWARD_ID, requestTimeOut = 200)
+                rewardAdLoader = TopOn.loadRewardAd(this, config) {}
             }
             rewardAdLoader?.show()
         }

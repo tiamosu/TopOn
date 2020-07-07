@@ -8,6 +8,9 @@ import com.beemans.topon.nativead.banner.NativeBannerLoader
 import com.beemans.topon.nativead.splash.NativeSplashCallback
 import com.beemans.topon.nativead.splash.NativeSplashConfig
 import com.beemans.topon.nativead.splash.NativeSplashLoader
+import com.beemans.topon.rewardad.RewardAdCallback
+import com.beemans.topon.rewardad.RewardAdConfig
+import com.beemans.topon.rewardad.RewardAdLoader
 
 /**
  * @author tiamosu
@@ -38,5 +41,13 @@ object TopOn {
         splashCallback: NativeSplashCallback.() -> Unit
     ): NativeSplashLoader {
         return NativeSplashLoader(owner, splashConfig, splashCallback)
+    }
+
+    fun loadRewardAd(
+        owner: LifecycleOwner,
+        rewardAdConfig: RewardAdConfig,
+        rewardAdCallback: RewardAdCallback.() -> Unit
+    ): RewardAdLoader {
+        return RewardAdLoader(owner, rewardAdConfig, rewardAdCallback)
     }
 }

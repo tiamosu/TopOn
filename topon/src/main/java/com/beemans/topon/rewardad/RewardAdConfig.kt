@@ -10,5 +10,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class RewardAdConfig(
     val placementId: String,
-    val isUsePreload: Boolean = true
+    val isUsePreload: Boolean = true,
+    val requestTimeOut: Long = 3000,    //请求超时时间
 ) : Parcelable

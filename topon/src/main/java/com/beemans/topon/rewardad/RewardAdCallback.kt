@@ -26,6 +26,8 @@ class RewardAdCallback {
 
     internal var onRewardedVideoAdPlayClicked: (() -> Unit)? = null
 
+    internal var onRewardedVideoAdTimeOut: (() -> Unit)? = null
+
     /**
      * 广告渲染成功
      */
@@ -87,5 +89,12 @@ class RewardAdCallback {
      */
     fun onRewardedVideoAdPlayClicked(onRewardedVideoAdPlayClicked: () -> Unit) {
         this.onRewardedVideoAdPlayClicked = onRewardedVideoAdPlayClicked
+    }
+
+    /**
+     * 广告加载超时
+     */
+    fun onRewardedVideoAdTimeOut(onRewardedVideoAdTimeOut: () -> Unit) {
+        this.onRewardedVideoAdTimeOut = onRewardedVideoAdTimeOut
     }
 }

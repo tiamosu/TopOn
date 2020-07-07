@@ -1,5 +1,7 @@
 package com.beemans.topon.rewardad
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -25,6 +27,7 @@ class RewardAdLoader(
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     private val activity by lazy {
         when (owner) {
@@ -48,6 +51,9 @@ class RewardAdLoader(
     //是否进行广告预加载
     private val isUsePreload by lazy { rewardAdConfig.isUsePreload }
 
+    //请求超时时间
+    private val requestTimeOut by lazy { rewardAdConfig.requestTimeOut }
+
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
         var liveData = RewardAdManager.loadedLiveDataMap[placementId]
@@ -66,6 +72,9 @@ class RewardAdLoader(
 
     //广告正在播放
     private var isAdPlaying = false
+
+    //是否超时
+    private var isTimeOut = false
 
     private var isDestroyed = false
 
@@ -87,7 +96,7 @@ class RewardAdLoader(
         owner.lifecycle.addObserver(this)
 
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded && !isDestroyed) {
+            if (isShowAfterLoaded && !isDestroyed && !isTimeOut) {
                 show()
             }
         }
@@ -110,6 +119,11 @@ class RewardAdLoader(
         if (!isRequesting && atRewardVideoAd?.isAdReady == false && !isDestroyed && !isAdPlaying) {
             RewardAdManager.updateRequestStatus(placementId, loaderTag, true)
             atRewardVideoAd?.load()
+
+            Log.e(logTag, "load:$requestTimeOut")
+            handler.postDelayed({
+                onRewardedVideoAdTimeOut()
+            }, requestTimeOut)
             return true
         }
         return isRequesting || isAdPlaying
@@ -123,6 +137,7 @@ class RewardAdLoader(
         if (load()) {
             return this
         }
+        isTimeOut = false
         isShowAfterLoaded = false
         atRewardVideoAd?.show(activity)
         rewardRenderSuc()
@@ -141,7 +156,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdLoaded() {
         Log.e(logTag, "onRewardedVideoAdLoaded")
-        if (isDestroyed) return
+        if (isDestroyed || isTimeOut) return
         RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
         RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdLoaded?.invoke()
 
@@ -149,6 +164,18 @@ class RewardAdLoader(
             show()
         }
         loadedLiveData.value = true
+    }
+
+    /**
+     * 广告加载超时
+     */
+    private fun onRewardedVideoAdTimeOut() {
+        Log.e(logTag, "onRewardedVideoAdTimeOut")
+        if (isDestroyed) return
+        isTimeOut = true
+        isShowAfterLoaded = true
+        RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
+        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdTimeOut?.invoke()
     }
 
     /**
@@ -224,6 +251,7 @@ class RewardAdLoader(
     private fun onDestroy(owner: LifecycleOwner) {
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        handler.removeCallbacksAndMessages(null)
         RewardAdManager.release(placementId)
     }
 }
