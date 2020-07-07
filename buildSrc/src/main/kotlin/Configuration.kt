@@ -11,8 +11,8 @@ object Android {
 }
 
 object Versions {
-    const val kotlin = "1.4-M2"
-    const val fly = "1.3.2"
+    const val kotlin = "1.4-M3"
+    const val fly = "1.3.3"
     const val leakcanary = "2.4"
 }
 
