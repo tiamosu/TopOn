@@ -76,11 +76,7 @@ class BannerLoader(
         liveData
     }
 
-    private val flAd by lazy {
-        FrameLayout(activity).apply {
-            layoutParams = this@BannerLoader.layoutParams
-        }
-    }
+    private val flAd by lazy { FrameLayout(activity) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
