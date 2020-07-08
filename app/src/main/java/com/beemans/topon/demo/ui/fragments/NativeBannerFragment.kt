@@ -10,6 +10,7 @@ import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.nativead.banner.NativeBannerConfig
 import com.beemans.topon.nativead.banner.NativeBannerLoader
 import kotlinx.android.synthetic.main.fragment_native_banner.*
+import kotlin.math.roundToInt
 
 /**
  * @author tiamosu
@@ -35,8 +36,10 @@ class NativeBannerFragment : BaseFragment() {
                 bannerSize = ATNativeBannerSize.BANNER_SIZE_320x50
                 isCloseBtnShow = true
             }
+            val width = 160.pt2px
+            val height = ((50 / 320f) * width).roundToInt()
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, 160.pt2px, 35.pt2px, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { flAd ->
                     nativeBanner_flBanner.addView(flAd)
@@ -53,8 +56,10 @@ class NativeBannerFragment : BaseFragment() {
                 bannerSize = ATNativeBannerSize.BANNER_SIZE_640x150
                 isCloseBtnShow = true
             }
+            val width = 320.pt2px
+            val height = ((150 / 640f) * width).roundToInt()
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, 320.pt2px, 70.pt2px, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { flAd ->
                     nativeBanner_flBanner2.addView(flAd)

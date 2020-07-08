@@ -136,7 +136,12 @@ class InterstitialAdLoader(
         }
         isTimeOut = false
         isShowAfterLoaded = false
-        atInterstitial?.show(activity)
+
+        if (interstitialAdConfig.scenario.isNotBlank()) {
+            atInterstitial?.show(activity, interstitialAdConfig.scenario)
+        } else {
+            atInterstitial?.show(activity)
+        }
         adRenderSuc()
         return this
     }
@@ -245,6 +250,8 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdVideoError:${error?.printStackTrace()}")
         if (isDestroyed) return
         isAdPlaying = false
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdVideoError?.invoke()
+        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdVideoError?.invoke(
+            error
+        )
     }
 }

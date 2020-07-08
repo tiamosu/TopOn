@@ -26,7 +26,7 @@ class InterstitialAdCallback {
 
     internal var onInterstitialAdVideoEnd: (() -> Unit)? = null
 
-    internal var onInterstitialAdVideoError: (() -> Unit)? = null
+    internal var onInterstitialAdVideoError: ((error: AdError?) -> Unit)? = null
 
     /**
      * 广告渲染成功
@@ -94,7 +94,7 @@ class InterstitialAdCallback {
     /**
      * 视频广告播放失败回调
      */
-    fun onInterstitialAdVideoError(onInterstitialAdVideoError: () -> Unit) {
+    fun onInterstitialAdVideoError(onInterstitialAdVideoError: (error: AdError?) -> Unit) {
         this.onInterstitialAdVideoError = onInterstitialAdVideoError
     }
 }

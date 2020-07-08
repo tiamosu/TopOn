@@ -140,7 +140,12 @@ class RewardAdLoader(
         }
         isTimeOut = false
         isShowAfterLoaded = false
-        atRewardVideoAd?.show(activity)
+
+        if (rewardAdConfig.scenario.isNotBlank()) {
+            atRewardVideoAd?.show(activity, rewardAdConfig.scenario)
+        } else {
+            atRewardVideoAd?.show(activity)
+        }
         adRenderSuc()
         return this
     }
