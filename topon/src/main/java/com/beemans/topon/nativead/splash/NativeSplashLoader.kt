@@ -188,6 +188,7 @@ class NativeSplashLoader(
         Log.e(logTag, "onAdShow:${info.toString()}")
         if (isDestroyed) return
         isAdPlaying = true
+        NativeSplashCallback().apply(splashCallback).onAdShow?.invoke(info)
     }
 
     /**
@@ -195,7 +196,7 @@ class NativeSplashLoader(
      */
     override fun onAdClick(info: ATAdInfo?) {
         Log.e(logTag, "onAdClick:${info.toString()}")
-        NativeSplashCallback().apply(splashCallback).onAdClick?.invoke()
+        NativeSplashCallback().apply(splashCallback).onAdClick?.invoke(info)
     }
 
     /**

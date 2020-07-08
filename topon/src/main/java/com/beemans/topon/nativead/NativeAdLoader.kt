@@ -308,5 +308,8 @@ class NativeAdLoader(
         clearView()
         NativeManager.release(placementId)
         nativeAd?.destory()
+        nativeAd?.setDislikeCallbackListener(null)
+        atNative = null
+        nativeAd = null
     }
 }

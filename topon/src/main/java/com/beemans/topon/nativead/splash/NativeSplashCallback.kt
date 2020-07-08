@@ -1,6 +1,7 @@
 package com.beemans.topon.nativead.splash
 
 import android.widget.FrameLayout
+import com.anythink.core.api.ATAdInfo
 
 /**
  * @author tiamosu
@@ -14,7 +15,9 @@ class NativeSplashCallback {
 
     internal var onAdSkip: (() -> Boolean)? = null
 
-    internal var onAdClick: (() -> Unit)? = null
+    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+
+    internal var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
     internal var onAdTick: ((tickTime: Long) -> Unit)? = null
 
@@ -42,9 +45,16 @@ class NativeSplashCallback {
     }
 
     /**
+     * 广告展示回调
+     */
+    fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
+        this.onAdShow = onAdShow
+    }
+
+    /**
      * 点击广告
      */
-    fun onAdClick(onAdClick: () -> Unit) {
+    fun onAdClick(onAdClick: (info: ATAdInfo?) -> Unit) {
         this.onAdClick = onAdClick
     }
 

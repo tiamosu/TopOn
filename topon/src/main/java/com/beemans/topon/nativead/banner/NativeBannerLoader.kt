@@ -162,6 +162,7 @@ class NativeBannerLoader(
     override fun onAutoRefresh(info: ATAdInfo?) {
         Log.e(logTag, "onAutoRefresh:${info.toString()}")
         if (isDestroyed) return
+        NativeBannerCallback().apply(bannerCallback).onAutoRefresh?.invoke(info)
     }
 
     /**
@@ -170,6 +171,7 @@ class NativeBannerLoader(
     override fun onAdShow(info: ATAdInfo?) {
         Log.e(logTag, "onAdShow:${info.toString()}")
         if (isDestroyed) return
+        NativeBannerCallback().apply(bannerCallback).onAdShow?.invoke(info)
     }
 
     /**
@@ -177,7 +179,7 @@ class NativeBannerLoader(
      */
     override fun onAdClick(info: ATAdInfo?) {
         Log.e(logTag, "onAdClick:${info.toString()}")
-        NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke()
+        NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke(info)
     }
 
     /**
@@ -186,6 +188,7 @@ class NativeBannerLoader(
     override fun onAutoRefreshFail(errorMsg: String?) {
         Log.e(logTag, "onAutoRefreshFail:$errorMsg")
         if (isDestroyed) return
+        NativeBannerCallback().apply(bannerCallback).onAutoRefreshFail?.invoke(errorMsg)
     }
 
     /**

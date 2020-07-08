@@ -1,6 +1,7 @@
 package com.beemans.topon.nativead.banner
 
 import android.widget.FrameLayout
+import com.anythink.core.api.ATAdInfo
 
 /**
  * @author tiamosu
@@ -12,7 +13,13 @@ class NativeBannerCallback {
 
     internal var onAdError: ((errorMsg: String?) -> Unit)? = null
 
-    internal var onAdClick: (() -> Unit)? = null
+    internal var onAutoRefresh: ((info: ATAdInfo?) -> Unit)? = null
+
+    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+
+    internal var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
+
+    internal var onAutoRefreshFail: ((errorMsg: String?) -> Unit)? = null
 
     internal var onAdClose: (() -> Boolean)? = null
 
@@ -31,10 +38,31 @@ class NativeBannerCallback {
     }
 
     /**
+     * 广告刷新回调
+     */
+    fun onAutoRefresh(onAutoRefresh: (info: ATAdInfo?) -> Unit) {
+        this.onAutoRefresh = onAutoRefresh
+    }
+
+    /**
+     * 广告展示回调
+     */
+    fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
+        this.onAdShow = onAdShow
+    }
+
+    /**
      * 点击广告
      */
-    fun onAdClick(onAdClick: () -> Unit) {
+    fun onAdClick(onAdClick: (info: ATAdInfo?) -> Unit) {
         this.onAdClick = onAdClick
+    }
+
+    /**
+     * 广告刷新失败回调
+     */
+    fun onAutoRefreshFail(onAutoRefreshFail: (errorMsg: String?) -> Unit) {
+        this.onAutoRefreshFail = onAutoRefreshFail
     }
 
     /**
