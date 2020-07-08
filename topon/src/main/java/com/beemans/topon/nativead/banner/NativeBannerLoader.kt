@@ -27,7 +27,7 @@ class NativeBannerLoader(
     private val bannerCallback: NativeBannerCallback.() -> Unit
 ) : LifecycleObserver, ATNativeBannerListener {
 
-    private val atNativeBannerView by lazy { ATNativeBannerView(activity) }
+    private var atNativeBannerView: ATNativeBannerView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
@@ -81,19 +81,21 @@ class NativeBannerLoader(
     }
 
     private fun initAd() {
-        atNativeBannerView.apply {
-            //配置广告宽高
-            val localMap: MutableMap<String, Any> = mutableMapOf()
-            localMap.apply {
-                put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
-                put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
-                put(MintegralATConst.AUTO_RENDER_NATIVE_WIDTH, nativeWidth)
-                put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
-            }.let(this::setLocalExtra)
+        if (atNativeBannerView == null) {
+            atNativeBannerView = ATNativeBannerView(activity).apply {
+                //配置广告宽高
+                val localMap: MutableMap<String, Any> = mutableMapOf()
+                localMap.apply {
+                    put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
+                    put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
+                    put(MintegralATConst.AUTO_RENDER_NATIVE_WIDTH, nativeWidth)
+                    put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
+                }.let(this::setLocalExtra)
 
-            setBannerConfig(bannerConfig.atBannerConfig)
-            setUnitId(placementId)
-            setAdListener(this@NativeBannerLoader)
+                setBannerConfig(bannerConfig.atBannerConfig)
+                setUnitId(placementId)
+                setAdListener(this@NativeBannerLoader)
+            }
         }
     }
 
@@ -116,7 +118,7 @@ class NativeBannerLoader(
         if (!isRequesting) {
             isShowAfterLoaded = false
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
-            atNativeBannerView.loadAd(null)
+            atNativeBannerView?.loadAd(null)
         }
         return this
     }
@@ -154,15 +156,6 @@ class NativeBannerLoader(
     }
 
     /**
-     * 广告刷新回调
-     */
-    override fun onAutoRefresh(info: ATAdInfo?) {
-        Log.e(logTag, "onAutoRefresh:${info.toString()}")
-        if (isDestroyed) return
-        NativeBannerCallback().apply(bannerCallback).onAutoRefresh?.invoke(info)
-    }
-
-    /**
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
@@ -172,11 +165,12 @@ class NativeBannerLoader(
     }
 
     /**
-     * 广告点击
+     * 广告刷新回调
      */
-    override fun onAdClick(info: ATAdInfo?) {
-        Log.e(logTag, "onAdClick:${info.toString()}")
-        NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke(info)
+    override fun onAutoRefresh(info: ATAdInfo?) {
+        Log.e(logTag, "onAutoRefresh:${info.toString()}")
+        if (isDestroyed) return
+        NativeBannerCallback().apply(bannerCallback).onAutoRefresh?.invoke(info)
     }
 
     /**
@@ -186,6 +180,14 @@ class NativeBannerLoader(
         Log.e(logTag, "onAutoRefreshFail:$errorMsg")
         if (isDestroyed) return
         NativeBannerCallback().apply(bannerCallback).onAutoRefreshFail?.invoke(errorMsg)
+    }
+
+    /**
+     * 广告点击
+     */
+    override fun onAdClick(info: ATAdInfo?) {
+        Log.e(logTag, "onAdClick:${info.toString()}")
+        NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke(info)
     }
 
     /**
@@ -206,5 +208,6 @@ class NativeBannerLoader(
         owner.lifecycle.removeObserver(this)
         clearView()
         NativeManager.release(placementId)
+        atNativeBannerView = null
     }
 }

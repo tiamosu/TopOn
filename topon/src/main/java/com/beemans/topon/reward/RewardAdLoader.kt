@@ -264,5 +264,6 @@ class RewardAdLoader(
         owner.lifecycle.removeObserver(this)
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.release(placementId)
+        atRewardVideoAd = null
     }
 }

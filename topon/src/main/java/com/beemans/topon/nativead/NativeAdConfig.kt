@@ -9,8 +9,8 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class NativeAdConfig(
-    var placementId: String,            //广告位ID
-    var nativeWidth: Int,               //广告视图宽度
-    var nativeHeight: Int,              //广告视图高度
-    var isUsePreload: Boolean = true    //是否进行广告预加载
+    val placementId: String,            //广告位ID
+    val nativeWidth: Int,               //广告视图宽度
+    val nativeHeight: Int,              //广告视图高度
+    val isUsePreload: Boolean = true    //是否进行广告预加载
 ) : Parcelable
