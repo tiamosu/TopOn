@@ -1,4 +1,4 @@
-package com.beemans.topon.rewardad
+package com.beemans.topon.reward
 
 import android.os.Handler
 import android.os.Looper

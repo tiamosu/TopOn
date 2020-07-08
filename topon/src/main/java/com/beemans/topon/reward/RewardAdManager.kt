@@ -1,4 +1,4 @@
-package com.beemans.topon.rewardad
+package com.beemans.topon.reward
 
 import com.tiamosu.fly.callback.EventLiveData
 

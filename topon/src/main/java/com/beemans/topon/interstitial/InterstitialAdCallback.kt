@@ -1,4 +1,4 @@
-package com.beemans.topon.interstitialad
+package com.beemans.topon.interstitial
 
 import com.anythink.core.api.AdError
 

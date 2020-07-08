@@ -14,7 +14,7 @@
     <com.beemans.topon.demo.ui.view.tabview.TabBarLayout
         android:id="@+id/main_tabBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="45pt"
         android:background="@color/colorPrimary">
 
         <com.beemans.topon.demo.ui.view.tabview.TabBarItem
@@ -24,7 +24,7 @@
             app:tbi_text="信息流"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="12dp" />
+            app:tbi_textSize="10pt" />
 
         <com.beemans.topon.demo.ui.view.tabview.TabBarItem
             android:layout_width="0pt"
@@ -33,7 +33,7 @@
             app:tbi_text="信息流-Banner"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="12dp" />
+            app:tbi_textSize="10pt" />
 
         <com.beemans.topon.demo.ui.view.tabview.TabBarItem
             android:layout_width="0pt"
@@ -42,7 +42,7 @@
             app:tbi_text="信息流-Splash"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="12dp" />
+            app:tbi_textSize="10pt" />
 
         <com.beemans.topon.demo.ui.view.tabview.TabBarItem
             android:layout_width="0pt"
@@ -51,7 +51,7 @@
             app:tbi_text="激励视频"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="12dp" />
+            app:tbi_textSize="10pt" />
 
         <com.beemans.topon.demo.ui.view.tabview.TabBarItem
             android:layout_width="0pt"
@@ -60,6 +60,6 @@
             app:tbi_text="插屏"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="12dp" />
+            app:tbi_textSize="10pt" />
     </com.beemans.topon.demo.ui.view.tabview.TabBarLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

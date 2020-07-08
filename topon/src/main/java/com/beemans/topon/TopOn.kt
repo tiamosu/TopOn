@@ -1,9 +1,9 @@
 package com.beemans.topon
 
 import androidx.lifecycle.LifecycleOwner
-import com.beemans.topon.interstitialad.InterstitialAdCallback
-import com.beemans.topon.interstitialad.InterstitialAdConfig
-import com.beemans.topon.interstitialad.InterstitialAdLoader
+import com.beemans.topon.interstitial.InterstitialAdCallback
+import com.beemans.topon.interstitial.InterstitialAdConfig
+import com.beemans.topon.interstitial.InterstitialAdLoader
 import com.beemans.topon.nativead.*
 import com.beemans.topon.nativead.banner.NativeBannerCallback
 import com.beemans.topon.nativead.banner.NativeBannerConfig
@@ -11,9 +11,9 @@ import com.beemans.topon.nativead.banner.NativeBannerLoader
 import com.beemans.topon.nativead.splash.NativeSplashCallback
 import com.beemans.topon.nativead.splash.NativeSplashConfig
 import com.beemans.topon.nativead.splash.NativeSplashLoader
-import com.beemans.topon.rewardad.RewardAdCallback
-import com.beemans.topon.rewardad.RewardAdConfig
-import com.beemans.topon.rewardad.RewardAdLoader
+import com.beemans.topon.reward.RewardAdCallback
+import com.beemans.topon.reward.RewardAdConfig
+import com.beemans.topon.reward.RewardAdLoader
 
 /**
  * @author tiamosu

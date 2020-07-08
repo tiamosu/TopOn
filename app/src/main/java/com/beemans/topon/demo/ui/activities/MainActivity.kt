@@ -5,9 +5,9 @@ import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseActivity
 import com.beemans.topon.demo.constant.Constant
 import com.beemans.topon.demo.ext.pt2px
-import com.beemans.topon.interstitialad.InterstitialAdConfig
+import com.beemans.topon.interstitial.InterstitialAdConfig
 import com.beemans.topon.nativead.NativeAdConfig
-import com.beemans.topon.rewardad.RewardAdConfig
+import com.beemans.topon.reward.RewardAdConfig
 
 class MainActivity : BaseActivity() {
 

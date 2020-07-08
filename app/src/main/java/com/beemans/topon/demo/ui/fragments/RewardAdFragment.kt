@@ -4,8 +4,8 @@ import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
-import com.beemans.topon.rewardad.RewardAdConfig
-import com.beemans.topon.rewardad.RewardAdLoader
+import com.beemans.topon.reward.RewardAdConfig
+import com.beemans.topon.reward.RewardAdLoader
 import kotlinx.android.synthetic.main.fragment_reward_ad.*
 
 /**
