@@ -1,6 +1,9 @@
 package com.beemans.topon
 
 import androidx.lifecycle.LifecycleOwner
+import com.beemans.topon.banner.BannerCallback
+import com.beemans.topon.banner.BannerConfig
+import com.beemans.topon.banner.BannerLoader
 import com.beemans.topon.interstitial.InterstitialAdCallback
 import com.beemans.topon.interstitial.InterstitialAdConfig
 import com.beemans.topon.interstitial.InterstitialAdLoader
@@ -75,5 +78,16 @@ object TopOn {
         interstitialAdCallback: InterstitialAdCallback.() -> Unit = {}
     ): InterstitialAdLoader {
         return InterstitialAdLoader(owner, interstitialAdConfig, interstitialAdCallback)
+    }
+
+    /**
+     * 加载横幅
+     */
+    fun loadBanner(
+        owner: LifecycleOwner,
+        bannerConfig: BannerConfig,
+        bannerCallback: BannerCallback.() -> Unit = {}
+    ): BannerLoader {
+        return BannerLoader(owner, bannerConfig, bannerCallback)
     }
 }

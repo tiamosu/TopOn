@@ -160,7 +160,6 @@ class NativeAdLoader(
     private fun adRenderSuc() {
         clearView()
         flAd.addView(atNativeAdView, layoutParams)
-
         NativeAdCallback().apply(nativeAdCallback).onNativeRenderSuc?.invoke(flAd)
     }
 
@@ -169,30 +168,6 @@ class NativeAdLoader(
         if (flAd.childCount > 0) {
             flAd.removeAllViews()
         }
-    }
-
-    /**
-     * 在Activity的onResume时调用（主要针对部分广告平台的视频广告）
-     */
-    private fun onResume() {
-        nativeAd?.onResume()
-    }
-
-    /**
-     * 在Activity的onPause时调用（主要针对部分广告平台的视频广告）
-     */
-    private fun onPause() {
-        nativeAd?.onPause()
-    }
-
-    /**
-     * 移除广告对view的绑定
-     * 销毁当前的广告对象（执行之后该广告无法再进行展示）
-     */
-    private fun onDestroy() {
-        clearView()
-        NativeManager.release(placementId)
-        nativeAd?.destory()
     }
 
     /**
@@ -247,22 +222,7 @@ class NativeAdLoader(
     override fun onAdVideoStart(view: ATNativeAdView?) {
         Log.e(logTag, "onAdVideoStart")
         if (isDestroyed) return
-    }
-
-    /**
-     * 广告视频播放进度（仅部分广告平台存在）
-     */
-    override fun onAdVideoProgress(view: ATNativeAdView?, progress: Int) {
-        Log.e(logTag, "onAdVideoProgress")
-        if (isDestroyed) return
-    }
-
-    /**
-     * 广告点击回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
-     */
-    override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(logTag, "onAdClicked:${info.toString()}")
-        NativeAdCallback().apply(nativeAdCallback).onNativeClicked?.invoke()
+        NativeAdCallback().apply(nativeAdCallback).onAdVideoStart?.invoke(view)
     }
 
     /**
@@ -271,6 +231,24 @@ class NativeAdLoader(
     override fun onAdVideoEnd(view: ATNativeAdView?) {
         Log.e(logTag, "onAdVideoEnd")
         if (isDestroyed) return
+        NativeAdCallback().apply(nativeAdCallback).onAdVideoEnd?.invoke(view)
+    }
+
+    /**
+     * 广告视频播放进度（仅部分广告平台存在）
+     */
+    override fun onAdVideoProgress(view: ATNativeAdView?, progress: Int) {
+        Log.e(logTag, "onAdVideoProgress")
+        if (isDestroyed) return
+        NativeAdCallback().apply(nativeAdCallback).onAdVideoProgress?.invoke(view, progress)
+    }
+
+    /**
+     * 广告点击回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
+     */
+    override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
+        Log.e(logTag, "onAdClicked:${info.toString()}")
+        NativeAdCallback().apply(nativeAdCallback).onAdClicked?.invoke(view, info)
     }
 
     /**
@@ -279,6 +257,7 @@ class NativeAdLoader(
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdImpressed:${info.toString()}")
         if (isDestroyed) return
+        NativeAdCallback().apply(nativeAdCallback).onAdImpressed?.invoke(view, info)
         preLoadAd()
     }
 
@@ -287,25 +266,38 @@ class NativeAdLoader(
      */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdCloseButtonClick:${info.toString()}")
-        if (NativeAdCallback().apply(nativeAdCallback).onNativeCloseClicked?.invoke() == true) {
+        if (NativeAdCallback().apply(nativeAdCallback)
+                .onAdCloseButtonClick?.invoke(view, info) == true
+        ) {
             clearView()
         }
     }
 
+    /**
+     * 在Activity的onResume时调用（主要针对部分广告平台的视频广告）
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private fun onResume(owner: LifecycleOwner) {
-        onResume()
+        nativeAd?.onResume()
     }
 
+    /**
+     * 在Activity的onPause时调用（主要针对部分广告平台的视频广告）
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     private fun onPause(owner: LifecycleOwner) {
-        onPause()
+        nativeAd?.onPause()
     }
 
+    /**
+     * 移除广告对view的绑定，销毁当前的广告对象（执行之后该广告无法再进行展示）
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
-        onDestroy()
+        clearView()
+        NativeManager.release(placementId)
+        nativeAd?.destory()
     }
 }
