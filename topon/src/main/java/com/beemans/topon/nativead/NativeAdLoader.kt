@@ -260,7 +260,7 @@ class NativeAdLoader(
      * 广告点击回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(logTag, "onAdClicked")
+        Log.e(logTag, "onAdClicked:${info.toString()}")
         NativeAdCallback().apply(nativeAdCallback).onNativeClicked?.invoke()
     }
 
@@ -276,7 +276,7 @@ class NativeAdLoader(
      * 广告展示回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(logTag, "onAdImpressed")
+        Log.e(logTag, "onAdImpressed:${info.toString()}")
         if (isDestroyed) return
         preLoadNative()
     }
@@ -285,7 +285,7 @@ class NativeAdLoader(
      * 广告Dislike监听回调
      */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(logTag, "onAdCloseButtonClick")
+        Log.e(logTag, "onAdCloseButtonClick:${info.toString()}")
         if (NativeAdCallback().apply(nativeAdCallback).onNativeCloseClicked?.invoke() == true) {
             clearView()
         }

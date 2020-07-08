@@ -160,7 +160,7 @@ class NativeBannerLoader(
      * 广告刷新回调
      */
     override fun onAutoRefresh(info: ATAdInfo?) {
-        Log.e(logTag, "onAutoRefresh")
+        Log.e(logTag, "onAutoRefresh:${info.toString()}")
         if (isDestroyed) return
     }
 
@@ -168,7 +168,7 @@ class NativeBannerLoader(
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
-        Log.e(logTag, "onAdShow")
+        Log.e(logTag, "onAdShow:${info.toString()}")
         if (isDestroyed) return
     }
 
@@ -176,7 +176,7 @@ class NativeBannerLoader(
      * 广告点击
      */
     override fun onAdClick(info: ATAdInfo?) {
-        Log.e(logTag, "onAdClick")
+        Log.e(logTag, "onAdClick:${info.toString()}")
         NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke()
     }
 
@@ -184,7 +184,7 @@ class NativeBannerLoader(
      * 广告刷新失败回调
      */
     override fun onAutoRefreshFail(errorMsg: String?) {
-        Log.e(logTag, "onAutoRefreshFail")
+        Log.e(logTag, "onAutoRefreshFail:$errorMsg")
         if (isDestroyed) return
     }
 

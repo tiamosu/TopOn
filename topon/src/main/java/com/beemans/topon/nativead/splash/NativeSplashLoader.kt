@@ -185,7 +185,7 @@ class NativeSplashLoader(
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
-        Log.e(logTag, "onAdShow")
+        Log.e(logTag, "onAdShow:${info.toString()}")
         if (isDestroyed) return
         isAdPlaying = true
     }
@@ -194,7 +194,7 @@ class NativeSplashLoader(
      * 广告点击回调
      */
     override fun onAdClick(info: ATAdInfo?) {
-        Log.e(logTag, "onAdClick")
+        Log.e(logTag, "onAdClick:${info.toString()}")
         NativeSplashCallback().apply(splashCallback).onAdClick?.invoke()
     }
 
@@ -202,7 +202,7 @@ class NativeSplashLoader(
      * 广告的倒计时回调，用于倒计时秒数的刷新，返回单位：毫秒
      */
     override fun onAdTick(tickTime: Long) {
-        Log.e(logTag, "onAdTick")
+        Log.e(logTag, "onAdTick:$tickTime")
         if (isDestroyed) return
         NativeSplashCallback().apply(splashCallback).onAdTick?.invoke(tickTime)
     }
