@@ -31,6 +31,9 @@ class NativeAdLoader(
     ATNativeEventListener,
     ATNativeDislikeListener() {
 
+    private var atNative: ATNative? = null
+    private var nativeAd: NativeAd? = null
+
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
 
@@ -47,8 +50,6 @@ class NativeAdLoader(
             }
         }
     }
-    private var atNative: ATNative? = null
-    private var nativeAd: NativeAd? = null
 
     //用于实现广告渲染
     private val atNativeAdView by lazy { ATNativeAdView(activity) }
@@ -107,7 +108,7 @@ class NativeAdLoader(
             }
         }
 
-        preLoadNative()
+        preLoadAd()
     }
 
     private fun createObserve() {
@@ -117,6 +118,15 @@ class NativeAdLoader(
             if (isShowAfterLoaded && !isDestroyed) {
                 show()
             }
+        }
+    }
+
+    /**
+     * 广告预加载
+     */
+    private fun preLoadAd() {
+        if (isUsePreload) {
+            makeAdRequest()
         }
     }
 
@@ -139,24 +149,15 @@ class NativeAdLoader(
             } else {
                 prepare(atNativeAdView)
             }
-            nativeRenderSuc()
+            adRenderSuc()
         }
         return this
     }
 
     /**
-     * 广告预加载
-     */
-    private fun preLoadNative() {
-        if (isUsePreload) {
-            makeAdRequest()
-        }
-    }
-
-    /**
      * 广告渲染成功
      */
-    private fun nativeRenderSuc() {
+    private fun adRenderSuc() {
         clearView()
         flAd.addView(atNativeAdView, layoutParams)
 
@@ -278,7 +279,7 @@ class NativeAdLoader(
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdImpressed:${info.toString()}")
         if (isDestroyed) return
-        preLoadNative()
+        preLoadAd()
     }
 
     /**

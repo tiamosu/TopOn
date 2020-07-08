@@ -27,6 +27,8 @@ class NativeBannerLoader(
     private val bannerCallback: NativeBannerCallback.() -> Unit
 ) : LifecycleObserver, ATNativeBannerListener {
 
+    private val atNativeBannerView by lazy { ATNativeBannerView(activity) }
+
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
 
@@ -43,8 +45,6 @@ class NativeBannerLoader(
             }
         }
     }
-
-    private val atNativeBannerView by lazy { ATNativeBannerView(activity) }
 
     private val nativeWidth by lazy { bannerConfig.nativeWidth }
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
