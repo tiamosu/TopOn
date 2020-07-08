@@ -66,9 +66,6 @@ class NativeAdLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告请求中
-    private var isRequesting = false
-
     //广告正在播放
     private var isAdPlaying = false
 
@@ -138,7 +135,7 @@ class NativeAdLoader(
      */
     fun show(): NativeAdLoader {
         isShowAfterLoaded = true
-        if (makeAdRequest() || isDestroyed || isAdPlaying) {
+        if (makeAdRequest()) {
             return this
         }
         isShowAfterLoaded = false
@@ -177,8 +174,8 @@ class NativeAdLoader(
      * 发起Native广告请求
      */
     private fun makeAdRequest(): Boolean {
-        isRequesting = NativeManager.isRequesting(placementId)
-        if (!isRequesting && getNativeAd().also { nativeAd = it } == null && !isDestroyed) {
+        val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
             atNative?.makeAdRequest()
             return true

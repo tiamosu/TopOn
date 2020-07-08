@@ -47,9 +47,6 @@ class NativeSplashLoader(
     private val nativeWidth by lazy { splashConfig.nativeWidth }
     private val nativeHeight by lazy { splashConfig.nativeHeight }
 
-    //广告正在进行请求
-    private var isRequesting = false
-
     //广告位ID
     private val placementId by lazy { splashConfig.placementId }
 
@@ -119,23 +116,26 @@ class NativeSplashLoader(
     /**
      * 广告加载显示
      */
-    fun show() {
+    fun show(): NativeSplashLoader {
         isShowAfterLoaded = true
-        isRequesting = NativeManager.isRequesting(placementId)
-        if (!isRequesting && !isDestroyed && !isAdPlaying) {
-            isShowAfterLoaded = false
-            NativeManager.updateRequestStatus(placementId, loaderTag, true)
-            ATNativeSplash(
-                activity,
-                frameLayout,
-                null,
-                placementId,
-                localMap,
-                splashConfig.requestTimeOut,
-                splashConfig.fetchDelay,
-                this
-            )
+        val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (isRequesting) {
+            return this
         }
+
+        isShowAfterLoaded = false
+        NativeManager.updateRequestStatus(placementId, loaderTag, true)
+        ATNativeSplash(
+            activity,
+            frameLayout,
+            null,
+            placementId,
+            localMap,
+            splashConfig.requestTimeOut,
+            splashConfig.fetchDelay,
+            this
+        )
+        return this
     }
 
     private fun clearView() {
@@ -221,6 +221,7 @@ class NativeSplashLoader(
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
+        Log.e(logTag, "onDestroy")
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         clearView()

@@ -67,9 +67,6 @@ class RewardAdLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告请求中
-    private var isRequesting = false
-
     //广告正在播放
     private var isAdPlaying = false
 
@@ -117,8 +114,9 @@ class RewardAdLoader(
      * 广告加载请求
      */
     private fun load(): Boolean {
-        isRequesting = RewardAdManager.isRequesting(placementId)
-        if (!isRequesting && atRewardVideoAd?.isAdReady == false && !isDestroyed && !isAdPlaying) {
+        val isRequesting = RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        val isAdReady = atRewardVideoAd?.isAdReady ?: false
+        if (!isRequesting && !isAdReady) {
             RewardAdManager.updateRequestStatus(placementId, loaderTag, true)
             atRewardVideoAd?.load()
 
@@ -127,7 +125,7 @@ class RewardAdLoader(
             }, requestTimeOut)
             return true
         }
-        return isRequesting || isAdPlaying
+        return isRequesting
     }
 
     /**
@@ -203,7 +201,7 @@ class RewardAdLoader(
     override fun onRewardedVideoAdClosed(info: ATAdInfo?) {
         Log.e(logTag, "onRewardedVideoAdClosed:${info.toString()}")
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdClosed?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdClosed?.invoke(info)
         preloadAd()
     }
 
@@ -213,7 +211,7 @@ class RewardAdLoader(
     override fun onReward(info: ATAdInfo?) {
         Log.e(logTag, "onReward:${info.toString()}")
         if (isDestroyed) return
-        RewardAdCallback().apply(rewardAdCallback).onReward?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onReward?.invoke(info)
     }
 
     /**
@@ -226,7 +224,7 @@ class RewardAdLoader(
         )
         if (isDestroyed) return
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayFailed?.invoke(error)
+        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayFailed?.invoke(error, info)
     }
 
     /**
@@ -236,7 +234,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdPlayStart:${info.toString()}")
         if (isDestroyed) return
         isAdPlaying = true
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayStart?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayStart?.invoke(info)
     }
 
     /**
@@ -246,7 +244,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdPlayEnd:${info.toString()}")
         if (isDestroyed) return
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayEnd?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayEnd?.invoke(info)
         preloadAd()
     }
 
@@ -255,12 +253,13 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayClicked(info: ATAdInfo?) {
         Log.e(logTag, "onRewardedVideoAdPlayClicked:${info.toString()}")
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayClicked?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayClicked?.invoke(info)
     }
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
+        Log.e(logTag, "onDestroy")
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         handler.removeCallbacksAndMessages(null)

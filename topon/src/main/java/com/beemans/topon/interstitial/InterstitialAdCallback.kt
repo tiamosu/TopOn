@@ -1,5 +1,6 @@
 package com.beemans.topon.interstitial
 
+import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 
 /**
@@ -16,15 +17,15 @@ class InterstitialAdCallback {
 
     internal var onInterstitialAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    internal var onInterstitialAdClicked: (() -> Unit)? = null
+    internal var onInterstitialAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdShow: (() -> Unit)? = null
+    internal var onInterstitialAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdClose: (() -> Unit)? = null
+    internal var onInterstitialAdClose: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdVideoStart: (() -> Unit)? = null
+    internal var onInterstitialAdVideoStart: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdVideoEnd: (() -> Unit)? = null
+    internal var onInterstitialAdVideoEnd: ((info: ATAdInfo?) -> Unit)? = null
 
     internal var onInterstitialAdVideoError: ((error: AdError?) -> Unit)? = null
 
@@ -59,35 +60,35 @@ class InterstitialAdCallback {
     /**
      * 广告点击
      */
-    fun onInterstitialAdClicked(onInterstitialAdClicked: () -> Unit) {
+    fun onInterstitialAdClicked(onInterstitialAdClicked: (info: ATAdInfo?) -> Unit) {
         this.onInterstitialAdClicked = onInterstitialAdClicked
     }
 
     /**
      * 广告展示回调
      */
-    fun onInterstitialAdShow(onInterstitialAdShow: () -> Unit) {
+    fun onInterstitialAdShow(onInterstitialAdShow: (info: ATAdInfo?) -> Unit) {
         this.onInterstitialAdShow = onInterstitialAdShow
     }
 
     /**
      * 广告关闭回调
      */
-    fun onInterstitialAdClose(onInterstitialAdClose: () -> Unit) {
+    fun onInterstitialAdClose(onInterstitialAdClose: (info: ATAdInfo?) -> Unit) {
         this.onInterstitialAdClose = onInterstitialAdClose
     }
 
     /**
      * 视频广告刷新回调
      */
-    fun onInterstitialAdVideoStart(onInterstitialAdVideoStart: () -> Unit) {
+    fun onInterstitialAdVideoStart(onInterstitialAdVideoStart: (info: ATAdInfo?) -> Unit) {
         this.onInterstitialAdVideoStart = onInterstitialAdVideoStart
     }
 
     /**
      * 视频广告播放结束
      */
-    fun onInterstitialAdVideoEnd(onInterstitialAdVideoEnd: () -> Unit) {
+    fun onInterstitialAdVideoEnd(onInterstitialAdVideoEnd: (info: ATAdInfo?) -> Unit) {
         this.onInterstitialAdVideoEnd = onInterstitialAdVideoEnd
     }
 

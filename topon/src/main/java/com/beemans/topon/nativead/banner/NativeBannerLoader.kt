@@ -49,9 +49,6 @@ class NativeBannerLoader(
     private val nativeWidth by lazy { bannerConfig.nativeWidth }
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
 
-    //广告正在进行请求
-    private var isRequesting = false
-
     //广告位ID
     private val placementId by lazy { bannerConfig.placementId }
 
@@ -115,8 +112,8 @@ class NativeBannerLoader(
      */
     fun show(): NativeBannerLoader {
         isShowAfterLoaded = true
-        isRequesting = NativeManager.isRequesting(placementId)
-        if (!isRequesting && !isDestroyed) {
+        val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
+        if (!isRequesting) {
             isShowAfterLoaded = false
             NativeManager.updateRequestStatus(placementId, loaderTag, true)
             atNativeBannerView.loadAd(null)
@@ -204,6 +201,7 @@ class NativeBannerLoader(
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
+        Log.e(logTag, "onDestroy")
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         clearView()
