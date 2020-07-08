@@ -69,6 +69,9 @@ class NativeAdLoader(
     //广告请求中
     private var isRequesting = false
 
+    //广告正在播放
+    private var isAdPlaying = false
+
     private var isDestroyed = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
@@ -115,7 +118,7 @@ class NativeAdLoader(
         owner.lifecycle.addObserver(this)
 
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded && !isDestroyed) {
+            if (isShowAfterLoaded) {
                 show()
             }
         }
@@ -135,7 +138,7 @@ class NativeAdLoader(
      */
     fun show(): NativeAdLoader {
         isShowAfterLoaded = true
-        if (makeAdRequest()) {
+        if (makeAdRequest() || isDestroyed || isAdPlaying) {
             return this
         }
         isShowAfterLoaded = false
@@ -191,7 +194,7 @@ class NativeAdLoader(
     }
 
     /**
-     * 广告加载失败，可通过AdError.printStackTrace()获取全部错误信息
+     * 广告加载失败
      */
     override fun onNativeAdLoadFail(error: AdError?) {
         Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
@@ -222,6 +225,7 @@ class NativeAdLoader(
     override fun onAdVideoStart(view: ATNativeAdView?) {
         Log.e(logTag, "onAdVideoStart")
         if (isDestroyed) return
+        isAdPlaying = true
         NativeAdCallback().apply(nativeAdCallback).onAdVideoStart?.invoke(view)
     }
 
@@ -231,6 +235,7 @@ class NativeAdLoader(
     override fun onAdVideoEnd(view: ATNativeAdView?) {
         Log.e(logTag, "onAdVideoEnd")
         if (isDestroyed) return
+        isAdPlaying = false
         NativeAdCallback().apply(nativeAdCallback).onAdVideoEnd?.invoke(view)
     }
 
@@ -244,21 +249,21 @@ class NativeAdLoader(
     }
 
     /**
-     * 广告点击回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
-     */
-    override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
-        Log.e(logTag, "onAdClicked:${info.toString()}")
-        NativeAdCallback().apply(nativeAdCallback).onAdClicked?.invoke(view, info)
-    }
-
-    /**
-     * 广告展示回调，其中ATAdInfo是广告的信息对象，主要包含是第三方聚合平台的id信息
+     * 广告展示回调
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
         Log.e(logTag, "onAdImpressed:${info.toString()}")
         if (isDestroyed) return
         NativeAdCallback().apply(nativeAdCallback).onAdImpressed?.invoke(view, info)
         preLoadAd()
+    }
+
+    /**
+     * 广告点击回调
+     */
+    override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
+        Log.e(logTag, "onAdClicked:${info.toString()}")
+        NativeAdCallback().apply(nativeAdCallback).onAdClicked?.invoke(view, info)
     }
 
     /**
@@ -269,6 +274,7 @@ class NativeAdLoader(
         if (NativeAdCallback().apply(nativeAdCallback)
                 .onAdCloseButtonClick?.invoke(view, info) == true
         ) {
+            isAdPlaying = false
             clearView()
         }
     }
