@@ -8,5 +8,15 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.beemans.topon.demo.ui.fragments.MainFragment"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/action_nativeAdFragment_to_nativeAdFragment"
+            app:destination="@id/nativeAdFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nativeAdFragment"
+        android:name="com.beemans.topon.demo.ui.fragments.NativeAdFragment"
+        tools:layout="@layout/fragment_native_ad" />
 </navigation>

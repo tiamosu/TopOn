@@ -14,6 +14,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/nativeAd_btnOpenPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="新页面"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nativeAd_btnNativeAd" />
+
     <FrameLayout
         android:id="@+id/nativeAd_flAd"
         android:layout_width="wrap_content"

@@ -284,6 +284,7 @@ class NativeAdLoader(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private fun onResume(owner: LifecycleOwner) {
+        Log.e(logTag, "onResume")
         nativeAd?.onResume()
     }
 
@@ -292,6 +293,7 @@ class NativeAdLoader(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     private fun onPause(owner: LifecycleOwner) {
+        Log.e(logTag, "onPause")
         nativeAd?.onPause()
     }
 
@@ -300,6 +302,7 @@ class NativeAdLoader(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
+        Log.e(logTag, "onDestroy")
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         clearView()
