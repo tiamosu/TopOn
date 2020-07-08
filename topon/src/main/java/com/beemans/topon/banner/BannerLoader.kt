@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.anythink.banner.api.ATBannerListener
 import com.anythink.banner.api.ATBannerView
 import com.anythink.core.api.ATAdInfo
@@ -193,5 +195,16 @@ class BannerLoader(
     override fun onBannerAutoRefreshFail(error: AdError?) {
         Log.e(logTag, "onBannerAutoRefreshFail:${error?.printStackTrace()}")
         BannerCallback().apply(bannerCallback).onBannerAutoRefreshFail?.invoke(error)
+    }
+
+    @Suppress("unused")
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private fun onDestroy(owner: LifecycleOwner) {
+        Log.e(logTag, "onDestroy")
+        isDestroyed = true
+        owner.lifecycle.removeObserver(this)
+        clearView()
+        BannerManager.release(placementId)
+        atBannerView = null
     }
 }

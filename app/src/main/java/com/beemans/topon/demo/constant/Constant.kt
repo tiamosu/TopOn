@@ -17,4 +17,5 @@ object Constant {
     const val NATIVE_AD_ID2 = "b5d148f9f2e47d"
     const val REWARD_ID = "b5b728e7a08cd4"
     const val INTERSTITIAL_ID = "b5baca585a8fef"
+    const val BANNER_ID = "b5baca45138428"
 }
