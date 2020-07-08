@@ -120,7 +120,6 @@ class RewardAdLoader(
             RewardAdManager.updateRequestStatus(placementId, loaderTag, true)
             atRewardVideoAd?.load()
 
-            Log.e(logTag, "load:$requestTimeOut")
             handler.postDelayed({
                 onRewardedVideoAdTimeOut()
             }, requestTimeOut)
@@ -157,6 +156,7 @@ class RewardAdLoader(
     override fun onRewardedVideoAdLoaded() {
         Log.e(logTag, "onRewardedVideoAdLoaded")
         if (isDestroyed || isTimeOut) return
+        handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
         RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdLoaded?.invoke()
 
@@ -184,6 +184,7 @@ class RewardAdLoader(
     override fun onRewardedVideoAdFailed(error: AdError?) {
         Log.e(logTag, "onRewardedVideoAdFailed:${error?.printStackTrace()}")
         if (isDestroyed) return
+        handler.removeCallbacksAndMessages(null)
         isShowAfterLoaded = true
         RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
         RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdFailed?.invoke(error)

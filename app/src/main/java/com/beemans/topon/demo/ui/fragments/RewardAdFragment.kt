@@ -20,7 +20,7 @@ class RewardAdFragment : BaseFragment() {
     override fun initEvent() {
         rewardAd_btnLoad.setOnClickListener {
             if (rewardAdLoader == null) {
-                val config = RewardAdConfig(Constant.REWARD_ID, requestTimeOut = 200)
+                val config = RewardAdConfig(Constant.REWARD_ID)
                 rewardAdLoader = TopOn.loadRewardAd(this, config) {}
             }
             rewardAdLoader?.show()

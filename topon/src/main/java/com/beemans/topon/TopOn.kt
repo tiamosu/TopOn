@@ -30,7 +30,7 @@ object TopOn {
     fun loadNativeBanner(
         owner: LifecycleOwner,
         bannerConfig: NativeBannerConfig,
-        bannerCallback: NativeBannerCallback.() -> Unit
+        bannerCallback: NativeBannerCallback.() -> Unit = {}
     ): NativeBannerLoader {
         return NativeBannerLoader(owner, bannerConfig, bannerCallback)
     }
@@ -38,7 +38,7 @@ object TopOn {
     fun loadNativeSplash(
         owner: LifecycleOwner,
         splashConfig: NativeSplashConfig,
-        splashCallback: NativeSplashCallback.() -> Unit
+        splashCallback: NativeSplashCallback.() -> Unit = {}
     ): NativeSplashLoader {
         return NativeSplashLoader(owner, splashConfig, splashCallback)
     }
@@ -46,7 +46,7 @@ object TopOn {
     fun loadRewardAd(
         owner: LifecycleOwner,
         rewardAdConfig: RewardAdConfig,
-        rewardAdCallback: RewardAdCallback.() -> Unit
+        rewardAdCallback: RewardAdCallback.() -> Unit = {}
     ): RewardAdLoader {
         return RewardAdLoader(owner, rewardAdConfig, rewardAdCallback)
     }
