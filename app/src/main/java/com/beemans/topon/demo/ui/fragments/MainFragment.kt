@@ -15,11 +15,11 @@ class MainFragment : BaseFragment() {
 
     private val fragments by lazy {
         arrayListOf<Class<out Fragment>>().apply {
-            add(HomeFragment::class.java)
             add(NativeAdFragment::class.java)
             add(NativeBannerFragment::class.java)
             add(NativeSplashFragment::class.java)
             add(RewardAdFragment::class.java)
+            add(InterstitialAdFragment::class.java)
         }
     }
 

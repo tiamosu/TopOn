@@ -21,16 +21,6 @@
             android:layout_width="0pt"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:tbi_selected="true"
-            app:tbi_text="首页"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="12dp" />
-
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
             app:tbi_text="信息流"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
@@ -59,6 +49,15 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             app:tbi_text="激励视频"
+            app:tbi_textNormalColor="@android:color/white"
+            app:tbi_textSelectedColor="@color/colorAccent"
+            app:tbi_textSize="12dp" />
+
+        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+            android:layout_width="0pt"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:tbi_text="插屏"
             app:tbi_textNormalColor="@android:color/white"
             app:tbi_textSelectedColor="@color/colorAccent"
             app:tbi_textSize="12dp" />

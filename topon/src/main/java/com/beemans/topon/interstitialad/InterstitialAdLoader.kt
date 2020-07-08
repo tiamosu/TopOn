@@ -129,7 +129,7 @@ class InterstitialAdLoader(
     /**
      * 广告加载显示
      */
-    private fun show(): InterstitialAdLoader {
+    fun show(): InterstitialAdLoader {
         isShowAfterLoaded = true
         if (load()) {
             return this
@@ -214,6 +214,7 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdClose:${info.toString()}")
         isAdPlaying = false
         InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdClose?.invoke()
+        preLoadAd()
     }
 
     /**

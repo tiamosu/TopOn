@@ -199,6 +199,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdClosed:${info.toString()}")
         isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdClosed?.invoke()
+        preloadAd()
     }
 
     /**
