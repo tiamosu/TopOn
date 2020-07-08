@@ -1,8 +1,10 @@
 package com.beemans.topon.banner
 
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
@@ -58,6 +60,9 @@ class BannerLoader(
 
     //广告加载成功
     private var isBannerLoaded = false
+
+    //已经渲染添加
+    private var isRenderAdded = false
 
     private var isDestroyed = false
 
@@ -123,15 +128,29 @@ class BannerLoader(
             return this
         }
         isShowAfterLoaded = false
-        isBannerLoaded = false
         adRenderSuc()
         return this
     }
 
     /**
-     * 广告渲染成功
+     * 控制广告显隐
+     */
+    fun setVisibility(visible: Int): BannerLoader {
+        atBannerView?.visibility = visible
+        return this
+    }
+
+    /**
+     * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
     private fun adRenderSuc() {
+        if (isRenderAdded) {
+            if (atBannerView?.isVisible == false) {
+                setVisibility(View.VISIBLE)
+            }
+            return
+        }
+        isRenderAdded = true
         clearView()
         flAd.addView(atBannerView, layoutParams)
         BannerCallback().apply(bannerCallback).onRenderSuc?.invoke(flAd)
@@ -176,7 +195,6 @@ class BannerLoader(
     override fun onBannerFailed(error: AdError?) {
         Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
         if (isDestroyed) return
-        isBannerLoaded = false
         isShowAfterLoaded = true
         BannerManager.updateRequestStatus(placementId, loaderTag, false)
         BannerCallback().apply(bannerCallback).onBannerFailed?.invoke(error)
@@ -204,7 +222,7 @@ class BannerLoader(
     override fun onBannerClose(info: ATAdInfo?) {
         Log.e(logTag, "onBannerClose:${info.toString()}")
         if (BannerCallback().apply(bannerCallback).onBannerClose?.invoke(info) == true) {
-            clearView()
+            setVisibility(View.GONE)
         }
     }
 
