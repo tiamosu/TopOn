@@ -20,18 +20,19 @@ class BannerFragment : BaseFragment() {
 
     override fun initEvent() {
         banner_btnLoad.setOnClickListener {
-            if (bannerLoader == null) {
-                val config = BannerConfig(Constant.BANNER_ID, 375.pt2px, 300.pt2px)
-                bannerLoader = TopOn.loadBanner(this, config) {
-                    onBannerLoaded { flAd ->
-                        banner_flAd.addView(flAd)
-                    }
-                    onBannerClose {
-                        true
-                    }
-                }
-            }
             bannerLoader?.show()
+        }
+    }
+
+    override fun doBusiness() {
+        val config = BannerConfig(Constant.BANNER_ID, 375.pt2px, 180.pt2px)
+        bannerLoader = TopOn.loadBanner(this, config) {
+            onRenderSuc { flAd ->
+                banner_flAd.addView(flAd)
+            }
+            onBannerClose {
+                true
+            }
         }
     }
 }

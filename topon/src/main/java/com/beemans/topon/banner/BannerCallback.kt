@@ -10,9 +10,11 @@ import com.anythink.core.api.AdError
  */
 class BannerCallback {
 
-    internal var onBannerLoaded: ((flAd: FrameLayout) -> Unit)? = null
+    internal var onBannerLoaded: (() -> Unit)? = null
 
     internal var onBannerFailed: ((error: AdError?) -> Unit)? = null
+
+    internal var onRenderSuc: ((flAd: FrameLayout) -> Unit)? = null
 
     internal var onBannerClicked: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -27,7 +29,7 @@ class BannerCallback {
     /**
      * 广告加载成功回调
      */
-    fun onBannerLoaded(onBannerLoaded: (flAd: FrameLayout) -> Unit) {
+    fun onBannerLoaded(onBannerLoaded: () -> Unit) {
         this.onBannerLoaded = onBannerLoaded
     }
 
@@ -36,6 +38,13 @@ class BannerCallback {
      */
     fun onBannerFailed(onBannerFailed: (error: AdError?) -> Unit) {
         this.onBannerFailed = onBannerFailed
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    fun onRenderSuc(onRenderSuc: (flAd: FrameLayout) -> Unit) {
+        this.onRenderSuc = onRenderSuc
     }
 
     /**

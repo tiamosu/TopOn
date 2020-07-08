@@ -56,6 +56,9 @@ class BannerLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
+    //广告加载成功
+    private var isBannerLoaded = false
+
     private var isDestroyed = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
@@ -88,6 +91,8 @@ class BannerLoader(
                 setBannerAdListener(this@BannerLoader)
             }
         }
+
+        preLoadAd()
     }
 
     private fun createObserve() {
@@ -105,7 +110,7 @@ class BannerLoader(
      */
     private fun preLoadAd() {
         if (isUsePreload) {
-
+            load()
         }
     }
 
@@ -114,13 +119,32 @@ class BannerLoader(
      */
     fun show(): BannerLoader {
         isShowAfterLoaded = true
+        if (load()) {
+            return this
+        }
+        isShowAfterLoaded = false
+        isBannerLoaded = false
+        adRenderSuc()
+        return this
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    private fun adRenderSuc() {
+        clearView()
+        flAd.addView(atBannerView, layoutParams)
+        BannerCallback().apply(bannerCallback).onRenderSuc?.invoke(flAd)
+    }
+
+    private fun load(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting) {
-            isShowAfterLoaded = false
+        if (!isRequesting && !isBannerLoaded) {
             BannerManager.updateRequestStatus(placementId, loaderTag, true)
             atBannerView?.loadAd()
+            return true
         }
-        return this
+        return isRequesting
     }
 
     private fun clearView() {
@@ -136,11 +160,13 @@ class BannerLoader(
     override fun onBannerLoaded() {
         Log.e(logTag, "onBannerLoaded")
         if (isDestroyed) return
+        isBannerLoaded = true
         BannerManager.updateRequestStatus(placementId, loaderTag, false)
+        BannerCallback().apply(bannerCallback).onBannerLoaded?.invoke()
 
-        clearView()
-        flAd.addView(atBannerView, layoutParams)
-        BannerCallback().apply(bannerCallback).onBannerLoaded?.invoke(flAd)
+        if (isShowAfterLoaded) {
+            show()
+        }
         loadedLiveData.value = true
     }
 
@@ -150,6 +176,7 @@ class BannerLoader(
     override fun onBannerFailed(error: AdError?) {
         Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
         if (isDestroyed) return
+        isBannerLoaded = false
         isShowAfterLoaded = true
         BannerManager.updateRequestStatus(placementId, loaderTag, false)
         BannerCallback().apply(bannerCallback).onBannerFailed?.invoke(error)
