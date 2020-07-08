@@ -13,7 +13,6 @@ import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.interstitial.api.ATInterstitial
 import com.anythink.interstitial.api.ATInterstitialListener
-import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
 
 /**
@@ -262,6 +261,6 @@ class InterstitialAdLoader(
         Log.e(logTag, "onDestroy")
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
-        NativeManager.release(placementId)
+        InterstitialAdManager.release(placementId)
     }
 }
