@@ -9,7 +9,7 @@ import com.anythink.core.api.ATAdInfo
  */
 class NativeSplashCallback {
 
-    internal var onAdLoaded: ((frameLayout: FrameLayout) -> Unit)? = null
+    internal var onAdLoaded: ((flAd: FrameLayout) -> Unit)? = null
 
     internal var onNoAdError: ((errorMsg: String?) -> Unit)? = null
 
@@ -26,7 +26,7 @@ class NativeSplashCallback {
     /**
      * 广告加载成功
      */
-    fun onAdLoaded(onAdLoaded: (frameLayout: FrameLayout) -> Unit) {
+    fun onAdLoaded(onAdLoaded: (flAd: FrameLayout) -> Unit) {
         this.onAdLoaded = onAdLoaded
     }
 

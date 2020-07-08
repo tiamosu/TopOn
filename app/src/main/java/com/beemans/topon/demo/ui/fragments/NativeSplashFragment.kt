@@ -1,5 +1,6 @@
 package com.beemans.topon.demo.ui.fragments
 
+import androidx.core.view.isVisible
 import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
@@ -18,19 +19,22 @@ class NativeSplashFragment : BaseFragment() {
 
     override fun getLayoutId() = R.layout.fragment_native_splash
 
-    override fun onFlySupportVisible() {
-        if (nativeSplashLoader == null) {
-            val config = NativeSplashConfig(Constant.NATIVE_AD_ID2, 350.pt2px)
-            nativeSplashLoader = TopOn.loadNativeSplash(this, config) {
-                onAdLoaded { frameLayout ->
-                    if (nativeSplash_flAd.childCount > 0) {
-                        nativeSplash_flAd.removeAllViews()
+    override fun initEvent() {
+        nativeSplash_btnLoad.setOnClickListener {
+            if (nativeSplashLoader == null) {
+                val config = NativeSplashConfig(Constant.NATIVE_AD_ID2, 350.pt2px)
+                nativeSplashLoader = TopOn.loadNativeSplash(this, config) {
+                    onAdLoaded { flAd ->
+                        nativeSplash_btnLoad.isVisible = false
+                        nativeSplash_flAd.addView(flAd)
                     }
-                    nativeSplash_flAd.addView(frameLayout)
+                    onAdSkip {
+                        nativeSplash_btnLoad.isVisible = true
+                        true
+                    }
                 }
-                onAdSkip { true }
             }
+            nativeSplashLoader?.show()
         }
-        nativeSplashLoader?.show()
     }
 }
