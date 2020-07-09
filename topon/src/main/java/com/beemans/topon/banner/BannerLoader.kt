@@ -24,6 +24,7 @@ import com.tiamosu.fly.callback.EventLiveData
 class BannerLoader(
     private val owner: LifecycleOwner,
     private val bannerConfig: BannerConfig,
+    private val flSplashView: FrameLayout,
     private val bannerCallback: BannerCallback.() -> Unit
 ) : LifecycleObserver, ATBannerListener {
 
@@ -61,9 +62,6 @@ class BannerLoader(
     //广告加载成功
     private var isBannerLoaded = false
 
-    //已经渲染添加
-    private var isRenderAdded = false
-
     private var isDestroyed = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
@@ -75,8 +73,6 @@ class BannerLoader(
         }
         liveData
     }
-
-    private val flAdView by lazy { FrameLayout(activity) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
@@ -91,6 +87,8 @@ class BannerLoader(
                 setUnitId(placementId)
                 setBannerAdListener(this@BannerLoader)
             }
+            flSplashView.addView(atBannerView, layoutParams)
+            setVisibility(View.GONE)
         }
 
         preLoadAd()
@@ -141,21 +139,11 @@ class BannerLoader(
      * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
     private fun onAdRenderSuc() {
-        if (isDestroyed) return
-        if (isRenderAdded) {
-            if (atBannerView?.isVisible == false) {
-                Log.e(logTag, "onAdRenderSuc")
-                setVisibility(View.VISIBLE)
-                BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(null)
-            }
-            return
-        }
+        if (isDestroyed || atBannerView?.isVisible == true) return
         Log.e(logTag, "onAdRenderSuc")
 
-        isRenderAdded = true
-        clearView()
-        flAdView.addView(atBannerView, layoutParams)
-        BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(flAdView)
+        setVisibility(View.VISIBLE)
+        BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke()
     }
 
     /**
@@ -172,10 +160,7 @@ class BannerLoader(
     }
 
     private fun clearView() {
-        (flAdView.parent as? ViewGroup)?.removeView(flAdView)
-        if (flAdView.childCount > 0) {
-            flAdView.removeAllViews()
-        }
+        (atBannerView?.parent as? ViewGroup)?.removeView(atBannerView)
     }
 
     /**

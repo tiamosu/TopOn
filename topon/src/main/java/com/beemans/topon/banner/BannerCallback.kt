@@ -1,6 +1,5 @@
 package com.beemans.topon.banner
 
-import android.widget.FrameLayout
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 
@@ -10,7 +9,7 @@ import com.anythink.core.api.AdError
  */
 class BannerCallback {
 
-    internal var onAdRenderSuc: ((flAdView: FrameLayout?) -> Unit)? = null
+    internal var onAdRenderSuc: (() -> Unit)? = null
 
     internal var onBannerLoaded: (() -> Unit)? = null
 
@@ -29,7 +28,7 @@ class BannerCallback {
     /**
      * 广告渲染成功
      */
-    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout?) -> Unit) {
+    fun onAdRenderSuc(onAdRenderSuc: () -> Unit) {
         this.onAdRenderSuc = onAdRenderSuc
     }
 

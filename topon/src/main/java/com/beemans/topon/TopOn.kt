@@ -1,5 +1,6 @@
 package com.beemans.topon
 
+import android.widget.FrameLayout
 import androidx.lifecycle.LifecycleOwner
 import com.beemans.topon.banner.BannerCallback
 import com.beemans.topon.banner.BannerConfig
@@ -89,9 +90,10 @@ object TopOn {
     fun loadBanner(
         owner: LifecycleOwner,
         bannerConfig: BannerConfig,
+        flSplashView: FrameLayout,
         bannerCallback: BannerCallback.() -> Unit = {}
     ): BannerLoader {
-        return BannerLoader(owner, bannerConfig, bannerCallback)
+        return BannerLoader(owner, bannerConfig, flSplashView, bannerCallback)
     }
 
     /**
