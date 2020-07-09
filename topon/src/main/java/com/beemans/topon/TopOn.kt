@@ -17,6 +17,9 @@ import com.beemans.topon.nativead.splash.NativeSplashLoader
 import com.beemans.topon.reward.RewardAdCallback
 import com.beemans.topon.reward.RewardAdConfig
 import com.beemans.topon.reward.RewardAdLoader
+import com.beemans.topon.splash.SplashAdCallback
+import com.beemans.topon.splash.SplashAdConfig
+import com.beemans.topon.splash.SplashAdLoader
 
 /**
  * @author tiamosu
@@ -89,5 +92,16 @@ object TopOn {
         bannerCallback: BannerCallback.() -> Unit = {}
     ): BannerLoader {
         return BannerLoader(owner, bannerConfig, bannerCallback)
+    }
+
+    /**
+     * 加载开屏
+     */
+    fun loadSplash(
+        owner: LifecycleOwner,
+        splashAdConfig: SplashAdConfig,
+        splashAdCallback: SplashAdCallback.() -> Unit
+    ): SplashAdLoader {
+        return SplashAdLoader(owner, splashAdConfig, splashAdCallback)
     }
 }

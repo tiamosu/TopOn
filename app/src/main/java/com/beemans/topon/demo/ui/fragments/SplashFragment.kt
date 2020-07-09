@@ -1,5 +1,7 @@
 package com.beemans.topon.demo.ui.fragments
 
+import androidx.core.view.isVisible
+import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
@@ -20,11 +22,13 @@ class SplashFragment : BaseFragment() {
         splash_btnLoad.setOnClickListener {
             if (splashAdLoader == null) {
                 val config = SplashAdConfig(Constant.SPLASH_ID)
-                splashAdLoader = SplashAdLoader(this, config) {
+                splashAdLoader = TopOn.loadSplash(this, config) {
                     onAdRenderSuc { flAdView ->
+                        splash_btnLoad.isVisible = false
                         splash_flAd.addView(flAdView)
                     }
                     onAdDismiss {
+                        splash_btnLoad.isVisible = true
                         true
                     }
                 }
