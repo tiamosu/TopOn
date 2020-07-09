@@ -15,7 +15,6 @@ import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.splashad.api.ATSplashAd
 import com.anythink.splashad.api.ATSplashAdListener
-import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
 
 /**
@@ -60,6 +59,12 @@ class SplashAdLoader(
     //广告正在播放
     private var isAdPlaying = false
 
+    //广告加载完成
+    private var isAdLoaded = false
+
+    //是否超时
+    private var isTimeOut = false
+
     private var isDestroyed = false
 
     private val frameLayout by lazy {
@@ -75,10 +80,10 @@ class SplashAdLoader(
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
-        var liveData = NativeManager.loadedLiveDataMap[placementId]
+        var liveData = SplashAdManager.loadedLiveDataMap[placementId]
         if (liveData == null) {
             liveData = EventLiveData()
-            NativeManager.loadedLiveDataMap[placementId] = liveData
+            SplashAdManager.loadedLiveDataMap[placementId] = liveData
         }
         liveData
     }
@@ -89,6 +94,12 @@ class SplashAdLoader(
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
+
+        loadedLiveData.observe(owner) {
+            if (isShowAfterLoaded && !isTimeOut) {
+                show()
+            }
+        }
     }
 
     /**
@@ -96,14 +107,53 @@ class SplashAdLoader(
      */
     fun show(): SplashAdLoader {
         isShowAfterLoaded = true
-        if (SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed) {
+        if (load()) {
             return this
         }
 
+        isTimeOut = false
         isShowAfterLoaded = false
-        SplashAdManager.updateRequestStatus(placementId, loaderTag, true)
-        atSplashAd = ATSplashAd(activity, frameLayout, placementId, this)
+        adRenderSuc()
         return this
+    }
+
+    /**
+     * 广告请求加载
+     */
+    private fun load(): Boolean {
+        val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (!isRequesting && !isAdLoaded) {
+            SplashAdManager.updateRequestStatus(placementId, loaderTag, true)
+            atSplashAd = ATSplashAd(activity, frameLayout, placementId, this)
+
+            handler.postDelayed({
+                onAdTimeOut()
+            }, requestTimeOut)
+            return true
+        }
+        return isRequesting
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    private fun adRenderSuc() {
+        if (isDestroyed) return
+        clearView()
+        flAd.addView(frameLayout)
+        SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAd)
+    }
+
+    /**
+     * 广告超时
+     */
+    private fun onAdTimeOut() {
+        Log.e(logTag, "onAdTimeOut")
+        if (isDestroyed) return
+        isTimeOut = true
+        isShowAfterLoaded = true
+        SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
+        SplashAdCallback().apply(splashAdCallback).onAdTimeOut?.invoke()
     }
 
     private fun clearView() {
@@ -118,12 +168,14 @@ class SplashAdLoader(
      */
     override fun onAdLoaded() {
         Log.e(logTag, "onAdLoaded")
-        if (isDestroyed) return
+        if (isDestroyed || isTimeOut) return
+        isAdLoaded = true
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
+        SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke()
 
-        clearView()
-        flAd.addView(frameLayout)
-        SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke(flAd)
+        if (isShowAfterLoaded) {
+            show()
+        }
         loadedLiveData.value = true
     }
 
@@ -162,6 +214,7 @@ class SplashAdLoader(
     override fun onAdDismiss(info: ATAdInfo?) {
         Log.e(logTag, "onAdDismiss:${info.toString()}")
         isAdPlaying = false
+        isAdLoaded = false
         if (SplashAdCallback().apply(splashAdCallback).onAdDismiss?.invoke(info) == true) {
             clearView()
         }

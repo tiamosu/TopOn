@@ -21,8 +21,11 @@ class SplashFragment : BaseFragment() {
             if (splashAdLoader == null) {
                 val config = SplashAdConfig(Constant.SPLASH_ID)
                 splashAdLoader = SplashAdLoader(this, config) {
-                    onAdLoaded { flAd ->
-                        splash_flAd.addView(flAd)
+                    onAdRenderSuc { flAdView ->
+                        splash_flAd.addView(flAdView)
+                    }
+                    onAdDismiss {
+                        true
                     }
                 }
             }

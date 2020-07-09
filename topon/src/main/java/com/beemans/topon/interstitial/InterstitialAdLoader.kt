@@ -135,9 +135,9 @@ class InterstitialAdLoader(
         if (load()) {
             return this
         }
+
         isTimeOut = false
         isShowAfterLoaded = false
-
         if (interstitialAdConfig.scenario.isNotBlank()) {
             atInterstitial?.show(activity, interstitialAdConfig.scenario)
         } else {
