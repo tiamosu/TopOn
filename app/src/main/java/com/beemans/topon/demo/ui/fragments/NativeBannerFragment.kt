@@ -24,8 +24,8 @@ class NativeBannerFragment : BaseFragment() {
     override fun initEvent() {
         nativeBanner_btnShow.setOnClickListener {
             loadNativeBanner1()
-//            loadNativeBanner2()
-//            loadNativeBanner3()
+            loadNativeBanner2()
+            loadNativeBanner3()
         }
     }
 
@@ -36,8 +36,8 @@ class NativeBannerFragment : BaseFragment() {
                 bannerSize = ATNativeBannerSize.BANNER_SIZE_320x50
                 isCloseBtnShow = true
             }
-            val width = 160.pt2px
-            val height = ((50 / 320f) * width).roundToInt()
+            val width = 220.pt2px
+            val height = ((65 / 320f) * width).roundToInt()
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID2, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
