@@ -1,12 +1,12 @@
-package com.beemans.topon.banner
+package com.beemans.topon.splash
 
 import com.tiamosu.fly.callback.EventLiveData
 
 /**
  * @author tiamosu
- * @date 2020/7/8.
+ * @date 2020/7/9.
  */
-internal object BannerManager {
+internal object SplashAdManager {
     val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
     private val requestingMap: MutableMap<String, MutableMap<String, Boolean>> by lazy { mutableMapOf() }
 

@@ -21,6 +21,7 @@ class MainFragment : BaseFragment() {
             add(RewardAdFragment::class.java)
             add(InterstitialAdFragment::class.java)
             add(BannerFragment::class.java)
+            add(SplashFragment::class.java)
         }
     }
 

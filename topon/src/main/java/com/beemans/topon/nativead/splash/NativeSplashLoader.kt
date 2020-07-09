@@ -27,6 +27,8 @@ class NativeSplashLoader(
     private val splashCallback: NativeSplashCallback.() -> Unit
 ) : LifecycleObserver, ATNativeSplashListener {
 
+    private var atNativeSplash: ATNativeSplash? = null
+
     private val logTag by lazy { this.javaClass.simpleName }
     private val loaderTag by lazy { this.toString() }
 
@@ -118,7 +120,7 @@ class NativeSplashLoader(
 
         isShowAfterLoaded = false
         NativeManager.updateRequestStatus(placementId, loaderTag, true)
-        ATNativeSplash(
+        atNativeSplash = ATNativeSplash(
             activity,
             frameLayout,
             null,
@@ -219,5 +221,6 @@ class NativeSplashLoader(
         owner.lifecycle.removeObserver(this)
         clearView()
         NativeManager.release(placementId)
+        atNativeSplash = null
     }
 }
