@@ -9,7 +9,9 @@ import com.anythink.core.api.ATAdInfo
  */
 class NativeBannerCallback {
 
-    internal var onAdLoaded: ((flAd: FrameLayout) -> Unit)? = null
+    internal var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+
+    internal var onAdLoaded: (() -> Unit)? = null
 
     internal var onAdError: ((errorMsg: String?) -> Unit)? = null
 
@@ -24,9 +26,16 @@ class NativeBannerCallback {
     internal var onAdClose: (() -> Boolean)? = null
 
     /**
+     * 广告渲染成功
+     */
+    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
+        this.onAdRenderSuc = onAdRenderSuc
+    }
+
+    /**
      * 广告加载成功
      */
-    fun onAdLoaded(onAdLoaded: (flAd: FrameLayout) -> Unit) {
+    fun onAdLoaded(onAdLoaded: () -> Unit) {
         this.onAdLoaded = onAdLoaded
     }
 

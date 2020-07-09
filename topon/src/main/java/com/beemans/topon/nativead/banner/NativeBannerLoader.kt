@@ -55,6 +55,12 @@ class NativeBannerLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
+    //广告加载完成
+    private var isAdLoaded = false
+
+    //广告是否已经渲染
+    private var isAdRendered = false
+
     private var isDestroyed = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
@@ -67,7 +73,7 @@ class NativeBannerLoader(
         liveData
     }
 
-    private val flAd by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(activity) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
@@ -99,7 +105,7 @@ class NativeBannerLoader(
         owner.lifecycle.addObserver(this)
 
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded && !isDestroyed) {
+            if (isShowAfterLoaded) {
                 show()
             }
         }
@@ -110,19 +116,46 @@ class NativeBannerLoader(
      */
     fun show(): NativeBannerLoader {
         isShowAfterLoaded = true
-        val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting) {
-            isShowAfterLoaded = false
-            NativeManager.updateRequestStatus(placementId, loaderTag, true)
-            atNativeBannerView?.loadAd(null)
+        if (onAdLoad()) {
+            return this
         }
+
+        isShowAfterLoaded = false
+        onAdRenderSuc()
         return this
     }
 
+    /**
+     * 广告请求加载
+     */
+    private fun onAdLoad(): Boolean {
+        val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
+        if (!isRequesting && !isAdLoaded) {
+            NativeManager.updateRequestStatus(placementId, loaderTag, true)
+            atNativeBannerView?.loadAd(null)
+            return true
+        }
+        return isRequesting
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    private fun onAdRenderSuc() {
+        if (isDestroyed || isAdRendered) return
+        Log.e(logTag, "onAdRenderSuc")
+
+        clearView()
+        isAdRendered = true
+        flAdView.addView(atNativeBannerView, layoutParams)
+        NativeBannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(flAdView)
+    }
+
     private fun clearView() {
-        (flAd.parent as? ViewGroup)?.removeView(flAd)
-        if (flAd.childCount > 0) {
-            flAd.removeAllViews()
+        isAdRendered = false
+        (flAdView.parent as? ViewGroup)?.removeView(flAdView)
+        if (flAdView.childCount > 0) {
+            flAdView.removeAllViews()
         }
     }
 
@@ -130,13 +163,16 @@ class NativeBannerLoader(
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
-        Log.e(logTag, "onAdLoaded")
         if (isDestroyed) return
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        Log.e(logTag, "onAdLoaded")
 
-        clearView()
-        flAd.addView(atNativeBannerView, layoutParams)
-        NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke(flAd)
+        isAdLoaded = true
+        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
+
+        if (isShowAfterLoaded) {
+            show()
+        }
         loadedLiveData.value = true
     }
 
@@ -144,8 +180,9 @@ class NativeBannerLoader(
      * 广告加载失败回调
      */
     override fun onAdError(errorMsg: String?) {
-        Log.e(logTag, "onAdError:$errorMsg")
         if (isDestroyed) return
+        Log.e(logTag, "onAdError:$errorMsg")
+
         isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, loaderTag, false)
         NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
@@ -155,8 +192,9 @@ class NativeBannerLoader(
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
-        Log.e(logTag, "onAdShow:${info.toString()}")
         if (isDestroyed) return
+        Log.e(logTag, "onAdShow:${info.toString()}")
+
         NativeBannerCallback().apply(bannerCallback).onAdShow?.invoke(info)
     }
 
@@ -164,8 +202,9 @@ class NativeBannerLoader(
      * 广告刷新回调
      */
     override fun onAutoRefresh(info: ATAdInfo?) {
-        Log.e(logTag, "onAutoRefresh:${info.toString()}")
         if (isDestroyed) return
+        Log.e(logTag, "onAutoRefresh:${info.toString()}")
+
         NativeBannerCallback().apply(bannerCallback).onAutoRefresh?.invoke(info)
     }
 
@@ -173,8 +212,9 @@ class NativeBannerLoader(
      * 广告刷新失败回调
      */
     override fun onAutoRefreshFail(errorMsg: String?) {
-        Log.e(logTag, "onAutoRefreshFail:$errorMsg")
         if (isDestroyed) return
+        Log.e(logTag, "onAutoRefreshFail:$errorMsg")
+
         NativeBannerCallback().apply(bannerCallback).onAutoRefreshFail?.invoke(errorMsg)
     }
 
@@ -182,7 +222,9 @@ class NativeBannerLoader(
      * 广告点击
      */
     override fun onAdClick(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdClick:${info.toString()}")
+
         NativeBannerCallback().apply(bannerCallback).onAdClick?.invoke(info)
     }
 
@@ -190,8 +232,11 @@ class NativeBannerLoader(
      * 广告关闭回调（部分广告平台有该回调），可在此处执行移除view的操作
      */
     override fun onAdClose() {
+        if (isDestroyed) return
         Log.e(logTag, "onAdClose")
+
         if (NativeBannerCallback().apply(bannerCallback).onAdClose?.invoke() == true) {
+            isAdLoaded = false
             clearView()
         }
     }
@@ -200,6 +245,7 @@ class NativeBannerLoader(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
         Log.e(logTag, "onDestroy")
+
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         clearView()

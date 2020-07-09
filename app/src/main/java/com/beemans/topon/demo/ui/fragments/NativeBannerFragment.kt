@@ -24,8 +24,8 @@ class NativeBannerFragment : BaseFragment() {
     override fun initEvent() {
         nativeBanner_btnShow.setOnClickListener {
             loadNativeBanner1()
-            loadNativeBanner2()
-            loadNativeBanner3()
+//            loadNativeBanner2()
+//            loadNativeBanner3()
         }
     }
 
@@ -41,8 +41,11 @@ class NativeBannerFragment : BaseFragment() {
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID2, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
-                onAdLoaded { flAd ->
-                    nativeBanner_flBanner.addView(flAd)
+                onAdRenderSuc { flAdView ->
+                    nativeBanner_flBanner.addView(flAdView)
+                }
+                onAdClose {
+                    true
                 }
             }.also { bannerLoaders["1"] = it }
         }
@@ -61,8 +64,8 @@ class NativeBannerFragment : BaseFragment() {
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID2, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
-                onAdLoaded { flAd ->
-                    nativeBanner_flBanner2.addView(flAd)
+                onAdRenderSuc { flAdView ->
+                    nativeBanner_flBanner2.addView(flAdView)
                 }
             }.also { bannerLoaders["2"] = it }
         }
@@ -79,8 +82,8 @@ class NativeBannerFragment : BaseFragment() {
             val config =
                 NativeBannerConfig(Constant.NATIVE_AD_ID2, 350.pt2px, 270.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
-                onAdLoaded { flAd ->
-                    nativeBanner_flBanner3.addView(flAd)
+                onAdRenderSuc { flAdView ->
+                    nativeBanner_flBanner3.addView(flAdView)
                 }
             }.also { bannerLoaders["3"] = it }
         }
