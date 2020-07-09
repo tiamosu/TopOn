@@ -76,7 +76,7 @@ class BannerLoader(
         liveData
     }
 
-    private val flAd by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(activity) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
@@ -100,7 +100,7 @@ class BannerLoader(
         owner.lifecycle.addObserver(this)
 
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded && !isDestroyed) {
+            if (isShowAfterLoaded) {
                 show()
             }
         }
@@ -111,7 +111,7 @@ class BannerLoader(
      */
     private fun preLoadAd() {
         if (isUsePreload) {
-            load()
+            onAdLoad()
         }
     }
 
@@ -120,11 +120,12 @@ class BannerLoader(
      */
     fun show(): BannerLoader {
         isShowAfterLoaded = true
-        if (load()) {
+        if (onAdLoad()) {
             return this
         }
+
         isShowAfterLoaded = false
-        adRenderSuc()
+        onAdRenderSuc()
         return this
     }
 
@@ -139,7 +140,10 @@ class BannerLoader(
     /**
      * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
-    private fun adRenderSuc() {
+    private fun onAdRenderSuc() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRenderSuc")
+
         if (isRenderAdded) {
             if (atBannerView?.isVisible == false) {
                 setVisibility(View.VISIBLE)
@@ -148,11 +152,14 @@ class BannerLoader(
         }
         isRenderAdded = true
         clearView()
-        flAd.addView(atBannerView, layoutParams)
-        BannerCallback().apply(bannerCallback).onRenderSuc?.invoke(flAd)
+        flAdView.addView(atBannerView, layoutParams)
+        BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
-    private fun load(): Boolean {
+    /**
+     * 广告请求加载
+     */
+    private fun onAdLoad(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isBannerLoaded) {
             BannerManager.updateRequestStatus(placementId, loaderTag, true)
@@ -163,9 +170,9 @@ class BannerLoader(
     }
 
     private fun clearView() {
-        (flAd.parent as? ViewGroup)?.removeView(flAd)
-        if (flAd.childCount > 0) {
-            flAd.removeAllViews()
+        (flAdView.parent as? ViewGroup)?.removeView(flAdView)
+        if (flAdView.childCount > 0) {
+            flAdView.removeAllViews()
         }
     }
 
@@ -173,8 +180,9 @@ class BannerLoader(
      * 广告加载成功回调
      */
     override fun onBannerLoaded() {
-        Log.e(logTag, "onBannerLoaded")
         if (isDestroyed) return
+        Log.e(logTag, "onBannerLoaded")
+
         isBannerLoaded = true
         BannerManager.updateRequestStatus(placementId, loaderTag, false)
         BannerCallback().apply(bannerCallback).onBannerLoaded?.invoke()
@@ -189,8 +197,9 @@ class BannerLoader(
      * 广告加载失败回调
      */
     override fun onBannerFailed(error: AdError?) {
-        Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
         if (isDestroyed) return
+        Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
+
         isShowAfterLoaded = true
         BannerManager.updateRequestStatus(placementId, loaderTag, false)
         BannerCallback().apply(bannerCallback).onBannerFailed?.invoke(error)
@@ -200,7 +209,9 @@ class BannerLoader(
      * 广告展示回调
      */
     override fun onBannerShow(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onBannerShow:${info.toString()}")
+
         BannerCallback().apply(bannerCallback).onBannerShow?.invoke(info)
     }
 
@@ -208,7 +219,9 @@ class BannerLoader(
      * 广告点击
      */
     override fun onBannerClicked(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onBannerClicked:${info.toString()}")
+
         BannerCallback().apply(bannerCallback).onBannerClicked?.invoke(info)
     }
 
@@ -216,7 +229,9 @@ class BannerLoader(
      * 广告关闭回调
      */
     override fun onBannerClose(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onBannerClose:${info.toString()}")
+
         if (BannerCallback().apply(bannerCallback).onBannerClose?.invoke(info) == true) {
             setVisibility(View.GONE)
         }
@@ -226,7 +241,9 @@ class BannerLoader(
      * 广告自动刷新回调
      */
     override fun onBannerAutoRefreshed(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onBannerAutoRefreshed:${info.toString()}")
+
         BannerCallback().apply(bannerCallback).onBannerAutoRefreshed?.invoke(info)
     }
 
@@ -234,7 +251,9 @@ class BannerLoader(
      * 广告自动刷新失败回调
      */
     override fun onBannerAutoRefreshFail(error: AdError?) {
+        if (isDestroyed) return
         Log.e(logTag, "onBannerAutoRefreshFail:${error?.printStackTrace()}")
+
         BannerCallback().apply(bannerCallback).onBannerAutoRefreshFail?.invoke(error)
     }
 
@@ -242,10 +261,12 @@ class BannerLoader(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
         Log.e(logTag, "onDestroy")
+
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         clearView()
         BannerManager.release(placementId)
+        atBannerView?.clean()
         atBannerView = null
     }
 }

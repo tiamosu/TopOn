@@ -76,7 +76,7 @@ class SplashAdLoader(
         }
     }
 
-    private val flAd by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(activity) }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -140,9 +140,10 @@ class SplashAdLoader(
     private fun onAdRenderSuc() {
         if (isDestroyed) return
         Log.e(logTag, "onAdRenderSuc")
+
         clearView()
-        flAd.addView(frameLayout)
-        SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAd)
+        flAdView.addView(frameLayout)
+        SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
     /**
@@ -151,6 +152,7 @@ class SplashAdLoader(
     private fun onAdTimeOut() {
         if (isDestroyed) return
         Log.e(logTag, "onAdTimeOut")
+
         isTimeOut = true
         isShowAfterLoaded = true
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
@@ -158,9 +160,9 @@ class SplashAdLoader(
     }
 
     private fun clearView() {
-        (flAd.parent as? ViewGroup)?.removeView(flAd)
-        if (flAd.childCount > 0) {
-            flAd.removeAllViews()
+        (flAdView.parent as? ViewGroup)?.removeView(flAdView)
+        if (flAdView.childCount > 0) {
+            flAdView.removeAllViews()
         }
     }
 
@@ -170,6 +172,7 @@ class SplashAdLoader(
     override fun onAdLoaded() {
         if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onAdLoaded")
+
         isAdLoaded = true
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
@@ -187,6 +190,7 @@ class SplashAdLoader(
     override fun onNoAdError(error: AdError?) {
         if (isDestroyed) return
         Log.e(logTag, "onNoAdError:${error?.printStackTrace()}")
+
         isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
@@ -199,6 +203,7 @@ class SplashAdLoader(
     override fun onAdShow(info: ATAdInfo?) {
         if (isDestroyed) return
         Log.e(logTag, "onAdShow:${info.toString()}")
+
         isAdPlaying = true
         SplashAdCallback().apply(splashAdCallback).onAdShow?.invoke(info)
     }
@@ -209,6 +214,7 @@ class SplashAdLoader(
     override fun onAdClick(info: ATAdInfo?) {
         if (isDestroyed) return
         Log.e(logTag, "onAdClick:${info.toString()}")
+
         SplashAdCallback().apply(splashAdCallback).onAdClick?.invoke(info)
     }
 
@@ -218,6 +224,7 @@ class SplashAdLoader(
     override fun onAdDismiss(info: ATAdInfo?) {
         if (isDestroyed) return
         Log.e(logTag, "onAdDismiss:${info.toString()}")
+
         isAdPlaying = false
         isAdLoaded = false
         if (SplashAdCallback().apply(splashAdCallback).onAdDismiss?.invoke(info) == true) {
@@ -231,6 +238,7 @@ class SplashAdLoader(
     override fun onAdTick(tickTime: Long) {
         if (isDestroyed) return
         Log.e(logTag, "onAdTick:$tickTime")
+
         SplashAdCallback().apply(splashAdCallback).onAdTick?.invoke(tickTime)
     }
 
@@ -238,6 +246,7 @@ class SplashAdLoader(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
         Log.e(logTag, "onDestroy")
+
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         handler.removeCallbacksAndMessages(null)
