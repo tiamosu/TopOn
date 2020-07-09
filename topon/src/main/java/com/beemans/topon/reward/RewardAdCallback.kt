@@ -9,7 +9,7 @@ import com.anythink.core.api.AdError
  */
 class RewardAdCallback {
 
-    internal var onRewardRenderSuc: (() -> Unit)? = null
+    internal var onAdRenderSuc: (() -> Unit)? = null
 
     internal var onRewardedVideoAdLoaded: (() -> Unit)? = null
 
@@ -27,13 +27,13 @@ class RewardAdCallback {
 
     internal var onRewardedVideoAdPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onRewardedVideoAdTimeOut: (() -> Unit)? = null
+    internal var onAdTimeOut: (() -> Unit)? = null
 
     /**
      * 广告渲染成功
      */
-    fun onRewardRenderSuc(onRewardRenderSuc: () -> Unit) {
-        this.onRewardRenderSuc = onRewardRenderSuc
+    fun onAdRenderSuc(onAdRenderSuc: () -> Unit) {
+        this.onAdRenderSuc = onAdRenderSuc
     }
 
     /**
@@ -95,7 +95,7 @@ class RewardAdCallback {
     /**
      * 广告加载超时
      */
-    fun onRewardedVideoAdTimeOut(onRewardedVideoAdTimeOut: () -> Unit) {
-        this.onRewardedVideoAdTimeOut = onRewardedVideoAdTimeOut
+    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
+        this.onAdTimeOut = onAdTimeOut
     }
 }
