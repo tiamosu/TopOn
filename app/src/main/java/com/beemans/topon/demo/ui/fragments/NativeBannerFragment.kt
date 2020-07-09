@@ -39,7 +39,7 @@ class NativeBannerFragment : BaseFragment() {
             val width = 160.pt2px
             val height = ((50 / 320f) * width).roundToInt()
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID2, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { flAd ->
                     nativeBanner_flBanner.addView(flAd)
@@ -59,7 +59,7 @@ class NativeBannerFragment : BaseFragment() {
             val width = 320.pt2px
             val height = ((150 / 640f) * width).roundToInt()
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID2, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { flAd ->
                     nativeBanner_flBanner2.addView(flAd)
@@ -77,7 +77,7 @@ class NativeBannerFragment : BaseFragment() {
                 isCloseBtnShow = true
             }
             val config =
-                NativeBannerConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px, bannerConfig)
+                NativeBannerConfig(Constant.NATIVE_AD_ID2, 350.pt2px, 270.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdLoaded { flAd ->
                     nativeBanner_flBanner3.addView(flAd)

@@ -81,11 +81,7 @@ class NativeAdLoader(
         liveData
     }
 
-    private val flAd by lazy {
-        FrameLayout(activity).apply {
-            layoutParams = this@NativeAdLoader.layoutParams
-        }
-    }
+    private val flAd by lazy { FrameLayout(activity) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 

@@ -80,14 +80,7 @@ class NativeSplashLoader(
         }
     }
 
-    private val flAd by lazy {
-        FrameLayout(activity).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-        }
-    }
+    private val flAd by lazy { FrameLayout(activity) }
 
     init {
         initAd()
