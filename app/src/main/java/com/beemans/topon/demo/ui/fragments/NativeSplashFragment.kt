@@ -24,9 +24,9 @@ class NativeSplashFragment : BaseFragment() {
             if (nativeSplashLoader == null) {
                 val config = NativeSplashConfig(Constant.NATIVE_AD_ID2, 350.pt2px)
                 nativeSplashLoader = TopOn.loadNativeSplash(this, config) {
-                    onAdLoaded { flAd ->
+                    onAdRenderSuc { flAdView ->
                         nativeSplash_btnLoad.isVisible = false
-                        nativeSplash_flAd.addView(flAd)
+                        nativeSplash_flAd.addView(flAdView)
                     }
                     onAdSkip {
                         nativeSplash_btnLoad.isVisible = true
