@@ -9,8 +9,6 @@ import com.anythink.core.api.AdError
  */
 class InterstitialAdCallback {
 
-    internal var onInterstitialSuc: (() -> Unit)? = null
-
     internal var onInterstitialAdTimeOut: (() -> Unit)? = null
 
     internal var onInterstitialAdLoaded: (() -> Unit)? = null
@@ -28,13 +26,6 @@ class InterstitialAdCallback {
     internal var onInterstitialAdVideoEnd: ((info: ATAdInfo?) -> Unit)? = null
 
     internal var onInterstitialAdVideoError: ((error: AdError?) -> Unit)? = null
-
-    /**
-     * 广告渲染成功
-     */
-    fun onInterstitialSuc(onInterstitialSuc: () -> Unit) {
-        this.onInterstitialSuc = onInterstitialSuc
-    }
 
     /**
      * 广告加载超时
