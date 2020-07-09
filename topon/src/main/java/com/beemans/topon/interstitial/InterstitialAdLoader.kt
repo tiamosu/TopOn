@@ -143,7 +143,18 @@ class InterstitialAdLoader(
         } else {
             atInterstitial?.show(activity)
         }
+        onAdRenderSuc()
         return this
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    private fun onAdRenderSuc() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRenderSuc")
+
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdRenderSuc?.invoke()
     }
 
     /**
