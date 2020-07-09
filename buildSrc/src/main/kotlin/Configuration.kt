@@ -16,6 +16,17 @@ object Versions {
     const val leakcanary = "2.4"
 }
 
+object Publish {
+    const val userOrg = "weixia" //bintray.com用户名
+    const val groupId = "me.tiamosu" //jcenter上的路径
+    const val publishVersion = "1.0.0" //版本号
+    const val desc = "Oh hi, this is a nice description for a project, right?"
+    const val website = "https://github.com/tiamosu/TopOn"
+    const val gitUrl = "https://github.com/tiamosu/TopOn.git"
+    const val email = "djy2009wenbi@gmail.com"
+    const val projectName = "X-TopOn"
+}
+
 object Deps {
     // fly Android 快速集成框架
     const val fly = "me.tiamosu:fly:${Versions.fly}"
