@@ -96,7 +96,7 @@ class SplashAdLoader(
         owner.lifecycle.addObserver(this)
 
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded && !isTimeOut) {
+            if (isShowAfterLoaded) {
                 show()
             }
         }
@@ -107,20 +107,20 @@ class SplashAdLoader(
      */
     fun show(): SplashAdLoader {
         isShowAfterLoaded = true
-        if (load()) {
+        if (onAdLoad()) {
             return this
         }
 
         isTimeOut = false
         isShowAfterLoaded = false
-        adRenderSuc()
+        onAdRenderSuc()
         return this
     }
 
     /**
      * 广告请求加载
      */
-    private fun load(): Boolean {
+    private fun onAdLoad(): Boolean {
         val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             SplashAdManager.updateRequestStatus(placementId, loaderTag, true)
@@ -137,8 +137,9 @@ class SplashAdLoader(
     /**
      * 广告渲染成功
      */
-    private fun adRenderSuc() {
+    private fun onAdRenderSuc() {
         if (isDestroyed) return
+        Log.e(logTag, "onAdRenderSuc")
         clearView()
         flAd.addView(frameLayout)
         SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAd)
@@ -148,8 +149,8 @@ class SplashAdLoader(
      * 广告超时
      */
     private fun onAdTimeOut() {
-        Log.e(logTag, "onAdTimeOut")
         if (isDestroyed) return
+        Log.e(logTag, "onAdTimeOut")
         isTimeOut = true
         isShowAfterLoaded = true
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
@@ -167,9 +168,10 @@ class SplashAdLoader(
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
-        Log.e(logTag, "onAdLoaded")
         if (isDestroyed || isTimeOut) return
+        Log.e(logTag, "onAdLoaded")
         isAdLoaded = true
+        handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
         SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke()
 
@@ -183,9 +185,10 @@ class SplashAdLoader(
      * 广告加载失败回调
      */
     override fun onNoAdError(error: AdError?) {
-        Log.e(logTag, "onNoAdError:${error?.printStackTrace()}")
         if (isDestroyed) return
+        Log.e(logTag, "onNoAdError:${error?.printStackTrace()}")
         isShowAfterLoaded = true
+        handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
         SplashAdCallback().apply(splashAdCallback).onNoAdError?.invoke(error)
     }
@@ -194,8 +197,8 @@ class SplashAdLoader(
      * 广告展示回调
      */
     override fun onAdShow(info: ATAdInfo?) {
-        Log.e(logTag, "onAdShow:${info.toString()}")
         if (isDestroyed) return
+        Log.e(logTag, "onAdShow:${info.toString()}")
         isAdPlaying = true
         SplashAdCallback().apply(splashAdCallback).onAdShow?.invoke(info)
     }
@@ -204,6 +207,7 @@ class SplashAdLoader(
      * 广告点击回调
      */
     override fun onAdClick(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdClick:${info.toString()}")
         SplashAdCallback().apply(splashAdCallback).onAdClick?.invoke(info)
     }
@@ -212,6 +216,7 @@ class SplashAdLoader(
      * 广告关闭回调
      */
     override fun onAdDismiss(info: ATAdInfo?) {
+        if (isDestroyed) return
         Log.e(logTag, "onAdDismiss:${info.toString()}")
         isAdPlaying = false
         isAdLoaded = false
@@ -224,8 +229,8 @@ class SplashAdLoader(
      * 广告的倒计时回调
      */
     override fun onAdTick(tickTime: Long) {
-        Log.e(logTag, "onAdTick:$tickTime")
         if (isDestroyed) return
+        Log.e(logTag, "onAdTick:$tickTime")
         SplashAdCallback().apply(splashAdCallback).onAdTick?.invoke(tickTime)
     }
 
@@ -235,8 +240,10 @@ class SplashAdLoader(
         Log.e(logTag, "onDestroy")
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        handler.removeCallbacksAndMessages(null)
         clearView()
         SplashAdManager.release(placementId)
+        atSplashAd?.onDestory()
         atSplashAd = null
     }
 }
