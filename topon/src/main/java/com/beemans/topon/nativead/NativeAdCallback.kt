@@ -11,11 +11,11 @@ import com.anythink.nativead.api.ATNativeAdView
  */
 class NativeAdCallback {
 
+    internal var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+
     internal var onNativeAdLoadFail: ((adError: AdError?) -> Unit)? = null
 
     internal var onNativeAdLoaded: (() -> Unit)? = null
-
-    internal var onNativeRenderSuc: ((flAd: FrameLayout) -> Unit)? = null
 
     internal var onAdVideoStart: ((view: ATNativeAdView?) -> Unit)? = null
 
@@ -46,8 +46,8 @@ class NativeAdCallback {
     /**
      * 广告渲染成功
      */
-    fun onNativeRenderSuc(onNativeRenderSuc: (flAd: FrameLayout) -> Unit) {
-        this.onNativeRenderSuc = onNativeRenderSuc
+    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
+        this.onAdRenderSuc = onAdRenderSuc
     }
 
     /**
