@@ -28,7 +28,7 @@ class BannerFragment : BaseFragment() {
         val config = BannerConfig(Constant.BANNER_ID, 375.pt2px, 180.pt2px)
         bannerLoader = TopOn.loadBanner(this, config) {
             onAdRenderSuc { flAdView ->
-                banner_flAd.addView(flAdView)
+                flAdView?.let { banner_flAd.addView(it) }
             }
             onBannerClose {
                 true

@@ -225,9 +225,9 @@ class SplashAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdDismiss:${info.toString()}")
 
-        isAdPlaying = false
-        isAdLoaded = false
         if (SplashAdCallback().apply(splashAdCallback).onAdDismiss?.invoke(info) == true) {
+            isAdPlaying = false
+            isAdLoaded = false
             clearView()
         }
     }

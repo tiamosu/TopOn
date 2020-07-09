@@ -142,14 +142,16 @@ class BannerLoader(
      */
     private fun onAdRenderSuc() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdRenderSuc")
-
         if (isRenderAdded) {
             if (atBannerView?.isVisible == false) {
+                Log.e(logTag, "onAdRenderSuc")
                 setVisibility(View.VISIBLE)
+                BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(null)
             }
             return
         }
+        Log.e(logTag, "onAdRenderSuc")
+
         isRenderAdded = true
         clearView()
         flAdView.addView(atBannerView, layoutParams)
