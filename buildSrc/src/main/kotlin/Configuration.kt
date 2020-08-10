@@ -11,20 +11,9 @@ object Android {
 }
 
 object Versions {
-    const val kotlin = "1.4-M3"
-    const val fly = "1.3.3"
+    const val kotlin = "1.4.0-rc"
+    const val fly = "1.4.6"
     const val leakcanary = "2.4"
-}
-
-object Publish {
-    const val userOrg = "weixia" //bintray.com用户名
-    const val groupId = "me.tiamosu" //jcenter上的路径
-    const val publishVersion = "1.0.0" //版本号
-    const val desc = "Oh hi, this is a nice description for a project, right?"
-    const val website = "https://github.com/tiamosu/TopOn"
-    const val gitUrl = "https://github.com/tiamosu/TopOn.git"
-    const val email = "djy2009wenbi@gmail.com"
-    const val projectName = "X-TopOn"
 }
 
 object Deps {

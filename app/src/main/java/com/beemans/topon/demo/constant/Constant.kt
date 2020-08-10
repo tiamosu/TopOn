@@ -9,7 +9,10 @@ object Constant {
 //    const val APP_KEY = "ce96a01d3a436ca15d2785a61b9701d7"
 //    const val NATIVE_AD_ID = "b5efef3c883a00"
 //    const val NATIVE_AD_ID2 = "b5f02bff3a5a7d"
-//    const val NATIVE_AD_ID3 = "b5f03dab3b9acb"
+//    const val REWARD_ID = "b5f1502786c59e"
+//    const val INTERSTITIAL_ID = "b5f1504051d3b2"
+//    const val BANNER_ID = "b5baca45138428"
+//    const val SPLASH_ID = "b5f07004e8a85f"
 
     const val APP_ID = "a5aa1f9deda26d"
     const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
