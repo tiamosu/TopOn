@@ -12,7 +12,6 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.anythink.core.api.ATAdInfo
 import com.anythink.nativead.splash.api.ATNativeSplash
 import com.anythink.nativead.splash.api.ATNativeSplashListener
-import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
@@ -99,8 +98,6 @@ class NativeSplashLoader(
         localMap.apply {
             put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
             put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
-            put(MintegralATConst.AUTO_RENDER_NATIVE_WIDTH, nativeWidth)
-            put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
         }
     }
 

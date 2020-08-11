@@ -12,7 +12,6 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
-import com.anythink.network.mintegral.MintegralATConst
 import com.anythink.network.toutiao.TTATConst
 import com.tiamosu.fly.callback.EventLiveData
 
@@ -98,8 +97,6 @@ class NativeAdLoader(
                 localMap.apply {
                     put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
                     put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
-                    put(MintegralATConst.AUTO_RENDER_NATIVE_WIDTH, nativeWidth)
-                    put(MintegralATConst.AUTO_RENDER_NATIVE_HEIGHT, nativeHeight)
                 }.let(this::setLocalExtra)
             }
         }

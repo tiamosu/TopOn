@@ -43,13 +43,6 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         val flIcon: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
         val ivChoiceLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
 
-        if (flAd.childCount > 0) {
-            flAd.removeAllViews()
-        }
-        if (flIcon.childCount > 0) {
-            flIcon.removeAllViews()
-        }
-
         //个性化模板
         val isNativeExpress = ad.isNativeExpress
         tvTitle.isVisible = !isNativeExpress
@@ -71,6 +64,10 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             tvCta.text = ad.callToActionText
         }
         if (flIcon.isVisible) {
+            if (flIcon.childCount > 0) {
+                flIcon.removeAllViews()
+            }
+
             //获取广告IconView
             val adIconView = ad.adIconView
             if (adIconView != null) {
