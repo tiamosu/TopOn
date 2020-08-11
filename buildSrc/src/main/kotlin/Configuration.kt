@@ -12,7 +12,7 @@ object Android {
 
 object Versions {
     const val kotlin = "1.4.0-rc"
-    const val fly = "1.4.6"
+    const val fly = "1.4.7"
     const val leakcanary = "2.4"
 }
 

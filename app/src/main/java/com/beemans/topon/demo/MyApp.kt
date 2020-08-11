@@ -4,6 +4,7 @@ import android.os.Build
 import android.webkit.WebView
 import com.anythink.core.api.ATSDK
 import com.beemans.topon.demo.constant.Constant
+import com.blankj.utilcode.util.Utils
 import com.tiamosu.fly.base.BaseFlyApplication
 
 /**
@@ -25,8 +26,8 @@ class MyApp : BaseFlyApplication() {
         }
 
         //开启日志功能
-        ATSDK.setNetworkLogDebug(true)
-        ATSDK.integrationChecking(applicationContext)
-        ATSDK.init(this, Constant.APP_ID, Constant.APP_KEY)
+        ATSDK.setNetworkLogDebug(BuildConfig.DEBUG)
+        ATSDK.integrationChecking(Utils.getApp())
+        ATSDK.init(Utils.getApp(), Constant.APP_ID, Constant.APP_KEY)
     }
 }
