@@ -29,7 +29,6 @@ class NativeSplashLoader(
     private var atNativeSplash: ATNativeSplash? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
 
     private val activity by lazy {
         when (owner) {
@@ -144,7 +143,7 @@ class NativeSplashLoader(
     private fun onAdLoad(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
-            NativeManager.updateRequestStatus(placementId, loaderTag, true)
+            NativeManager.updateRequestStatus(placementId, true)
             atNativeSplash = ATNativeSplash(
                 activity,
                 frameLayout,
@@ -176,7 +175,7 @@ class NativeSplashLoader(
         Log.e(logTag, "onAdLoaded")
 
         isAdLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeManager.updateRequestStatus(placementId, false)
         NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
@@ -193,8 +192,8 @@ class NativeSplashLoader(
         Log.e(logTag, "onNoAdError:$errorMsg")
 
         isShowAfterLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeSplashCallback().apply(splashCallback).onNoAdError?.invoke(errorMsg)
+        NativeManager.updateRequestStatus(placementId, false)
+        NativeSplashCallback().apply(splashCallback).onAdError?.invoke(errorMsg)
     }
 
     /**

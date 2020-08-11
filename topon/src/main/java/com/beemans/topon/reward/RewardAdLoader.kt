@@ -28,7 +28,6 @@ class RewardAdLoader(
     private var atRewardVideoAd: ATRewardVideoAd? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     private val activity by lazy {
@@ -117,7 +116,7 @@ class RewardAdLoader(
         val isRequesting = RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         val isAdReady = atRewardVideoAd?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
-            RewardAdManager.updateRequestStatus(placementId, loaderTag, true)
+            RewardAdManager.updateRequestStatus(placementId, true)
             atRewardVideoAd?.load()
 
             handler.postDelayed({
@@ -167,7 +166,7 @@ class RewardAdLoader(
 
         isTimeOut = true
         isShowAfterLoaded = true
-        RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
+        RewardAdManager.updateRequestStatus(placementId, false)
         RewardAdCallback().apply(rewardAdCallback).onAdTimeOut?.invoke()
     }
 
@@ -179,8 +178,8 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdLoaded")
 
         handler.removeCallbacksAndMessages(null)
-        RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdLoaded?.invoke()
+        RewardAdManager.updateRequestStatus(placementId, false)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show()
@@ -197,8 +196,8 @@ class RewardAdLoader(
 
         isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
-        RewardAdManager.updateRequestStatus(placementId, loaderTag, false)
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdFailed?.invoke(error)
+        RewardAdManager.updateRequestStatus(placementId, false)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoFailed?.invoke(error)
     }
 
     /**
@@ -209,7 +208,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdClosed:${info.toString()}")
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdClosed?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoClosed?.invoke(info)
         preloadAd()
     }
 
@@ -220,7 +219,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onReward:${info.toString()}")
 
-        RewardAdCallback().apply(rewardAdCallback).onReward?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdReward?.invoke(info)
     }
 
     /**
@@ -234,7 +233,7 @@ class RewardAdLoader(
         )
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayFailed?.invoke(error, info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayFailed?.invoke(error, info)
     }
 
     /**
@@ -245,7 +244,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdPlayStart:${info.toString()}")
 
         isAdPlaying = true
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayStart?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayStart?.invoke(info)
     }
 
     /**
@@ -256,7 +255,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdPlayEnd:${info.toString()}")
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayEnd?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayEnd?.invoke(info)
         preloadAd()
     }
 
@@ -267,7 +266,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onRewardedVideoAdPlayClicked:${info.toString()}")
 
-        RewardAdCallback().apply(rewardAdCallback).onRewardedVideoAdPlayClicked?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayClicked?.invoke(info)
     }
 
     @Suppress("unused")

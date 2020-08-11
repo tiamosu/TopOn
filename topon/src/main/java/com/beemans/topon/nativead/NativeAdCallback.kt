@@ -13,9 +13,9 @@ class NativeAdCallback {
 
     internal var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
-    internal var onNativeAdLoadFail: ((adError: AdError?) -> Unit)? = null
+    internal var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
 
-    internal var onNativeAdLoaded: (() -> Unit)? = null
+    internal var onAdLoaded: (() -> Unit)? = null
 
     internal var onAdVideoStart: ((view: ATNativeAdView?) -> Unit)? = null
 
@@ -27,20 +27,20 @@ class NativeAdCallback {
 
     internal var onAdImpressed: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdCloseButtonClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
+    internal var onAdCloseClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
 
     /**
      * 广告加载失败
      */
-    fun onNativeAdLoadFail(onNativeAdLoadFail: (adError: AdError?) -> Unit) {
-        this.onNativeAdLoadFail = onNativeAdLoadFail
+    fun onAdLoadFail(onAdAdLoadFail: (adError: AdError?) -> Unit) {
+        this.onAdLoadFail = onAdAdLoadFail
     }
 
     /**
      * 广告加载成功
      */
-    fun onNativeAdLoaded(onNativeAdLoaded: () -> Unit) {
-        this.onNativeAdLoaded = onNativeAdLoaded
+    fun onAdLoaded(onAdLoaded: () -> Unit) {
+        this.onAdLoaded = onAdLoaded
     }
 
     /**
@@ -88,7 +88,7 @@ class NativeAdCallback {
     /**
      * 对广告不感兴趣等，进行广告关闭点击
      */
-    fun onAdCloseButtonClick(onAdCloseButtonClick: (view: ATNativeAdView?, info: ATAdInfo?) -> Boolean) {
-        this.onAdCloseButtonClick = onAdCloseButtonClick
+    fun onAdCloseClick(onAdCloseClick: (view: ATNativeAdView?, info: ATAdInfo?) -> Boolean) {
+        this.onAdCloseClick = onAdCloseClick
     }
 }

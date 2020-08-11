@@ -14,7 +14,7 @@ class SplashAdCallback {
 
     internal var onAdLoaded: (() -> Unit)? = null
 
-    internal var onNoAdError: ((error: AdError?) -> Unit)? = null
+    internal var onAdError: ((error: AdError?) -> Unit)? = null
 
     internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -43,8 +43,8 @@ class SplashAdCallback {
     /**
      * 广告加载失败
      */
-    fun onNoAdError(onNoAdError: (error: AdError?) -> Unit) {
-        this.onNoAdError = onNoAdError
+    fun onAdError(onAdError: (error: AdError?) -> Unit) {
+        this.onAdError = onAdError
     }
 
     /**

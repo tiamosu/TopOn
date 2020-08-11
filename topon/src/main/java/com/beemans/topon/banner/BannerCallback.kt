@@ -11,19 +11,19 @@ class BannerCallback {
 
     internal var onAdRenderSuc: (() -> Unit)? = null
 
-    internal var onBannerLoaded: (() -> Unit)? = null
+    internal var onAdLoaded: (() -> Unit)? = null
 
-    internal var onBannerFailed: ((error: AdError?) -> Unit)? = null
+    internal var onAdFailed: ((error: AdError?) -> Unit)? = null
 
-    internal var onBannerClicked: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onBannerShow: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onBannerClose: ((info: ATAdInfo?) -> Boolean)? = null
+    internal var onAdClose: ((info: ATAdInfo?) -> Boolean)? = null
 
-    internal var onBannerAutoRefreshed: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdAutoRefreshed: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onBannerAutoRefreshFail: ((error: AdError?) -> Unit)? = null
+    internal var onAdAutoRefreshFail: ((error: AdError?) -> Unit)? = null
 
     /**
      * 广告渲染成功
@@ -35,49 +35,49 @@ class BannerCallback {
     /**
      * 广告加载成功回调
      */
-    fun onBannerLoaded(onBannerLoaded: () -> Unit) {
-        this.onBannerLoaded = onBannerLoaded
+    fun onAdLoaded(onAdLoaded: () -> Unit) {
+        this.onAdLoaded = onAdLoaded
     }
 
     /**
      * 广告加载失败回调
      */
-    fun onBannerFailed(onBannerFailed: (error: AdError?) -> Unit) {
-        this.onBannerFailed = onBannerFailed
+    fun onAdFailed(onAdFailed: (error: AdError?) -> Unit) {
+        this.onAdFailed = onAdFailed
     }
 
     /**
      * 广告点击
      */
-    fun onBannerClicked(onBannerClicked: (info: ATAdInfo?) -> Unit) {
-        this.onBannerClicked = onBannerClicked
+    fun onAdClicked(onAdClicked: (info: ATAdInfo?) -> Unit) {
+        this.onAdClicked = onAdClicked
     }
 
     /**
      * 广告展示回调
      */
-    fun onBannerShow(onBannerShow: (info: ATAdInfo?) -> Unit) {
-        this.onBannerShow = onBannerShow
+    fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
+        this.onAdShow = onAdShow
     }
 
     /**
      * 广告关闭回调
      */
-    fun onBannerClose(onBannerClose: (info: ATAdInfo?) -> Boolean) {
-        this.onBannerClose = onBannerClose
+    fun onAdClose(onAdClose: (info: ATAdInfo?) -> Boolean) {
+        this.onAdClose = onAdClose
     }
 
     /**
      * 广告自动刷新回调
      */
-    fun onBannerAutoRefreshed(onBannerAutoRefreshed: (info: ATAdInfo?) -> Unit) {
-        this.onBannerAutoRefreshed = onBannerAutoRefreshed
+    fun onAdAutoRefreshed(onAdAutoRefreshed: (info: ATAdInfo?) -> Unit) {
+        this.onAdAutoRefreshed = onAdAutoRefreshed
     }
 
     /**
      * 广告自动刷新失败回调
      */
-    fun onBannerAutoRefreshFail(onBannerAutoRefreshFail: (error: AdError?) -> Unit) {
-        this.onBannerAutoRefreshFail = onBannerAutoRefreshFail
+    fun onAdAutoRefreshFail(onAdAutoRefreshFail: (error: AdError?) -> Unit) {
+        this.onAdAutoRefreshFail = onAdAutoRefreshFail
     }
 }

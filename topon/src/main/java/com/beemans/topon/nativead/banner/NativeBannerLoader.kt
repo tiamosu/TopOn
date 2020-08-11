@@ -29,7 +29,6 @@ class NativeBannerLoader(
     private var atNativeBannerView: ATNativeBannerView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
 
     private val activity by lazy {
         when (owner) {
@@ -128,7 +127,7 @@ class NativeBannerLoader(
     private fun onAdLoad(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isAdLoaded) {
-            NativeManager.updateRequestStatus(placementId, loaderTag, true)
+            NativeManager.updateRequestStatus(placementId, true)
             atNativeBannerView?.loadAd(null)
             return true
         }
@@ -164,7 +163,7 @@ class NativeBannerLoader(
         Log.e(logTag, "onAdLoaded")
 
         isAdLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeManager.updateRequestStatus(placementId, false)
         NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
@@ -181,7 +180,7 @@ class NativeBannerLoader(
         Log.e(logTag, "onAdError:$errorMsg")
 
         isShowAfterLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
+        NativeManager.updateRequestStatus(placementId, false)
         NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
     }
 
@@ -202,7 +201,7 @@ class NativeBannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAutoRefresh:${info.toString()}")
 
-        NativeBannerCallback().apply(bannerCallback).onAutoRefresh?.invoke(info)
+        NativeBannerCallback().apply(bannerCallback).onAdAutoRefresh?.invoke(info)
     }
 
     /**
@@ -212,7 +211,7 @@ class NativeBannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAutoRefreshFail:$errorMsg")
 
-        NativeBannerCallback().apply(bannerCallback).onAutoRefreshFail?.invoke(errorMsg)
+        NativeBannerCallback().apply(bannerCallback).onAdAutoRefreshFail?.invoke(errorMsg)
     }
 
     /**

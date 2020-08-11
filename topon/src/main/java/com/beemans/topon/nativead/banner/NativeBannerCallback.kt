@@ -15,13 +15,13 @@ class NativeBannerCallback {
 
     internal var onAdError: ((errorMsg: String?) -> Unit)? = null
 
-    internal var onAutoRefresh: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdAutoRefresh: ((info: ATAdInfo?) -> Unit)? = null
 
     internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
     internal var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAutoRefreshFail: ((errorMsg: String?) -> Unit)? = null
+    internal var onAdAutoRefreshFail: ((errorMsg: String?) -> Unit)? = null
 
     internal var onAdClose: (() -> Boolean)? = null
 
@@ -49,8 +49,8 @@ class NativeBannerCallback {
     /**
      * 广告刷新回调
      */
-    fun onAutoRefresh(onAutoRefresh: (info: ATAdInfo?) -> Unit) {
-        this.onAutoRefresh = onAutoRefresh
+    fun onAdAutoRefresh(onAdAutoRefresh: (info: ATAdInfo?) -> Unit) {
+        this.onAdAutoRefresh = onAdAutoRefresh
     }
 
     /**
@@ -70,8 +70,8 @@ class NativeBannerCallback {
     /**
      * 广告刷新失败回调
      */
-    fun onAutoRefreshFail(onAutoRefreshFail: (errorMsg: String?) -> Unit) {
-        this.onAutoRefreshFail = onAutoRefreshFail
+    fun onAdAutoRefreshFail(onAdAutoRefreshFail: (errorMsg: String?) -> Unit) {
+        this.onAdAutoRefreshFail = onAdAutoRefreshFail
     }
 
     /**

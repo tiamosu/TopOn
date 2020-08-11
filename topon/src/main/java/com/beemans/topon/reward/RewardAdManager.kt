@@ -8,20 +8,17 @@ import com.tiamosu.fly.callback.EventLiveData
  */
 internal object RewardAdManager {
     val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
-    private val requestingMap: MutableMap<String, MutableMap<String, Boolean>> by lazy { mutableMapOf() }
+    private val requestingMap: MutableMap<String, Boolean> by lazy { mutableMapOf() }
 
     fun isRequesting(placementId: String): Boolean {
-        return ((requestingMap[placementId] ?: mutableMapOf()).values).contains(true)
+        return requestingMap[placementId] == true
     }
 
-    fun updateRequestStatus(placementId: String, nativeLoaderTag: String, isRequesting: Boolean) {
-        (requestingMap[placementId] ?: mutableMapOf()).apply {
-            put(nativeLoaderTag, isRequesting)
-            requestingMap[placementId] = this
-        }
+    fun updateRequestStatus(placementId: String, isRequesting: Boolean) {
+        requestingMap[placementId] = isRequesting
     }
 
     fun release(placementId: String) {
-        (requestingMap[placementId])?.clear()
+        requestingMap[placementId] = false
     }
 }

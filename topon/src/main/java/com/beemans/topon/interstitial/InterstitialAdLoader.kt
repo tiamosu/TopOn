@@ -28,7 +28,6 @@ class InterstitialAdLoader(
     private var atInterstitial: ATInterstitial? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     private val activity by lazy {
@@ -116,7 +115,7 @@ class InterstitialAdLoader(
             InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         val isAdReady = atInterstitial?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
-            InterstitialAdManager.updateRequestStatus(placementId, loaderTag, true)
+            InterstitialAdManager.updateRequestStatus(placementId, true)
             atInterstitial?.load()
 
             handler.postDelayed({
@@ -166,8 +165,8 @@ class InterstitialAdLoader(
 
         isTimeOut = true
         isShowAfterLoaded = true
-        InterstitialAdManager.updateRequestStatus(placementId, loaderTag, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdTimeOut?.invoke()
+        InterstitialAdManager.updateRequestStatus(placementId, false)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke()
     }
 
     /**
@@ -178,8 +177,8 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdLoaded")
 
         handler.removeCallbacksAndMessages(null)
-        InterstitialAdManager.updateRequestStatus(placementId, loaderTag, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdLoaded?.invoke()
+        InterstitialAdManager.updateRequestStatus(placementId, false)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show()
@@ -196,9 +195,9 @@ class InterstitialAdLoader(
 
         isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
-        InterstitialAdManager.updateRequestStatus(placementId, loaderTag, false)
+        InterstitialAdManager.updateRequestStatus(placementId, false)
         InterstitialAdCallback().apply(interstitialAdCallback)
-            .onInterstitialAdLoadFail?.invoke(error)
+            .onAdLoadFail?.invoke(error)
     }
 
     /**
@@ -208,7 +207,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onInterstitialAdClicked:${info.toString()}")
 
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdClicked?.invoke(info)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdClicked?.invoke(info)
     }
 
     /**
@@ -218,7 +217,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onInterstitialAdShow:${info.toString()}")
 
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdShow?.invoke(info)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdShow?.invoke(info)
     }
 
     /**
@@ -229,7 +228,7 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdClose:${info.toString()}")
 
         isAdPlaying = false
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdClose?.invoke(info)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdClose?.invoke(info)
         preLoadAd()
     }
 
@@ -242,7 +241,7 @@ class InterstitialAdLoader(
 
         isAdPlaying = true
         InterstitialAdCallback().apply(interstitialAdCallback)
-            .onInterstitialAdVideoStart?.invoke(info)
+            .onAdVideoStart?.invoke(info)
     }
 
     /**
@@ -253,7 +252,7 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdVideoEnd:${info.toString()}")
 
         isAdPlaying = false
-        InterstitialAdCallback().apply(interstitialAdCallback).onInterstitialAdVideoEnd?.invoke(info)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoEnd?.invoke(info)
         preLoadAd()
     }
 
@@ -266,7 +265,7 @@ class InterstitialAdLoader(
 
         isAdPlaying = false
         InterstitialAdCallback().apply(interstitialAdCallback)
-            .onInterstitialAdVideoError?.invoke(error)
+            .onAdVideoError?.invoke(error)
     }
 
     @Suppress("unused")

@@ -31,7 +31,6 @@ class BannerLoader(
     private var atBannerView: ATBannerView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
 
     private val activity by lazy {
         when (owner) {
@@ -152,7 +151,7 @@ class BannerLoader(
     private fun onAdLoad(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isBannerLoaded) {
-            BannerManager.updateRequestStatus(placementId, loaderTag, true)
+            BannerManager.updateRequestStatus(placementId, true)
             atBannerView?.loadAd()
             return true
         }
@@ -171,8 +170,8 @@ class BannerLoader(
         Log.e(logTag, "onBannerLoaded")
 
         isBannerLoaded = true
-        BannerManager.updateRequestStatus(placementId, loaderTag, false)
-        BannerCallback().apply(bannerCallback).onBannerLoaded?.invoke()
+        BannerManager.updateRequestStatus(placementId, false)
+        BannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show()
@@ -188,8 +187,8 @@ class BannerLoader(
         Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
 
         isShowAfterLoaded = true
-        BannerManager.updateRequestStatus(placementId, loaderTag, false)
-        BannerCallback().apply(bannerCallback).onBannerFailed?.invoke(error)
+        BannerManager.updateRequestStatus(placementId, false)
+        BannerCallback().apply(bannerCallback).onAdFailed?.invoke(error)
     }
 
     /**
@@ -199,7 +198,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerShow:${info.toString()}")
 
-        BannerCallback().apply(bannerCallback).onBannerShow?.invoke(info)
+        BannerCallback().apply(bannerCallback).onAdShow?.invoke(info)
     }
 
     /**
@@ -209,7 +208,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerClicked:${info.toString()}")
 
-        BannerCallback().apply(bannerCallback).onBannerClicked?.invoke(info)
+        BannerCallback().apply(bannerCallback).onAdClicked?.invoke(info)
     }
 
     /**
@@ -219,7 +218,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerClose:${info.toString()}")
 
-        if (BannerCallback().apply(bannerCallback).onBannerClose?.invoke(info) == true) {
+        if (BannerCallback().apply(bannerCallback).onAdClose?.invoke(info) == true) {
             setVisibility(View.GONE)
         }
     }
@@ -231,7 +230,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerAutoRefreshed:${info.toString()}")
 
-        BannerCallback().apply(bannerCallback).onBannerAutoRefreshed?.invoke(info)
+        BannerCallback().apply(bannerCallback).onAdAutoRefreshed?.invoke(info)
     }
 
     /**
@@ -241,7 +240,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerAutoRefreshFail:${error?.printStackTrace()}")
 
-        BannerCallback().apply(bannerCallback).onBannerAutoRefreshFail?.invoke(error)
+        BannerCallback().apply(bannerCallback).onAdAutoRefreshFail?.invoke(error)
     }
 
     @Suppress("unused")

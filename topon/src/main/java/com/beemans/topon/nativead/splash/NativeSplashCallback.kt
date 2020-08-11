@@ -13,7 +13,7 @@ class NativeSplashCallback {
 
     internal var onAdLoaded: (() -> Unit)? = null
 
-    internal var onNoAdError: ((errorMsg: String?) -> Unit)? = null
+    internal var onAdError: ((errorMsg: String?) -> Unit)? = null
 
     internal var onAdSkip: (() -> Boolean)? = null
 
@@ -42,8 +42,8 @@ class NativeSplashCallback {
     /**
      * 广告加载失败
      */
-    fun onNoAdError(onNoAdError: (errorMsg: String?) -> Unit) {
-        this.onNoAdError = onNoAdError
+    fun onAdError(onAdError: (errorMsg: String?) -> Unit) {
+        this.onAdError = onAdError
     }
 
     /**

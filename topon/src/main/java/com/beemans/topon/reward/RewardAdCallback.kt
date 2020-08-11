@@ -11,21 +11,21 @@ class RewardAdCallback {
 
     internal var onAdRenderSuc: (() -> Unit)? = null
 
-    internal var onRewardedVideoAdLoaded: (() -> Unit)? = null
+    internal var onAdVideoLoaded: (() -> Unit)? = null
 
-    internal var onRewardedVideoAdFailed: ((error: AdError?) -> Unit)? = null
+    internal var onAdVideoFailed: ((error: AdError?) -> Unit)? = null
 
-    internal var onRewardedVideoAdClosed: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoClosed: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onReward: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdReward: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onRewardedVideoAdPlayFailed: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoPlayFailed: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
 
-    internal var onRewardedVideoAdPlayStart: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoPlayStart: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onRewardedVideoAdPlayEnd: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoPlayEnd: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onRewardedVideoAdPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
 
     internal var onAdTimeOut: (() -> Unit)? = null
 
@@ -39,57 +39,57 @@ class RewardAdCallback {
     /**
      * 广告加载成功回调
      */
-    fun onRewardedVideoAdLoaded(onRewardedVideoAdLoaded: () -> Unit) {
-        this.onRewardedVideoAdLoaded = onRewardedVideoAdLoaded
+    fun onAdVideoLoaded(onAdVideoLoaded: () -> Unit) {
+        this.onAdVideoLoaded = onAdVideoLoaded
     }
 
     /**
      * 广告加载失败回调
      */
-    fun onRewardedVideoAdFailed(onRewardedVideoAdFailed: (error: AdError?) -> Unit) {
-        this.onRewardedVideoAdFailed = onRewardedVideoAdFailed
+    fun onAdVideoFailed(onAdVideoFailed: (error: AdError?) -> Unit) {
+        this.onAdVideoFailed = onAdVideoFailed
     }
 
     /**
      * 广告关闭回调，建议在此回调中调用load进行广告的加载，方便下一次广告的展示
      */
-    fun onRewardedVideoAdClosed(onRewardedVideoAdClosed: (info: ATAdInfo?) -> Unit) {
-        this.onRewardedVideoAdClosed = onRewardedVideoAdClosed
+    fun onAdVideoClosed(onAdVideoClosed: (info: ATAdInfo?) -> Unit) {
+        this.onAdVideoClosed = onAdVideoClosed
     }
 
     /**
      * 下发激励的时候会回调该接口
      */
-    fun onReward(onReward: (info: ATAdInfo?) -> Unit) {
-        this.onReward = onReward
+    fun onAdReward(onAdReward: (info: ATAdInfo?) -> Unit) {
+        this.onAdReward = onAdReward
     }
 
     /**
      * 广告播放失败回调
      */
-    fun onRewardedVideoAdPlayFailed(onRewardedVideoAdPlayFailed: (error: AdError?, info: ATAdInfo?) -> Unit) {
-        this.onRewardedVideoAdPlayFailed = onRewardedVideoAdPlayFailed
+    fun onAdVideoPlayFailed(onAdVideoPlayFailed: (error: AdError?, info: ATAdInfo?) -> Unit) {
+        this.onAdVideoPlayFailed = onAdVideoPlayFailed
     }
 
     /**
      * 广告刷新回调
      */
-    fun onRewardedVideoAdPlayStart(onRewardedVideoAdPlayStart: (info: ATAdInfo?) -> Unit) {
-        this.onRewardedVideoAdPlayStart = onRewardedVideoAdPlayStart
+    fun onAdVideoPlayStart(onAdVideoPlayStart: (info: ATAdInfo?) -> Unit) {
+        this.onAdVideoPlayStart = onAdVideoPlayStart
     }
 
     /**
      * 广告播放结束
      */
-    fun onRewardedVideoAdPlayEnd(onRewardedVideoAdPlayEnd: (info: ATAdInfo?) -> Unit) {
-        this.onRewardedVideoAdPlayEnd = onRewardedVideoAdPlayEnd
+    fun onAdVideoPlayEnd(onAdVideoPlayEnd: (info: ATAdInfo?) -> Unit) {
+        this.onAdVideoPlayEnd = onAdVideoPlayEnd
     }
 
     /**
      * 广告点击
      */
-    fun onRewardedVideoAdPlayClicked(onRewardedVideoAdPlayClicked: (info: ATAdInfo?) -> Unit) {
-        this.onRewardedVideoAdPlayClicked = onRewardedVideoAdPlayClicked
+    fun onAdVideoPlayClicked(onAdVideoPlayClicked: (info: ATAdInfo?) -> Unit) {
+        this.onAdVideoPlayClicked = onAdVideoPlayClicked
     }
 
     /**

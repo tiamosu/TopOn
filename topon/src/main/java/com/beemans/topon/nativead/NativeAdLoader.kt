@@ -37,7 +37,6 @@ class NativeAdLoader(
     private var atNativeAdView: ATNativeAdView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
 
     private val activity by lazy {
         when (owner) {
@@ -176,7 +175,7 @@ class NativeAdLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
-            NativeManager.updateRequestStatus(placementId, loaderTag, true)
+            NativeManager.updateRequestStatus(placementId, true)
             atNative?.makeAdRequest()
             return true
         }
@@ -198,8 +197,8 @@ class NativeAdLoader(
         Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
 
         isShowAfterLoaded = true
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeAdCallback().apply(nativeAdCallback).onNativeAdLoadFail?.invoke(error)
+        NativeManager.updateRequestStatus(placementId, false)
+        NativeAdCallback().apply(nativeAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
@@ -209,8 +208,8 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoaded")
 
-        NativeManager.updateRequestStatus(placementId, loaderTag, false)
-        NativeAdCallback().apply(nativeAdCallback).onNativeAdLoaded?.invoke()
+        NativeManager.updateRequestStatus(placementId, false)
+        NativeAdCallback().apply(nativeAdCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show()
@@ -279,7 +278,7 @@ class NativeAdLoader(
         Log.e(logTag, "onAdCloseButtonClick:${info.toString()}")
 
         if (NativeAdCallback().apply(nativeAdCallback)
-                .onAdCloseButtonClick?.invoke(view, info) == true
+                .onAdCloseClick?.invoke(view, info) == true
         ) {
             isAdPlaying = false
             clearView()

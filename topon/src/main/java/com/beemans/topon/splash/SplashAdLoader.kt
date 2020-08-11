@@ -30,7 +30,6 @@ class SplashAdLoader(
     private var atSplashAd: ATSplashAd? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-    private val loaderTag by lazy { this.toString() }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     private val activity by lazy {
@@ -123,7 +122,7 @@ class SplashAdLoader(
     private fun onAdLoad(): Boolean {
         val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
-            SplashAdManager.updateRequestStatus(placementId, loaderTag, true)
+            SplashAdManager.updateRequestStatus(placementId, true)
             atSplashAd = ATSplashAd(activity, frameLayout, placementId, this)
 
             handler.postDelayed({
@@ -155,7 +154,7 @@ class SplashAdLoader(
 
         isTimeOut = true
         isShowAfterLoaded = true
-        SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
+        SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdTimeOut?.invoke()
     }
 
@@ -175,7 +174,7 @@ class SplashAdLoader(
 
         isAdLoaded = true
         handler.removeCallbacksAndMessages(null)
-        SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
+        SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
@@ -193,8 +192,8 @@ class SplashAdLoader(
 
         isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
-        SplashAdManager.updateRequestStatus(placementId, loaderTag, false)
-        SplashAdCallback().apply(splashAdCallback).onNoAdError?.invoke(error)
+        SplashAdManager.updateRequestStatus(placementId, false)
+        SplashAdCallback().apply(splashAdCallback).onAdError?.invoke(error)
     }
 
     /**

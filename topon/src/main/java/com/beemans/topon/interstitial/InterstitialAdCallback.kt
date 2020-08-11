@@ -11,23 +11,23 @@ class InterstitialAdCallback {
 
     internal var onAdRenderSuc: (() -> Unit)? = null
 
-    internal var onInterstitialAdTimeOut: (() -> Unit)? = null
+    internal var onAdTimeOut: (() -> Unit)? = null
 
-    internal var onInterstitialAdLoaded: (() -> Unit)? = null
+    internal var onAdLoaded: (() -> Unit)? = null
 
-    internal var onInterstitialAdLoadFail: ((error: AdError?) -> Unit)? = null
+    internal var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    internal var onInterstitialAdClicked: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdShow: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdClose: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdClose: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdVideoStart: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoStart: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdVideoEnd: ((info: ATAdInfo?) -> Unit)? = null
+    internal var onAdVideoEnd: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onInterstitialAdVideoError: ((error: AdError?) -> Unit)? = null
+    internal var onAdVideoError: ((error: AdError?) -> Unit)? = null
 
     /**
      * 广告渲染成功
@@ -39,63 +39,63 @@ class InterstitialAdCallback {
     /**
      * 广告加载超时
      */
-    fun onInterstitialAdTimeOut(onInterstitialAdTimeOut: () -> Unit) {
-        this.onInterstitialAdTimeOut = onInterstitialAdTimeOut
+    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
+        this.onAdTimeOut = onAdTimeOut
     }
 
     /**
      * 广告加载成功回调
      */
-    fun onInterstitialAdLoaded(onInterstitialAdLoaded: () -> Unit) {
-        this.onInterstitialAdLoaded = onInterstitialAdLoaded
+    fun onAdLoaded(onAdLoaded: () -> Unit) {
+        this.onAdLoaded = onAdLoaded
     }
 
     /**
      * 广告加载失败回调
      */
-    fun onInterstitialAdLoadFail(onInterstitialAdLoadFail: (error: AdError?) -> Unit) {
-        this.onInterstitialAdLoadFail = onInterstitialAdLoadFail
+    fun onAdLoadFail(onAdLoadFail: (error: AdError?) -> Unit) {
+        this.onAdLoadFail = onAdLoadFail
     }
 
     /**
      * 广告点击
      */
-    fun onInterstitialAdClicked(onInterstitialAdClicked: (info: ATAdInfo?) -> Unit) {
-        this.onInterstitialAdClicked = onInterstitialAdClicked
+    fun onAdClicked(onAdClicked: (info: ATAdInfo?) -> Unit) {
+        this.onAdClicked = onAdClicked
     }
 
     /**
      * 广告展示回调
      */
-    fun onInterstitialAdShow(onInterstitialAdShow: (info: ATAdInfo?) -> Unit) {
-        this.onInterstitialAdShow = onInterstitialAdShow
+    fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
+        this.onAdShow = onAdShow
     }
 
     /**
      * 广告关闭回调
      */
-    fun onInterstitialAdClose(onInterstitialAdClose: (info: ATAdInfo?) -> Unit) {
-        this.onInterstitialAdClose = onInterstitialAdClose
+    fun onAdClose(onAdClose: (info: ATAdInfo?) -> Unit) {
+        this.onAdClose = onAdClose
     }
 
     /**
      * 视频广告刷新回调
      */
-    fun onInterstitialAdVideoStart(onInterstitialAdVideoStart: (info: ATAdInfo?) -> Unit) {
-        this.onInterstitialAdVideoStart = onInterstitialAdVideoStart
+    fun onAdVideoStart(onAdVideoStart: (info: ATAdInfo?) -> Unit) {
+        this.onAdVideoStart = onAdVideoStart
     }
 
     /**
      * 视频广告播放结束
      */
-    fun onInterstitialAdVideoEnd(onInterstitialAdVideoEnd: (info: ATAdInfo?) -> Unit) {
-        this.onInterstitialAdVideoEnd = onInterstitialAdVideoEnd
+    fun onAdVideoEnd(onAdVideoEnd: (info: ATAdInfo?) -> Unit) {
+        this.onAdVideoEnd = onAdVideoEnd
     }
 
     /**
      * 视频广告播放失败回调
      */
-    fun onInterstitialAdVideoError(onInterstitialAdVideoError: (error: AdError?) -> Unit) {
-        this.onInterstitialAdVideoError = onInterstitialAdVideoError
+    fun onAdVideoError(onAdVideoError: (error: AdError?) -> Unit) {
+        this.onAdVideoError = onAdVideoError
     }
 }
