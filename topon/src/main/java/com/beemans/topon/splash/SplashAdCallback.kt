@@ -10,21 +10,21 @@ import com.anythink.core.api.AdError
  */
 class SplashAdCallback {
 
-    internal var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
-    internal var onAdLoaded: (() -> Unit)? = null
+    var onAdLoaded: (() -> Unit)? = null
 
-    internal var onAdError: ((error: AdError?) -> Unit)? = null
+    var onAdError: ((error: AdError?) -> Unit)? = null
 
-    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdDismiss: ((info: ATAdInfo?) -> Boolean)? = null
+    var onAdDismiss: ((info: ATAdInfo?) -> Boolean)? = null
 
-    internal var onAdTick: ((tickTime: Long) -> Unit)? = null
+    var onAdTick: ((tickTime: Long) -> Unit)? = null
 
-    internal var onAdTimeOut: (() -> Unit)? = null
+    var onAdTimeOut: (() -> Unit)? = null
 
     /**
      * 广告渲染成功

@@ -9,21 +9,21 @@ import com.anythink.core.api.ATAdInfo
  */
 class NativeSplashCallback {
 
-    internal var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
-    internal var onAdLoaded: (() -> Unit)? = null
+    var onAdLoaded: (() -> Unit)? = null
 
-    internal var onAdError: ((errorMsg: String?) -> Unit)? = null
+    var onAdError: ((errorMsg: String?) -> Unit)? = null
 
-    internal var onAdSkip: (() -> Boolean)? = null
+    var onAdSkip: (() -> Boolean)? = null
 
-    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdTick: ((tickTime: Long) -> Unit)? = null
+    var onAdTick: ((tickTime: Long) -> Unit)? = null
 
-    internal var onAdTimeOver: (() -> Unit)? = null
+    var onAdTimeOver: (() -> Unit)? = null
 
     /**
      * 广告渲染成功

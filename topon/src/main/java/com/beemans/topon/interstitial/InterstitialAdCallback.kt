@@ -9,25 +9,25 @@ import com.anythink.core.api.AdError
  */
 class InterstitialAdCallback {
 
-    internal var onAdRenderSuc: (() -> Unit)? = null
+    var onAdRenderSuc: (() -> Unit)? = null
 
-    internal var onAdTimeOut: (() -> Unit)? = null
+    var onAdTimeOut: (() -> Unit)? = null
 
-    internal var onAdLoaded: (() -> Unit)? = null
+    var onAdLoaded: (() -> Unit)? = null
 
-    internal var onAdLoadFail: ((error: AdError?) -> Unit)? = null
+    var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    internal var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdClose: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdClose: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoStart: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoStart: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoEnd: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoEnd: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoError: ((error: AdError?) -> Unit)? = null
+    var onAdVideoError: ((error: AdError?) -> Unit)? = null
 
     /**
      * 广告渲染成功

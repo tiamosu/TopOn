@@ -11,23 +11,23 @@ import com.anythink.nativead.api.ATNativeAdView
  */
 class NativeAdCallback {
 
-    internal var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
-    internal var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
+    var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
 
-    internal var onAdLoaded: (() -> Unit)? = null
+    var onAdLoaded: (() -> Unit)? = null
 
-    internal var onAdVideoStart: ((view: ATNativeAdView?) -> Unit)? = null
+    var onAdVideoStart: ((view: ATNativeAdView?) -> Unit)? = null
 
-    internal var onAdVideoEnd: ((view: ATNativeAdView?) -> Unit)? = null
+    var onAdVideoEnd: ((view: ATNativeAdView?) -> Unit)? = null
 
-    internal var onAdVideoProgress: ((view: ATNativeAdView?, progress: Int) -> Unit)? = null
+    var onAdVideoProgress: ((view: ATNativeAdView?, progress: Int) -> Unit)? = null
 
-    internal var onAdClicked: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
+    var onAdClicked: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdImpressed: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
+    var onAdImpressed: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdCloseClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
+    var onAdCloseClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
 
     /**
      * 广告加载失败

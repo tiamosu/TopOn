@@ -9,25 +9,25 @@ import com.anythink.core.api.AdError
  */
 class RewardAdCallback {
 
-    internal var onAdRenderSuc: (() -> Unit)? = null
+    var onAdRenderSuc: (() -> Unit)? = null
 
-    internal var onAdVideoLoaded: (() -> Unit)? = null
+    var onAdVideoLoaded: (() -> Unit)? = null
 
-    internal var onAdVideoFailed: ((error: AdError?) -> Unit)? = null
+    var onAdVideoFailed: ((error: AdError?) -> Unit)? = null
 
-    internal var onAdVideoClosed: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoClosed: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdReward: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdReward: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoPlayFailed: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoPlayFailed: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoPlayStart: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoPlayStart: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoPlayEnd: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoPlayEnd: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdVideoPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdTimeOut: (() -> Unit)? = null
+    var onAdTimeOut: (() -> Unit)? = null
 
     /**
      * 广告渲染成功

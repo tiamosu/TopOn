@@ -9,21 +9,21 @@ import com.anythink.core.api.AdError
  */
 class BannerCallback {
 
-    internal var onAdRenderSuc: (() -> Unit)? = null
+    var onAdRenderSuc: (() -> Unit)? = null
 
-    internal var onAdLoaded: (() -> Unit)? = null
+    var onAdLoaded: (() -> Unit)? = null
 
-    internal var onAdFailed: ((error: AdError?) -> Unit)? = null
+    var onAdFailed: ((error: AdError?) -> Unit)? = null
 
-    internal var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdClose: ((info: ATAdInfo?) -> Boolean)? = null
+    var onAdClose: ((info: ATAdInfo?) -> Boolean)? = null
 
-    internal var onAdAutoRefreshed: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdAutoRefreshed: ((info: ATAdInfo?) -> Unit)? = null
 
-    internal var onAdAutoRefreshFail: ((error: AdError?) -> Unit)? = null
+    var onAdAutoRefreshFail: ((error: AdError?) -> Unit)? = null
 
     /**
      * 广告渲染成功
