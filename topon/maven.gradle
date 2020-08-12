@@ -1,0 +1,31 @@
+apply plugin: 'maven'
+
+
+//在gradle文件最下方新建一个打包任务.
+//maven上传,示例代码将aar输出到了本地,如果公司有maven私服,可以将地址改为maven私服的地址
+//def MAVEN_LOCAL_PATH = 'file://localhost/' + rootProject.buildDir
+def MAVEN_LOCAL_PATH = 'file://localhost/' + rootDir.path + '/aar'
+//版本号
+def VERSION = '1.0.0'
+//公司名称
+def GROUP_ID = 'me.tiamosu'
+//aar包名称
+def ARTIFACT_ID = 'topon'
+//Maven私服账号
+//def ACCOUNT = 'xxx'
+//Maven私服密码
+//def PWD = 'xxx'
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: MAVEN_LOCAL_PATH) {
+                //如果使用的是maven私服,一般都需要账号密码
+                //authentication(userName :ACCOUNT,password:PWD)
+            }
+            pom.groupId = GROUP_ID
+            pom.artifactId = ARTIFACT_ID
+            pom.version = VERSION
+            pom.packaging = 'aar'
+        }
+    }
+}

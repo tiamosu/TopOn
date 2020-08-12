@@ -34,20 +34,10 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar"])
-    api Deps.fly
-    api Deps.fly_imageloader_glide
-    api Deps.androidx_constraint_layout
-    debugImplementation Deps.leakcanary_android
-
-    fileTree(include: ['*.jar', '*.aar'], dir: 'libs').each { file ->
-        if (file.name.endsWith('.aar')) {
-            def name = file.name.lastIndexOf('.').with { index ->
-                index != -1 ? file.name[0..index - 1] : file.name
-            }
-            api(name: name, ext: 'aar')
-
-            println "$project.name aar =====：$name"
-        }
-    }
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+    implementation Deps.fly
+    implementation Deps.fly_imageloader_glide
+    implementation Deps.androidx_constraint_layout
 }
+
+apply from: 'maven.gradle'
