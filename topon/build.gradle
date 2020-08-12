@@ -34,10 +34,21 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: "libs", include: ["*.jar", "*.aar"])
+    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation Deps.fly
     implementation Deps.fly_imageloader_glide
     implementation Deps.androidx_constraint_layout
+
+    fileTree(include: ['*.jar', '*.aar'], dir: 'libs').each { file ->
+        if (file.name.endsWith('.aar')) {
+            def name = file.name.lastIndexOf('.').with { index ->
+                index != -1 ? file.name[0..index - 1] : file.name
+            }
+            api(name: name, ext: 'aar')
+
+            println "$project.name aar =====：$name"
+        }
+    }
 }
 
 apply from: 'maven.gradle'
