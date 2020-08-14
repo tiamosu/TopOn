@@ -22,7 +22,7 @@ class NativeSplashFragment : BaseFragment() {
     override fun initEvent() {
         nativeSplash_btnLoad.setOnClickListener {
             if (nativeSplashLoader == null) {
-                val config = NativeSplashConfig(Constant.NATIVE_AD_ID2, 350.pt2px)
+                val config = NativeSplashConfig(Constant.NATIVE_AD_ID, 350.pt2px)
                 nativeSplashLoader = TopOn.loadNativeSplash(this, config) {
                     onAdRenderSuc { flAdView ->
                         nativeSplash_btnLoad.isVisible = false

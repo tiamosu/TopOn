@@ -117,7 +117,7 @@ class NativeAdLoader(
      * 广告预加载
      */
     private fun preLoadAd() {
-        if (isUsePreload) {
+        if (isUsePreload && isAllowRequest()) {
             makeAdRequest()
         }
     }
@@ -127,7 +127,8 @@ class NativeAdLoader(
      */
     fun show(): NativeAdLoader {
         isShowAfterLoaded = true
-        if (makeAdRequest()) {
+        if (isAllowRequest()) {
+            makeAdRequest()
             return this
         }
 
@@ -170,16 +171,22 @@ class NativeAdLoader(
     }
 
     /**
+     * 是否允许发起广告请求
+     */
+    fun isAllowRequest(): Boolean {
+        val isRequesting = NativeManager.isRequesting(placementId)
+        return !isRequesting
+                && !isAdPlaying
+                && !isDestroyed
+                && getNativeAd().also { nativeAd = it } == null
+    }
+
+    /**
      * 发起Native广告请求
      */
-    private fun makeAdRequest(): Boolean {
-        val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
-        if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
-            NativeManager.updateRequestStatus(placementId, true)
-            atNative?.makeAdRequest()
-            return true
-        }
-        return isRequesting
+    private fun makeAdRequest() {
+        NativeManager.updateRequestStatus(placementId, true)
+        atNative?.makeAdRequest()
     }
 
     /**

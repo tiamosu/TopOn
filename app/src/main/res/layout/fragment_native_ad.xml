@@ -7,20 +7,28 @@
     tools:ignore="all">
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/nativeAd_btnNativeAd"
+        android:id="@+id/nativeAd_btnPreload1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="原生信息流"
+        android:text="预加载1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/nativeAd_btnOpenPage"
+        android:id="@+id/nativeAd_btnPreload2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="新页面"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nativeAd_btnNativeAd" />
+        android:text="预加载2"
+        app:layout_constraintLeft_toRightOf="@+id/nativeAd_btnPreload1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/nativeAd_btnShowAd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="展示广告"
+        app:layout_constraintLeft_toRightOf="@+id/nativeAd_btnPreload2"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/nativeAd_flAd"

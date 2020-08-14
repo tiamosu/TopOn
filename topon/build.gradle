@@ -34,9 +34,9 @@ android {
 }
 
 dependencies {
-    implementation Deps.fly
-    implementation Deps.fly_imageloader_glide
-    implementation Deps.androidx_constraint_layout
+    compileOnly Deps.fly
+    compileOnly Deps.fly_imageloader_glide
+    compileOnly Deps.androidx_constraint_layout
 
     fileTree(include: ['*.jar', '*.aar'], dir: 'libs').each { file ->
         if (file.name.endsWith('.aar')) {
@@ -50,4 +50,4 @@ dependencies {
     }
 }
 
-apply from: 'maven.gradle'
+apply from: "${rootDir.path}/maven.gradle"
