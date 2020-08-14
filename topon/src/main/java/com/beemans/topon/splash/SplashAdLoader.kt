@@ -187,7 +187,7 @@ class SplashAdLoader(
      * 广告加载失败回调
      */
     override fun onNoAdError(error: AdError?) {
-        if (isDestroyed) return
+        if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onNoAdError:${error?.printStackTrace()}")
 
         isShowAfterLoaded = true

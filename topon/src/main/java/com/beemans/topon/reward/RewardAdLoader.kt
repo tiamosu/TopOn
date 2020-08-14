@@ -94,7 +94,7 @@ class RewardAdLoader(
         owner.lifecycle.addObserver(this)
 
         loadedLiveData.observe(owner) {
-            if (isShowAfterLoaded && !isDestroyed && !isTimeOut) {
+            if (isShowAfterLoaded) {
                 show()
             }
         }
@@ -191,7 +191,7 @@ class RewardAdLoader(
      * 广告加载失败回调
      */
     override fun onRewardedVideoAdFailed(error: AdError?) {
-        if (isDestroyed) return
+        if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onRewardedVideoAdFailed:${error?.printStackTrace()}")
 
         isShowAfterLoaded = true

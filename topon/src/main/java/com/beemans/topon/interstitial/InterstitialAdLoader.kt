@@ -190,14 +190,13 @@ class InterstitialAdLoader(
      * 广告加载失败回调
      */
     override fun onInterstitialAdLoadFail(error: AdError?) {
-        if (isDestroyed) return
+        if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onInterstitialAdLoadFail:${error?.printStackTrace()}")
 
         isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback)
-            .onAdLoadFail?.invoke(error)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
@@ -240,8 +239,7 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdVideoStart:${info.toString()}")
 
         isAdPlaying = true
-        InterstitialAdCallback().apply(interstitialAdCallback)
-            .onAdVideoStart?.invoke(info)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoStart?.invoke(info)
     }
 
     /**
@@ -264,8 +262,7 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdVideoError:${error?.printStackTrace()}")
 
         isAdPlaying = false
-        InterstitialAdCallback().apply(interstitialAdCallback)
-            .onAdVideoError?.invoke(error)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoError?.invoke(error)
     }
 
     @Suppress("unused")

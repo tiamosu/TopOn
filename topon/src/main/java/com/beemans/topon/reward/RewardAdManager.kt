@@ -6,19 +6,26 @@ import com.tiamosu.fly.callback.EventLiveData
  * @author tiamosu
  * @date 2020/7/7.
  */
-internal object RewardAdManager {
-    val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
+internal class RewardAdManager {
     private val requestingMap: MutableMap<String, Boolean> by lazy { mutableMapOf() }
 
-    fun isRequesting(placementId: String): Boolean {
-        return requestingMap[placementId] == true
-    }
+    companion object {
+        val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
 
-    fun updateRequestStatus(placementId: String, isRequesting: Boolean) {
-        requestingMap[placementId] = isRequesting
-    }
+        private val instance: RewardAdManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
+            RewardAdManager()
+        }
 
-    fun release(placementId: String) {
-        requestingMap[placementId] = false
+        fun isRequesting(placementId: String): Boolean {
+            return instance.requestingMap[placementId] == true
+        }
+
+        fun updateRequestStatus(placementId: String, isRequesting: Boolean) {
+            instance.requestingMap[placementId] = isRequesting
+        }
+
+        fun release(placementId: String) {
+            instance.requestingMap[placementId] = false
+        }
     }
 }
