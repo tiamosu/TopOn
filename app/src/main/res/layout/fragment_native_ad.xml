@@ -18,7 +18,7 @@
         android:id="@+id/nativeAd_btnShowAd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="展示广告"
+        android:text="加载广告"
         app:layout_constraintLeft_toRightOf="@+id/nativeAd_btnPreload"
         app:layout_constraintTop_toTopOf="parent" />
 

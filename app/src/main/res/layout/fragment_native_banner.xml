@@ -15,7 +15,7 @@
             android:id="@+id/nativeBanner_btnShow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="信息流-Banner"
+            android:text="加载广告"
             android:textAllCaps="false"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
