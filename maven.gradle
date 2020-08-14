@@ -6,7 +6,7 @@ uploadArchives {
         pom.project {
             groupId = 'me.tiamosu'
             artifactId = 'topon'
-            version = '1.0.0'
+            version = '1.0.1'
             packaging = 'aar'
         }
     }
