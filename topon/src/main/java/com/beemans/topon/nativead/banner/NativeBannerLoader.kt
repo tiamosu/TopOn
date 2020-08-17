@@ -15,6 +15,8 @@ import com.anythink.nativead.banner.api.ATNativeBannerView
 import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -128,7 +130,10 @@ class NativeBannerLoader(
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             NativeManager.updateRequestStatus(placementId, true)
-            atNativeBannerView?.loadAd(null)
+
+            post(Schedulers.io()) {
+                atNativeBannerView?.loadAd(null)
+            }
             return true
         }
         return isRequesting

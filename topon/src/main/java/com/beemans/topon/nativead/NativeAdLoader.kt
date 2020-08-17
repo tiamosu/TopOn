@@ -14,6 +14,8 @@ import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
 import com.anythink.network.toutiao.TTATConst
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -176,7 +178,10 @@ class NativeAdLoader(
         val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
             NativeManager.updateRequestStatus(placementId, true)
-            atNative?.makeAdRequest()
+
+            post(Schedulers.io()) {
+                atNative?.makeAdRequest()
+            }
             return true
         }
         return isRequesting

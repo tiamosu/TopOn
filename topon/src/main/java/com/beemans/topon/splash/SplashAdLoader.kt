@@ -16,6 +16,8 @@ import com.anythink.core.api.AdError
 import com.anythink.splashad.api.ATSplashAd
 import com.anythink.splashad.api.ATSplashAdListener
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -123,7 +125,10 @@ class SplashAdLoader(
         val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             SplashAdManager.updateRequestStatus(placementId, true)
-            atSplashAd = ATSplashAd(activity, frameLayout, placementId, this)
+
+            post(Schedulers.io()) {
+                atSplashAd = ATSplashAd(activity, frameLayout, placementId, this)
+            }
 
             handler.postDelayed({
                 onAdTimeOut()

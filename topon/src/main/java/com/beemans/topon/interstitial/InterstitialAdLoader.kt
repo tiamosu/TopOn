@@ -14,6 +14,8 @@ import com.anythink.core.api.AdError
 import com.anythink.interstitial.api.ATInterstitial
 import com.anythink.interstitial.api.ATInterstitialListener
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -116,7 +118,10 @@ class InterstitialAdLoader(
         val isAdReady = atInterstitial?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
             InterstitialAdManager.updateRequestStatus(placementId, true)
-            atInterstitial?.load()
+
+            post(Schedulers.io()) {
+                atInterstitial?.load()
+            }
 
             handler.postDelayed({
                 onInterstitialAdTimeOut()

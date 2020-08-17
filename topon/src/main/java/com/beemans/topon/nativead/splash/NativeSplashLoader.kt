@@ -15,6 +15,8 @@ import com.anythink.nativead.splash.api.ATNativeSplashListener
 import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -144,16 +146,19 @@ class NativeSplashLoader(
         val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             NativeManager.updateRequestStatus(placementId, true)
-            atNativeSplash = ATNativeSplash(
-                activity,
-                frameLayout,
-                null,
-                placementId,
-                localMap,
-                splashConfig.requestTimeOut,
-                splashConfig.fetchDelay,
-                this
-            )
+
+            post(Schedulers.io()) {
+                atNativeSplash = ATNativeSplash(
+                    activity,
+                    frameLayout,
+                    null,
+                    placementId,
+                    localMap,
+                    splashConfig.requestTimeOut,
+                    splashConfig.fetchDelay,
+                    this
+                )
+            }
             return true
         }
         return isRequesting

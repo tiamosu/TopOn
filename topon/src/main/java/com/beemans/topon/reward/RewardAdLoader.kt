@@ -14,6 +14,8 @@ import com.anythink.core.api.AdError
 import com.anythink.rewardvideo.api.ATRewardVideoAd
 import com.anythink.rewardvideo.api.ATRewardVideoListener
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -117,7 +119,10 @@ class RewardAdLoader(
         val isAdReady = atRewardVideoAd?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
             RewardAdManager.updateRequestStatus(placementId, true)
-            atRewardVideoAd?.load()
+
+            post(Schedulers.io()) {
+                atRewardVideoAd?.load()
+            }
 
             handler.postDelayed({
                 onAdTimeOut()

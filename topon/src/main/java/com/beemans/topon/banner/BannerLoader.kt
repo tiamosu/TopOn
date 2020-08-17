@@ -16,6 +16,8 @@ import com.anythink.banner.api.ATBannerView
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.tiamosu.fly.callback.EventLiveData
+import com.tiamosu.fly.utils.post
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * @author tiamosu
@@ -152,7 +154,10 @@ class BannerLoader(
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isBannerLoaded) {
             BannerManager.updateRequestStatus(placementId, true)
-            atBannerView?.loadAd()
+
+            post(Schedulers.io()) {
+                atBannerView?.loadAd()
+            }
             return true
         }
         return isRequesting
