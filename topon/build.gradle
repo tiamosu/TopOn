@@ -35,7 +35,6 @@ android {
 
 dependencies {
     compileOnly Deps.fly
-    compileOnly Deps.fly_imageloader_glide
     compileOnly Deps.androidx_constraint_layout
 
     fileTree(include: ['*.jar', '*.aar'], dir: 'libs').each { file ->

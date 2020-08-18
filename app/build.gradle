@@ -53,7 +53,6 @@ dependencies {
     implementation project(':topon')
 
     implementation Deps.fly
-    implementation Deps.fly_imageloader_glide
     implementation Deps.androidx_constraint_layout
     implementation Deps.androidx_viewpager2
     debugCompileOnly Deps.leakcanary_android
