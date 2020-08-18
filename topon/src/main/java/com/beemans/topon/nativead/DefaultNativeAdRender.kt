@@ -36,14 +36,7 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
     override fun renderAdView(view: View, ad: CustomNativeAd) {
         clickView.clear()
 
-        val tvTitle: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvTitle)
-        val tvDesc: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvDesc)
-        val tvCta: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvInstall)
-        val tvAdFrom: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvFrom)
         val flContentArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flAd)
-        val flIconArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
-        val ivChoiceLogo: ATNativeImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
-
         val mediaView: View? = ad.getAdMediaView(flContentArea, flContentArea.width)
         val params = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
@@ -56,6 +49,13 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             flContentArea.addView(mediaView, params)
             return
         }
+
+        val tvTitle: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvTitle)
+        val tvDesc: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvDesc)
+        val tvCta: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvInstall)
+        val tvAdFrom: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvFrom)
+        val flIconArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
+        val ivChoiceLogo: ATNativeImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
 
         //获取广告标题
         tvTitle.isVisible = true
