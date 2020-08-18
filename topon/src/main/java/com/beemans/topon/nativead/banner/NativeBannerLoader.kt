@@ -154,7 +154,10 @@ class NativeBannerLoader(
 
     private fun clearView() {
         isAdRendered = false
-        (flAdView.parent as? ViewGroup)?.removeView(flAdView)
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.childCount > 0) {
+            parent.removeAllViews()
+        }
         if (flAdView.childCount > 0) {
             flAdView.removeAllViews()
         }

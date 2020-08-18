@@ -165,7 +165,10 @@ class NativeAdLoader(
     }
 
     private fun clearView() {
-        (flAdView.parent as? ViewGroup)?.removeView(flAdView)
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.childCount > 0) {
+            parent.removeAllViews()
+        }
         if (flAdView.childCount > 0) {
             flAdView.removeAllViews()
         }
@@ -285,6 +288,7 @@ class NativeAdLoader(
         if (NativeAdCallback().apply(nativeAdCallback).onAdCloseClick?.invoke(view, info) == true) {
             isAdPlaying = false
             clearView()
+            nativeAd?.setDislikeCallbackListener(null)
         }
     }
 

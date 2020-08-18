@@ -164,7 +164,10 @@ class BannerLoader(
     }
 
     private fun clearView() {
-        (atBannerView?.parent as? ViewGroup)?.removeView(atBannerView)
+        val parent = atBannerView?.parent
+        if (parent is ViewGroup && parent.childCount > 0) {
+            parent.removeAllViews()
+        }
     }
 
     /**
