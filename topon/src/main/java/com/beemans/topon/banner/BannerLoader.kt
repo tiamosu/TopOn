@@ -110,7 +110,7 @@ class BannerLoader(
      */
     private fun preLoadAd() {
         if (isUsePreload) {
-            onAdLoad()
+            makeAdRequest()
         }
     }
 
@@ -119,7 +119,7 @@ class BannerLoader(
      */
     fun show(): BannerLoader {
         isShowAfterLoaded = true
-        if (onAdLoad()) {
+        if (makeAdRequest()) {
             return this
         }
 
@@ -150,7 +150,7 @@ class BannerLoader(
     /**
      * 广告请求加载
      */
-    private fun onAdLoad(): Boolean {
+    private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isBannerLoaded) {
             BannerManager.updateRequestStatus(placementId, true)

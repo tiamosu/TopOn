@@ -107,14 +107,14 @@ class RewardAdLoader(
      */
     private fun preloadAd() {
         if (isUsePreload) {
-            onAdLoaded()
+            makeAdRequest()
         }
     }
 
     /**
      * 广告加载请求
      */
-    private fun onAdLoaded(): Boolean {
+    private fun makeAdRequest(): Boolean {
         val isRequesting = RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         val isAdReady = atRewardVideoAd?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
@@ -137,7 +137,7 @@ class RewardAdLoader(
      */
     fun show(): RewardAdLoader {
         isShowAfterLoaded = true
-        if (onAdLoaded()) {
+        if (makeAdRequest()) {
             return this
         }
 

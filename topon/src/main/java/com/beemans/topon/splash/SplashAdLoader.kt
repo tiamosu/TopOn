@@ -108,7 +108,7 @@ class SplashAdLoader(
      */
     fun show(): SplashAdLoader {
         isShowAfterLoaded = true
-        if (onAdLoad()) {
+        if (makeAdRequest()) {
             return this
         }
 
@@ -121,7 +121,7 @@ class SplashAdLoader(
     /**
      * 广告请求加载
      */
-    private fun onAdLoad(): Boolean {
+    private fun makeAdRequest(): Boolean {
         val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             SplashAdManager.updateRequestStatus(placementId, true)

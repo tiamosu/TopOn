@@ -105,14 +105,14 @@ class InterstitialAdLoader(
      */
     private fun preLoadAd() {
         if (isUsePreload) {
-            onAdLoad()
+            makeAdRequest()
         }
     }
 
     /**
      * 广告加载请求
      */
-    private fun onAdLoad(): Boolean {
+    private fun makeAdRequest(): Boolean {
         val isRequesting =
             InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         val isAdReady = atInterstitial?.isAdReady ?: false
@@ -136,7 +136,7 @@ class InterstitialAdLoader(
      */
     fun show(): InterstitialAdLoader {
         isShowAfterLoaded = true
-        if (onAdLoad()) {
+        if (makeAdRequest()) {
             return this
         }
 

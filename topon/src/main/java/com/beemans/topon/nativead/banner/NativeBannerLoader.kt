@@ -114,7 +114,7 @@ class NativeBannerLoader(
      */
     fun show(): NativeBannerLoader {
         isShowAfterLoaded = true
-        if (onAdLoad()) {
+        if (makeAdRequest()) {
             return this
         }
 
@@ -126,7 +126,7 @@ class NativeBannerLoader(
     /**
      * 广告请求加载
      */
-    private fun onAdLoad(): Boolean {
+    private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             NativeManager.updateRequestStatus(placementId, true)

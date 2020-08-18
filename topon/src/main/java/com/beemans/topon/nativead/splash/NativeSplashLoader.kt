@@ -117,7 +117,7 @@ class NativeSplashLoader(
      */
     fun show(): NativeSplashLoader {
         isShowAfterLoaded = true
-        if (onAdLoad()) {
+        if (makeAdRequest()) {
             return this
         }
 
@@ -142,7 +142,7 @@ class NativeSplashLoader(
     /**
      * 广告请求加载
      */
-    private fun onAdLoad(): Boolean {
+    private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && !isAdLoaded) {
             NativeManager.updateRequestStatus(placementId, true)
