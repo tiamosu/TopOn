@@ -9,10 +9,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
-import com.anythink.network.toutiao.TTATConst
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -96,8 +96,8 @@ class NativeAdLoader(
                 //配置广告宽高
                 val localMap: MutableMap<String, Any> = mutableMapOf()
                 localMap.apply {
-                    put(TTATConst.NATIVE_AD_IMAGE_WIDTH, nativeWidth)
-                    put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, nativeHeight)
+                    put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
+                    put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
                 }.let(this::setLocalExtra)
             }
         }
