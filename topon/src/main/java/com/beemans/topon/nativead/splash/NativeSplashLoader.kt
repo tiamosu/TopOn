@@ -3,8 +3,6 @@ package com.beemans.topon.nativead.splash
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -13,6 +11,7 @@ import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.nativead.splash.api.ATNativeSplash
 import com.anythink.nativead.splash.api.ATNativeSplashListener
+import com.beemans.topon.ext.context
 import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
@@ -31,20 +30,6 @@ class NativeSplashLoader(
     private var atNativeSplash: ATNativeSplash? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
 
     private val nativeWidth by lazy { splashConfig.nativeWidth }
     private val nativeHeight by lazy { splashConfig.nativeHeight }
@@ -79,8 +64,8 @@ class NativeSplashLoader(
     //配置广告宽高
     private val localMap: MutableMap<String, Any> by lazy { mutableMapOf() }
 
-    private val frameLayout by lazy {
-        FrameLayout(activity).apply {
+    private val flContainer by lazy {
+        FrameLayout(owner.context).apply {
             layoutParams = ViewGroup.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -88,7 +73,7 @@ class NativeSplashLoader(
         }
     }
 
-    private val flAdView by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(owner.context) }
 
     init {
         initAd()
@@ -135,7 +120,7 @@ class NativeSplashLoader(
 
         clearView()
         isAdRendered = true
-        flAdView.addView(frameLayout)
+        flAdView.addView(flContainer)
         NativeSplashCallback().apply(splashCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
@@ -149,8 +134,8 @@ class NativeSplashLoader(
 
             post(Schedulers.io()) {
                 atNativeSplash = ATNativeSplash(
-                    activity,
-                    frameLayout,
+                    owner.context,
+                    flContainer,
                     null,
                     placementId,
                     localMap,

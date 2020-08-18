@@ -3,8 +3,6 @@ package com.beemans.topon.nativead
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +13,7 @@ import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
 import com.anythink.network.gdt.GDTATConst
 import com.anythink.network.toutiao.TTATConst
+import com.beemans.topon.ext.context
 import com.qq.e.ads.nativ.ADSize
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
@@ -43,20 +42,6 @@ class NativeAdLoader(
 
     private val logTag by lazy { this.javaClass.simpleName }
 
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
-
     //广告位ID
     private val placementId by lazy { nativeAdConfig.placementId }
 
@@ -84,7 +69,7 @@ class NativeAdLoader(
         liveData
     }
 
-    private val flAdView by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(owner.context) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
@@ -95,7 +80,7 @@ class NativeAdLoader(
 
     private fun initAd() {
         if (atNative == null) {
-            atNative = ATNative(activity, placementId, this).apply {
+            atNative = ATNative(owner.context, placementId, this).apply {
                 //配置广告宽高
                 val localMap: MutableMap<String, Any> = mutableMapOf()
                 localMap.apply {
@@ -150,7 +135,7 @@ class NativeAdLoader(
             setDislikeCallbackListener(this@NativeAdLoader)
 
             if (atNativeAdView == null) {
-                atNativeAdView = ATNativeAdView(activity)
+                atNativeAdView = ATNativeAdView(owner.context)
             }
             renderAdView(atNativeAdView, nativeAdRender)
             if (nativeAdRender.clickView.isNotEmpty()) {

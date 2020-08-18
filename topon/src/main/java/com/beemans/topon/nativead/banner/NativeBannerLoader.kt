@@ -3,8 +3,6 @@ package com.beemans.topon.nativead.banner
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -13,6 +11,7 @@ import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.nativead.banner.api.ATNativeBannerListener
 import com.anythink.nativead.banner.api.ATNativeBannerView
+import com.beemans.topon.ext.context
 import com.beemans.topon.nativead.NativeManager
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
@@ -31,20 +30,6 @@ class NativeBannerLoader(
     private var atNativeBannerView: ATNativeBannerView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
 
     private val nativeWidth by lazy { bannerConfig.nativeWidth }
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
@@ -73,7 +58,7 @@ class NativeBannerLoader(
         liveData
     }
 
-    private val flAdView by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(owner.context) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
@@ -84,7 +69,7 @@ class NativeBannerLoader(
 
     private fun initAd() {
         if (atNativeBannerView == null) {
-            atNativeBannerView = ATNativeBannerView(activity).apply {
+            atNativeBannerView = ATNativeBannerView(owner.context).apply {
                 //配置广告宽高
                 val localMap: MutableMap<String, Any> = mutableMapOf()
                 localMap.apply {

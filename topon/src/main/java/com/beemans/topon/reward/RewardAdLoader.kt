@@ -3,16 +3,16 @@ package com.beemans.topon.reward
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.rewardvideo.api.ATRewardVideoAd
 import com.anythink.rewardvideo.api.ATRewardVideoListener
+import com.beemans.topon.ext.context
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -31,20 +31,6 @@ class RewardAdLoader(
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
-
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
 
     //广告位ID
     private val placementId by lazy { rewardAdConfig.placementId }
@@ -83,9 +69,14 @@ class RewardAdLoader(
 
     private fun initAd() {
         if (atRewardVideoAd == null) {
-            atRewardVideoAd = ATRewardVideoAd(activity, placementId).apply {
+            atRewardVideoAd = ATRewardVideoAd(owner.context, placementId).apply {
                 setAdListener(this@RewardAdLoader)
-                setUserData(rewardAdConfig.userId, rewardAdConfig.customData)
+
+                val localMap: MutableMap<String, Any> = mutableMapOf()
+                localMap.apply {
+                    put(ATAdConst.KEY.USER_ID, rewardAdConfig.userId)
+                    put(ATAdConst.KEY.USER_CUSTOM_DATA, rewardAdConfig.customData)
+                }.let(this::setLocalExtra)
             }
         }
 
@@ -144,9 +135,9 @@ class RewardAdLoader(
         isTimeOut = false
         isShowAfterLoaded = false
         if (rewardAdConfig.scenario.isNotBlank()) {
-            atRewardVideoAd?.show(activity, rewardAdConfig.scenario)
+            atRewardVideoAd?.show(owner.context, rewardAdConfig.scenario)
         } else {
-            atRewardVideoAd?.show(activity)
+            atRewardVideoAd?.show(owner.context)
         }
         onAdRenderSuc()
         return this
@@ -261,7 +252,6 @@ class RewardAdLoader(
 
         isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayEnd?.invoke(info)
-        preloadAd()
     }
 
     /**

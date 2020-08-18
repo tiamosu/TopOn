@@ -5,8 +5,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +13,7 @@ import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.splashad.api.ATSplashAd
 import com.anythink.splashad.api.ATSplashAdListener
+import com.beemans.topon.ext.context
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -33,20 +32,6 @@ class SplashAdLoader(
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
-
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
 
     //广告位ID
     private val placementId by lazy { splashAdConfig.placementId }
@@ -68,8 +53,8 @@ class SplashAdLoader(
 
     private var isDestroyed = false
 
-    private val frameLayout by lazy {
-        FrameLayout(activity).apply {
+    private val flContainer by lazy {
+        FrameLayout(owner.context).apply {
             layoutParams = ViewGroup.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -77,7 +62,7 @@ class SplashAdLoader(
         }
     }
 
-    private val flAdView by lazy { FrameLayout(activity) }
+    private val flAdView by lazy { FrameLayout(owner.context) }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -127,7 +112,7 @@ class SplashAdLoader(
             SplashAdManager.updateRequestStatus(placementId, true)
 
             post(Schedulers.io()) {
-                atSplashAd = ATSplashAd(activity, frameLayout, placementId, this)
+                atSplashAd = ATSplashAd(owner.context, flContainer, placementId, this)
             }
 
             handler.postDelayed({
@@ -146,7 +131,7 @@ class SplashAdLoader(
         Log.e(logTag, "onAdRenderSuc")
 
         clearView()
-        flAdView.addView(frameLayout)
+        flAdView.addView(flContainer)
         SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
 

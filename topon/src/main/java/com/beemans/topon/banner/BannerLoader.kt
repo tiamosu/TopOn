@@ -5,8 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +13,7 @@ import com.anythink.banner.api.ATBannerListener
 import com.anythink.banner.api.ATBannerView
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
+import com.beemans.topon.ext.context
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -33,20 +32,6 @@ class BannerLoader(
     private var atBannerView: ATBannerView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
-
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
 
     private val nativeWidth by lazy { bannerConfig.nativeWidth }
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
@@ -84,7 +69,7 @@ class BannerLoader(
 
     private fun initAd() {
         if (atBannerView == null) {
-            atBannerView = ATBannerView(activity).apply {
+            atBannerView = ATBannerView(owner.context).apply {
                 setUnitId(placementId)
                 setBannerAdListener(this@BannerLoader)
             }
@@ -260,7 +245,7 @@ class BannerLoader(
         owner.lifecycle.removeObserver(this)
         clearView()
         BannerManager.release(placementId)
-        atBannerView?.clean()
+        atBannerView?.destroy()
         atBannerView = null
     }
 }

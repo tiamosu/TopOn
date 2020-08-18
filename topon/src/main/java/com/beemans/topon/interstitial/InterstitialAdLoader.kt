@@ -3,8 +3,6 @@ package com.beemans.topon.interstitial
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -13,6 +11,7 @@ import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.interstitial.api.ATInterstitial
 import com.anythink.interstitial.api.ATInterstitialListener
+import com.beemans.topon.ext.context
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -31,20 +30,6 @@ class InterstitialAdLoader(
 
     private val logTag by lazy { this.javaClass.simpleName }
     private val handler by lazy { Handler(Looper.getMainLooper()) }
-
-    private val activity by lazy {
-        when (owner) {
-            is Fragment -> {
-                owner.requireActivity()
-            }
-            is FragmentActivity -> {
-                owner
-            }
-            else -> {
-                throw IllegalArgumentException("owner must instanceof Fragment or FragmentActivity！")
-            }
-        }
-    }
 
     //广告位ID
     private val placementId by lazy { interstitialAdConfig.placementId }
@@ -83,7 +68,7 @@ class InterstitialAdLoader(
 
     private fun initAd() {
         if (atInterstitial == null) {
-            atInterstitial = ATInterstitial(activity, placementId)
+            atInterstitial = ATInterstitial(owner.context, placementId)
             atInterstitial?.setAdListener(this)
         }
 
@@ -143,9 +128,9 @@ class InterstitialAdLoader(
         isTimeOut = false
         isShowAfterLoaded = false
         if (interstitialAdConfig.scenario.isNotBlank()) {
-            atInterstitial?.show(activity, interstitialAdConfig.scenario)
+            atInterstitial?.show(owner.context, interstitialAdConfig.scenario)
         } else {
-            atInterstitial?.show(activity)
+            atInterstitial?.show(owner.context)
         }
         onAdRenderSuc()
         return this
@@ -256,7 +241,6 @@ class InterstitialAdLoader(
 
         isAdPlaying = false
         InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoEnd?.invoke(info)
-        preLoadAd()
     }
 
     /**
