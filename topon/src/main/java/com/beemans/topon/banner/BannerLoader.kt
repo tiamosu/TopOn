@@ -29,7 +29,7 @@ class BannerLoader(
     private val bannerCallback: BannerCallback.() -> Unit
 ) : LifecycleObserver, ATBannerListener {
 
-    private var atBannerView: ATBannerView? = null
+    private lateinit var atBannerView: ATBannerView
 
     private val logTag by lazy { this.javaClass.simpleName }
 
@@ -68,15 +68,12 @@ class BannerLoader(
     }
 
     private fun initAd() {
-        if (atBannerView == null) {
-            atBannerView = ATBannerView(owner.context).apply {
-                setUnitId(placementId)
-                setBannerAdListener(this@BannerLoader)
-            }
-            flSplashView.addView(atBannerView, layoutParams)
-            setVisibility(View.GONE)
+        atBannerView = ATBannerView(owner.context).apply {
+            setUnitId(placementId)
+            setBannerAdListener(this@BannerLoader)
         }
-
+        flSplashView.addView(atBannerView, layoutParams)
+        setVisibility(View.GONE)
         preLoadAd()
     }
 
@@ -117,7 +114,7 @@ class BannerLoader(
      * 控制广告显隐
      */
     fun setVisibility(visible: Int): BannerLoader {
-        atBannerView?.visibility = visible
+        atBannerView.visibility = visible
         return this
     }
 
@@ -125,7 +122,7 @@ class BannerLoader(
      * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
     private fun onAdRenderSuc() {
-        if (isDestroyed || atBannerView?.isVisible == true) return
+        if (isDestroyed || atBannerView.isVisible) return
         Log.e(logTag, "onAdRenderSuc")
 
         setVisibility(View.VISIBLE)
@@ -141,7 +138,7 @@ class BannerLoader(
             BannerManager.updateRequestStatus(placementId, true)
 
             post(Schedulers.io()) {
-                atBannerView?.loadAd()
+                atBannerView.loadAd()
             }
             return true
         }
@@ -149,7 +146,7 @@ class BannerLoader(
     }
 
     private fun clearView() {
-        val parent = atBannerView?.parent
+        val parent = atBannerView.parent
         if (parent is ViewGroup && parent.childCount > 0) {
             parent.removeAllViews()
         }
@@ -245,7 +242,6 @@ class BannerLoader(
         owner.lifecycle.removeObserver(this)
         clearView()
         BannerManager.release(placementId)
-        atBannerView?.destroy()
-        atBannerView = null
+        atBannerView.destroy()
     }
 }

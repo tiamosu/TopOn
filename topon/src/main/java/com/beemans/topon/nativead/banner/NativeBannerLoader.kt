@@ -27,7 +27,7 @@ class NativeBannerLoader(
     private val bannerCallback: NativeBannerCallback.() -> Unit
 ) : LifecycleObserver, ATNativeBannerListener {
 
-    private var atNativeBannerView: ATNativeBannerView? = null
+    private lateinit var atNativeBannerView: ATNativeBannerView
 
     private val logTag by lazy { this.javaClass.simpleName }
 
@@ -68,19 +68,17 @@ class NativeBannerLoader(
     }
 
     private fun initAd() {
-        if (atNativeBannerView == null) {
-            atNativeBannerView = ATNativeBannerView(owner.context).apply {
-                //配置广告宽高
-                val localMap: MutableMap<String, Any> = mutableMapOf()
-                localMap.apply {
-                    put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
-                    put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
-                }.let(this::setLocalExtra)
+        atNativeBannerView = ATNativeBannerView(owner.context).apply {
+            //配置广告宽高
+            val localMap: MutableMap<String, Any> = mutableMapOf()
+            localMap.apply {
+                put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
+                put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
+            }.let(this::setLocalExtra)
 
-                setBannerConfig(bannerConfig.atBannerConfig)
-                setUnitId(placementId)
-                setAdListener(this@NativeBannerLoader)
-            }
+            setBannerConfig(bannerConfig.atBannerConfig)
+            setUnitId(placementId)
+            setAdListener(this@NativeBannerLoader)
         }
     }
 
@@ -117,7 +115,7 @@ class NativeBannerLoader(
             NativeManager.updateRequestStatus(placementId, true)
 
             post(Schedulers.io()) {
-                atNativeBannerView?.loadAd(null)
+                atNativeBannerView.loadAd(null)
             }
             return true
         }
@@ -239,6 +237,5 @@ class NativeBannerLoader(
         owner.lifecycle.removeObserver(this)
         clearView()
         NativeManager.release(placementId)
-        atNativeBannerView = null
     }
 }

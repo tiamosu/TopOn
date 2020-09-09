@@ -39,14 +39,22 @@ dependencies {
 
     fileTree(include: ['*.aar'], dir: 'libs').each { file ->
         if (file.name.endsWith('.aar')) {
-            def name = file.name.lastIndexOf('.').with { index ->
-                index != -1 ? file.name[0..index - 1] : file.name
-            }
-            api(name: name, ext: 'aar')
-
-            println "$project.name aar ===== $name"
+            api(name: aar(file), ext: 'aar')
         }
     }
+    fileTree(include: ['*.aar'], dir: 'libs_admob').each { file ->
+        if (file.name.endsWith('.aar')) {
+            api(name: aar(file), ext: 'aar')
+        }
+    }
+}
+
+private def aar(File file) {
+    def name = file.name.lastIndexOf('.').with { index ->
+        index != -1 ? file.name[0..index - 1] : file.name
+    }
+    println "$project.name aar === $name"
+    return name
 }
 
 apply from: "${rootDir.path}/maven.gradle"

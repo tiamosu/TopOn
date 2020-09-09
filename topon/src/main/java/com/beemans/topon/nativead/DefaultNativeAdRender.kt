@@ -42,7 +42,7 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
         )
         //个性化模板
-        if (ad.isNativeExpress) {
+        if (ad.isNativeExpress && mediaView != null) {
             if (flContentArea.childCount > 0) {
                 flContentArea.removeAllViews()
             }
@@ -79,13 +79,13 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             flIconArea.addView(adIconView)
         } else {
             //获取广告图标url
-            val iconView = ATNativeImageView(view.context)
-            iconView.setImage(ad.iconImageUrl)
-            flIconArea.addView(iconView)
+            ATNativeImageView(view.context).apply {
+                setImage(ad.iconImageUrl)
+            }.let(flIconArea::addView)
         }
 
         //获取广告商的标识的图标url
-        if (ad.adChoiceIconUrl.isNotBlank()) {
+        if (ad.adChoiceIconUrl?.isNotBlank() == true) {
             ivChoiceLogo.isVisible = true
             ivChoiceLogo.setImage(ad.adChoiceIconUrl)
         }
@@ -105,10 +105,11 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             flContentArea.addView(mediaView, params)
         } else {
             //获取大图Url
-            val imageView = ATNativeImageView(view.context)
-            imageView.setImage(ad.mainImageUrl)
-            imageView.layoutParams = params
-            flContentArea.addView(imageView, params)
+            ATNativeImageView(view.context).apply {
+                setImage(ad.mainImageUrl)
+                layoutParams = params
+                flContentArea.addView(this, params)
+            }
         }
 
         clickView.add(tvTitle)

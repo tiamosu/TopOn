@@ -14,6 +14,10 @@
     <!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
 
     <application>
+        <!--google-->
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
         <!-- network type: china/network_sdk/pangle/AndroidManifest.xml-->
         <provider
             android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"

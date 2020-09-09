@@ -38,7 +38,7 @@ class NativeAdLoader(
     private var nativeAd: NativeAd? = null
 
     //用于实现广告渲染
-    private var atNativeAdView: ATNativeAdView? = null
+    private val atNativeAdView by lazy { ATNativeAdView(owner.context) }
 
     private val logTag by lazy { this.javaClass.simpleName }
 
@@ -134,16 +134,15 @@ class NativeAdLoader(
             setNativeEventListener(this@NativeAdLoader)
             setDislikeCallbackListener(this@NativeAdLoader)
 
-            if (atNativeAdView == null) {
-                atNativeAdView = ATNativeAdView(owner.context)
+            atNativeAdView.apply {
+                renderAdView(this, nativeAdRender)
+                if (nativeAdRender.clickView.isNotEmpty()) {
+                    prepare(this, nativeAdRender.clickView, null)
+                } else {
+                    prepare(this)
+                }
+                onAdRenderSuc()
             }
-            renderAdView(atNativeAdView, nativeAdRender)
-            if (nativeAdRender.clickView.isNotEmpty()) {
-                prepare(atNativeAdView, nativeAdRender.clickView, null)
-            } else {
-                prepare(atNativeAdView)
-            }
-            onAdRenderSuc()
         }
         return this
     }
@@ -321,6 +320,5 @@ class NativeAdLoader(
         nativeAd?.setDislikeCallbackListener(null)
         atNative = null
         nativeAd = null
-        atNativeAdView = null
     }
 }
