@@ -154,7 +154,6 @@ class InterstitialAdLoader(
         Log.e(logTag, "onInterstitialAdTimeOut")
 
         isTimeOut = true
-        isShowAfterLoaded = true
         InterstitialAdManager.updateRequestStatus(placementId, false)
         InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke()
     }
@@ -183,7 +182,6 @@ class InterstitialAdLoader(
         if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onInterstitialAdLoadFail:${error?.printStackTrace()}")
 
-        isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
         InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error)

@@ -184,7 +184,6 @@ class NativeSplashLoader(
         if (isDestroyed) return
         Log.e(logTag, "onNoAdError:$errorMsg")
 
-        isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, false)
         NativeSplashCallback().apply(splashCallback).onAdError?.invoke(errorMsg)
     }

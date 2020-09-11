@@ -199,7 +199,6 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
 
-        isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, false)
         NativeAdCallback().apply(nativeAdCallback).onAdLoadFail?.invoke(error)
     }

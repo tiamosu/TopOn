@@ -161,7 +161,6 @@ class RewardAdLoader(
         Log.e(logTag, "onAdTimeOut")
 
         isTimeOut = true
-        isShowAfterLoaded = true
         RewardAdManager.updateRequestStatus(placementId, false)
         RewardAdCallback().apply(rewardAdCallback).onAdTimeOut?.invoke()
     }
@@ -190,7 +189,6 @@ class RewardAdLoader(
         if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onRewardedVideoAdFailed:${error?.printStackTrace()}")
 
-        isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
         RewardAdCallback().apply(rewardAdCallback).onAdVideoFailed?.invoke(error)

@@ -143,7 +143,6 @@ class SplashAdLoader(
         Log.e(logTag, "onAdTimeOut")
 
         isTimeOut = true
-        isShowAfterLoaded = true
         SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdTimeOut?.invoke()
     }
@@ -183,7 +182,6 @@ class SplashAdLoader(
         if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onNoAdError:${error?.printStackTrace()}")
 
-        isShowAfterLoaded = true
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdError?.invoke(error)

@@ -176,7 +176,6 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
 
-        isShowAfterLoaded = true
         BannerManager.updateRequestStatus(placementId, false)
         BannerCallback().apply(bannerCallback).onAdFailed?.invoke(error)
     }

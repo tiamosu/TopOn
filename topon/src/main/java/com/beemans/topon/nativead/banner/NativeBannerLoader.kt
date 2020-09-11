@@ -170,7 +170,6 @@ class NativeBannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdError:$errorMsg")
 
-        isShowAfterLoaded = true
         NativeManager.updateRequestStatus(placementId, false)
         NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
     }
