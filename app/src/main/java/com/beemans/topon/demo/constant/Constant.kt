@@ -16,7 +16,7 @@ object Constant {
     const val APP_ID = "a5aa1f9deda26d"
     const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
     const val NATIVE_AD_ID = "b5c2c97629da0d"
-    const val REWARD_ID = "b5b728e7a08cd4"
+    const val REWARD_ID = "b5f486a5a9a1ae"
     const val INTERSTITIAL_ID = "b5baca585a8fef"
     const val BANNER_ID = "b5baca45138428"
     const val SPLASH_ID = "b5bea7c1b653ef"
