@@ -1,5 +1,7 @@
 package com.beemans.topon.ext
 
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
@@ -20,3 +22,13 @@ val LifecycleOwner.context: FragmentActivity
             else -> throw IllegalArgumentException("owner must is Fragment or FragmentActivity")
         }
     }
+
+/**
+ * 添加广告 View
+ */
+fun ViewGroup.addAdView(adView: View) {
+    if (childCount > 0) {
+        removeAllViews()
+    }
+    addView(adView)
+}

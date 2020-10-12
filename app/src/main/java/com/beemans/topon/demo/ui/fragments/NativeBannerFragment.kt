@@ -7,6 +7,7 @@ import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
 import com.beemans.topon.demo.ext.pt2px
+import com.beemans.topon.ext.addAdView
 import com.beemans.topon.nativead.banner.NativeBannerConfig
 import com.beemans.topon.nativead.banner.NativeBannerLoader
 import kotlinx.android.synthetic.main.fragment_native_banner.*
@@ -42,7 +43,7 @@ class NativeBannerFragment : BaseFragment() {
                 NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeBanner_flBanner.addView(flAdView)
+                    nativeBanner_flBanner.addAdView(flAdView)
                 }
                 onAdClose {
                     true
@@ -65,7 +66,7 @@ class NativeBannerFragment : BaseFragment() {
                 NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeBanner_flBanner2.addView(flAdView)
+                    nativeBanner_flBanner2.addAdView(flAdView)
                 }
             }.also { bannerLoaders["2"] = it }
         }
@@ -83,7 +84,7 @@ class NativeBannerFragment : BaseFragment() {
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeBanner_flBanner3.addView(flAdView)
+                    nativeBanner_flBanner3.addAdView(flAdView)
                 }
             }.also { bannerLoaders["3"] = it }
         }

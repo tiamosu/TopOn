@@ -7,6 +7,7 @@ import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
 import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.nativead.NativeAdConfig
+import com.beemans.topon.nativead.NativeAdLoader
 import kotlinx.android.synthetic.main.fragment_native_ad.*
 
 /**
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_native_ad.*
  */
 class NativeAdFragment : BaseFragment() {
     private val config by lazy { NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px) }
+    private var nativeAdLoader: NativeAdLoader? = null
 
     override fun getLayoutId() = R.layout.fragment_native_ad
 
@@ -26,17 +28,20 @@ class NativeAdFragment : BaseFragment() {
 
         //显示广告
         nativeAd_btnShowAd.setOnClickListener {
-            TopOn.loadNativeAd(this, config) {
-                onAdRenderSuc { flAdView ->
-                    nativeAd_flAd.addView(flAdView)
+            if (nativeAdLoader == null) {
+                nativeAdLoader = TopOn.loadNativeAd(this, config) {
+                    onAdRenderSuc { flAdView ->
+                        nativeAd_flAd.addView(flAdView)
+                    }
+                    onAdLoadFail {
+                        Log.e("xia", "${this.javaClass.simpleName}show:${it?.printStackTrace()}")
+                    }
+                    onAdCloseClick { _, _ ->
+                        true
+                    }
                 }
-                onAdLoadFail {
-                    Log.e("xia", "${this.javaClass.simpleName}show:${it?.printStackTrace()}")
-                }
-                onAdCloseClick { _, _ ->
-                    true
-                }
-            }.show()
+            }
+            nativeAdLoader?.show()
         }
     }
 }
