@@ -5,9 +5,9 @@ package com.beemans.topon.demo.constant
  * @date 2020/7/5.
  */
 object Constant {
-    const val APP_ID = "a5efef38f5807f"
+    const val APP_ID = "a5f854b3e85bf0"
     const val APP_KEY = "ce96a01d3a436ca15d2785a61b9701d7"
-    const val NATIVE_AD_ID = "b5efef3c883a00"
+    const val NATIVE_AD_ID = "b5f854b55e5c24"
     const val REWARD_ID = "b5f486a5a9a1ae"
     const val INTERSTITIAL_ID = "b5f1504051d3b2"
     const val BANNER_ID = "b5baca45138428"

@@ -1,6 +1,8 @@
 @file:Suppress("unused", "SpellCheckingInspection")
 
 object Android {
+    const val applicationId = "com.beemans.weather.yz"
+
     const val compileSdkVersion = 30
     const val buildToolsVersion = "30.0.2"
     const val minSdkVersion = 21

@@ -1,6 +1,7 @@
 package com.beemans.topon.nativead
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -42,11 +43,13 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
         )
         //个性化模板
-        if (ad.isNativeExpress && mediaView != null) {
-            if (flContentArea.childCount > 0) {
-                flContentArea.removeAllViews()
+        if (ad.isNativeExpress) {
+            if (mediaView != null) {
+                if (flContentArea.childCount > 0) {
+                    flContentArea.removeAllViews()
+                }
+                flContentArea.addView(mediaView, params)
             }
-            flContentArea.addView(mediaView, params)
             return
         }
 
@@ -78,6 +81,8 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         if (adIconView != null) {
             flIconArea.addView(adIconView)
         } else {
+            Log.e("xia", "iconImageUrl:${ad.iconImageUrl}")
+
             //获取广告图标url
             ATNativeImageView(view.context).apply {
                 setImage(ad.iconImageUrl)
@@ -104,6 +109,8 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         if (mediaView != null) {
             flContentArea.addView(mediaView, params)
         } else {
+            Log.e("xia", "mainImageUrl:${ad.mainImageUrl}")
+
             //获取大图Url
             ATNativeImageView(view.context).apply {
                 setImage(ad.mainImageUrl)

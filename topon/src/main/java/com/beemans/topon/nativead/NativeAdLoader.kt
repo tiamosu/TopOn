@@ -55,7 +55,8 @@ class NativeAdLoader(
     private var isShowAfterLoaded = false
 
     //广告正在播放
-    private var isAdPlaying = false
+    var isAdPlaying = false
+        private set
 
     private var isDestroyed = false
 
@@ -129,6 +130,7 @@ class NativeAdLoader(
             return this
         }
 
+        isAdPlaying = false
         isShowAfterLoaded = false
         nativeAd?.apply {
             setNativeEventListener(this@NativeAdLoader)
@@ -173,7 +175,7 @@ class NativeAdLoader(
      * 发起Native广告请求
      */
     private fun makeAdRequest(): Boolean {
-        val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
             NativeManager.updateRequestStatus(placementId, true)
 

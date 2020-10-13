@@ -7,7 +7,7 @@ android {
     compileSdkVersion Android.compileSdkVersion
     buildToolsVersion Android.buildToolsVersion
     defaultConfig {
-        applicationId "com.beemans.weather.live"
+        applicationId Android.applicationId
         minSdkVersion Android.minSdkVersion
         targetSdkVersion Android.targetSdkVersion
         versionCode Android.versionCode
