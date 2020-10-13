@@ -15,7 +15,9 @@ object Android {
 object Versions {
     const val kotlin = "1.4.10"
     const val fly = "1.5.4"
-    const val leakcanary = "2.4"
+    const val leakcanary = "2.5"
+    const val constraintlayout = "2.0.2"
+    const val viewpager2 = "1.0.0"
 }
 
 object Deps {
@@ -25,8 +27,9 @@ object Deps {
     const val fly_imageloader_glide = "me.tiamosu:fly-imageloader-glide:${Versions.fly}"
 
     // androidx
-    const val androidx_constraint_layout = "androidx.constraintlayout:constraintlayout:2.0.2"
-    const val androidx_viewpager2 = "androidx.viewpager2:viewpager2:1.0.0"
+    const val androidx_constraint_layout =
+        "androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}"
+    const val androidx_viewpager2 = "androidx.viewpager2:viewpager2:${Versions.viewpager2}"
 
     // leakcanary 检测内存泄漏
     const val leakcanary_android =

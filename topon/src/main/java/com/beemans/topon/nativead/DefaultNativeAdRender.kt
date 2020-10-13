@@ -5,11 +5,12 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
-import com.anythink.nativead.api.ATNativeImageView
 import com.anythink.nativead.unitgroup.api.CustomNativeAd
 import com.beemans.topon.R
+import com.beemans.topon.ext.loadAdImage
 
 /**
  * @author tiamosu
@@ -58,7 +59,7 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         val tvCta: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvInstall)
         val tvAdFrom: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvFrom)
         val flIconArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
-        val ivChoiceLogo: ATNativeImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
+        val ivChoiceLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
 
         //获取广告标题
         tvTitle.isVisible = true
@@ -84,15 +85,15 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             Log.e("xia", "iconImageUrl:${ad.iconImageUrl}")
 
             //获取广告图标url
-            ATNativeImageView(view.context).apply {
-                setImage(ad.iconImageUrl)
+            AppCompatImageView(view.context).apply {
+                loadAdImage(ad.iconImageUrl)
             }.let(flIconArea::addView)
         }
 
         //获取广告商的标识的图标url
         if (ad.adChoiceIconUrl?.isNotBlank() == true) {
             ivChoiceLogo.isVisible = true
-            ivChoiceLogo.setImage(ad.adChoiceIconUrl)
+            ivChoiceLogo.loadAdImage(ad.adChoiceIconUrl)
         }
 
         //获取广告来源
@@ -112,8 +113,8 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             Log.e("xia", "mainImageUrl:${ad.mainImageUrl}")
 
             //获取大图Url
-            ATNativeImageView(view.context).apply {
-                setImage(ad.mainImageUrl)
+            AppCompatImageView(view.context).apply {
+                loadAdImage(ad.mainImageUrl)
                 layoutParams = params
                 flContentArea.addView(this, params)
             }
