@@ -20,11 +20,13 @@
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
+
         <!-- network type: china/network_sdk/pangle/AndroidManifest.xml-->
         <provider
             android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
             android:authorities="${applicationId}.TTMultiProvider"
             android:exported="false" />
+
         <provider
             android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
             android:authorities="${applicationId}.TTFileProvider"
@@ -34,27 +36,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/anythink_bk_tt_file_path" />
         </provider>
+
         <!-- network type: china/network_sdk/gdt/AndroidManifest.xml-->
-        <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-
-        <activity
-            android:name="com.qq.e.ads.PortraitADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.qq.e.ads.LandscapeADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:screenOrientation="landscape" />
-
         <provider
-            android:name="com.anythink.network.gdt.GDTATFileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:name="com.qq.e.comm.GDTFileProvider"
+            android:authorities="${applicationId}.gdt.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

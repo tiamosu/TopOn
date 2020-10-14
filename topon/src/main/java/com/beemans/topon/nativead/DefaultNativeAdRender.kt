@@ -1,7 +1,7 @@
 package com.beemans.topon.nativead
 
 import android.content.Context
-import android.util.Log
+import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -36,13 +36,26 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
      * 用于实现广告内容渲染的方法，其中customNativeAd是广告素材的对象，可提供素材进行渲染
      */
     override fun renderAdView(view: View, ad: CustomNativeAd) {
-        clickView.clear()
-
         val flContentArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flAd)
+        val tvTitle: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvTitle)
+        val tvDesc: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvDesc)
+        val tvCta: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvInstall)
+        val tvAdFrom: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvFrom)
+        val flIconArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
+        val ivChoiceLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
+        val ivLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivLogo)
+
+        val isNativeExpress = ad.isNativeExpress
+        tvTitle.isVisible = !isNativeExpress
+        tvDesc.isVisible = !isNativeExpress
+        tvCta.isVisible = !isNativeExpress
+        flIconArea.isVisible = !isNativeExpress
+        ivChoiceLogo.isVisible = !isNativeExpress
+        ivLogo.isVisible = !isNativeExpress
+
         val mediaView: View? = ad.getAdMediaView(flContentArea, flContentArea.width)
-        val params = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
-        )
+        val params = FrameLayout.LayoutParams(-1, -2)
+
         //个性化模板
         if (ad.isNativeExpress) {
             if (mediaView != null) {
@@ -54,45 +67,39 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             return
         }
 
-        val tvTitle: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvTitle)
-        val tvDesc: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvDesc)
-        val tvCta: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvInstall)
-        val tvAdFrom: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvFrom)
-        val flIconArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
-        val ivChoiceLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
-
         //获取广告标题
-        tvTitle.isVisible = true
-        tvTitle.text = ad.title
+        if (tvTitle.isVisible) {
+            tvTitle.text = ad.title
+        }
 
         //获取广告描述
-        tvDesc.isVisible = true
-        tvDesc.text = ad.descriptionText
+        if (tvDesc.isVisible) {
+            tvDesc.text = ad.descriptionText
+        }
 
         //获取广告CTA按钮文字
-        tvCta.isVisible = true
-        tvCta.text = ad.callToActionText
-
-        flIconArea.isVisible = true
-        if (flIconArea.childCount > 0) {
-            flIconArea.removeAllViews()
+        if (tvCta.isVisible) {
+            tvCta.text = ad.callToActionText
         }
-        //获取广告IconView
-        val adIconView = ad.adIconView
-        if (adIconView != null) {
-            flIconArea.addView(adIconView)
-        } else {
-            Log.e("xia", "iconImageUrl:${ad.iconImageUrl}")
 
-            //获取广告图标url
-            AppCompatImageView(view.context).apply {
-                loadAdImage(ad.iconImageUrl)
-            }.let(flIconArea::addView)
+        //获取广告图标
+        if (flIconArea.isVisible) {
+            if (flIconArea.childCount > 0) {
+                flIconArea.removeAllViews()
+            }
+            val adIconView: View? = ad.adIconView
+            if (adIconView != null) {
+                flIconArea.addView(adIconView)
+            } else {
+                AppCompatImageView(view.context).apply {
+                    loadAdImage(ad.iconImageUrl)
+                }.let(flIconArea::addView)
+            }
         }
 
         //获取广告商的标识的图标url
-        if (ad.adChoiceIconUrl?.isNotBlank() == true) {
-            ivChoiceLogo.isVisible = true
+        ivChoiceLogo.isVisible = ad.adChoiceIconUrl?.isNotBlank() == true
+        if (ivChoiceLogo.isVisible) {
             ivChoiceLogo.loadAdImage(ad.adChoiceIconUrl)
         }
 
@@ -100,6 +107,12 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         tvAdFrom.isVisible = ad.adFrom?.isNotBlank() == true
         if (tvAdFrom.isVisible) {
             tvAdFrom.text = ad.adFrom
+        }
+
+        //获取AdLogo的Bitmap
+        if (ivLogo.isVisible) {
+            val adLogo: Bitmap? = ad.adLogo
+            ivLogo.setImageBitmap(adLogo)
         }
 
         //获取广告大图的渲染容器（仅部分广告平台会存在），有可能是静态图和视频。
@@ -110,8 +123,6 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         if (mediaView != null) {
             flContentArea.addView(mediaView, params)
         } else {
-            Log.e("xia", "mainImageUrl:${ad.mainImageUrl}")
-
             //获取大图Url
             AppCompatImageView(view.context).apply {
                 loadAdImage(ad.mainImageUrl)
@@ -120,8 +131,14 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
             }
         }
 
-        clickView.add(tvTitle)
-        clickView.add(tvDesc)
-        clickView.add(tvCta)
+        clickView.apply {
+            clear()
+            add(flContentArea)
+            add(flIconArea)
+            add(tvTitle)
+            add(tvDesc)
+            add(tvCta)
+            add(ivLogo)
+        }
     }
 }
