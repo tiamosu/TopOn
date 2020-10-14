@@ -1,14 +1,15 @@
 package com.beemans.topon.demo.ext
 
-import com.blankj.utilcode.util.AdaptScreenUtils
-import com.blankj.utilcode.util.SizeUtils
+import com.beemans.topon.demo.utils.AutoSize
+import com.blankj.utilcode.util.ScreenUtils
+import kotlin.math.roundToInt
 
 /**
  * @author tiamosu
  * @date 2020/7/2.
  */
 val Int.pt2px: Int
-    get() = AdaptScreenUtils.pt2Px(this.toFloat())
-
-val Int.dp2px: Int
-    get() = SizeUtils.dp2px(this.toFloat())
+    get() {
+        val screenWidth = ScreenUtils.getAppScreenWidth()
+        return (screenWidth / AutoSize.DESIGN_WIDTH.toFloat() * this).roundToInt()
+    }

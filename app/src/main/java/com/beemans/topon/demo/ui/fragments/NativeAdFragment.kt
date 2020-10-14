@@ -5,7 +5,7 @@ import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
-import com.beemans.topon.demo.ext.dp2px
+import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.nativead.NativeAdLoader
 import kotlinx.android.synthetic.main.fragment_native_ad.*
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_native_ad.*
  * @date 2020/7/5.
  */
 class NativeAdFragment : BaseFragment() {
-    private val config by lazy { NativeAdConfig(Constant.NATIVE_AD_ID, 350.dp2px, 280.dp2px) }
+    private val config by lazy { NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px) }
     private var nativeAdLoader: NativeAdLoader? = null
 
     override fun getLayoutId() = R.layout.fragment_native_ad

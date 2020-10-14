@@ -10,7 +10,7 @@ import com.blankj.utilcode.util.ScreenUtils
  * @date 2020/7/2.
  */
 object AutoSize {
-    private const val DESIGN_WIDTH = 375
+    const val DESIGN_WIDTH = 375
 
     fun adaptScreen(resources: Resources): Resources {
         return if (ScreenUtils.isPortrait()) {
