@@ -40,7 +40,8 @@
         android:adjustViewBounds="true"
         android:src="@drawable/ad_logo"
         app:layout_constraintLeft_toRightOf="@+id/nativeAdItem_tvFrom"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginLeft="0pt" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/nativeAdItem_ivChoiceLogo"

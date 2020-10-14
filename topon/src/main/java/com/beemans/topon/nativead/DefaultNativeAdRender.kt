@@ -18,13 +18,11 @@ import com.beemans.topon.ext.loadAdImage
  */
 class DefaultNativeAdRender : BaseNativeAdRender() {
     private var developView: View? = null
-    private var networkType = 0
 
     /**
      * 用于创建自定义的Native广告布局的View
      */
     override fun createView(context: Context, networkType: Int): View {
-        this.networkType = networkType
         if (developView == null) {
             developView = View.inflate(context, R.layout.native_ad_item, null)
         }

@@ -11,10 +11,7 @@ import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.nativead.api.*
-import com.anythink.network.gdt.GDTATConst
-import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.ext.context
-import com.qq.e.ads.nativ.ADSize
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -87,14 +84,6 @@ class NativeAdLoader(
                 localMap.apply {
                     put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
                     put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
-
-                    //对穿山甲和广点通进行广告自适应高度
-                    if (nativeHeight == 0) {
-                        //穿山甲
-                        put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, 0)
-                        //广点通
-                        put(GDTATConst.AD_HEIGHT, ADSize.AUTO_HEIGHT)
-                    }
                 }.let(this::setLocalExtra)
             }
         }

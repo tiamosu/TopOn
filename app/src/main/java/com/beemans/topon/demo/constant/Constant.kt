@@ -7,9 +7,9 @@ package com.beemans.topon.demo.constant
 object Constant {
 
     /** 天气预报 **/
-    const val APP_ID = "a5f854b3e85bf0" //a5f854b3e85bf0  //a5efef38f5807f
+    const val APP_ID = "a5efef38f5807f" //a5f854b3e85bf0  //a5efef38f5807f
     const val APP_KEY = "ce96a01d3a436ca15d2785a61b9701d7"
-    const val NATIVE_AD_ID = "b5f854b55e5c24"//b5f854b55e5c24   //b5efef3c883a00
+    const val NATIVE_AD_ID = "b5efef3c883a00"//b5f854b55e5c24   //b5efef3c883a00
     const val BANNER_ID = "b5baca45138428"
     const val INTERSTITIAL_ID = "b5f1504051d3b2"
     const val REWARD_ID = "b5f1502786c59e"
