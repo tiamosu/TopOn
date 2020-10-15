@@ -53,14 +53,7 @@ class SplashAdLoader(
 
     private var isDestroyed = false
 
-    private val flContainer by lazy {
-        FrameLayout(owner.context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT,
-            )
-        }
-    }
+    private var flContainer: FrameLayout? = null
 
     private val flAdView by lazy { FrameLayout(owner.context) }
 
@@ -111,6 +104,12 @@ class SplashAdLoader(
         if (!isRequesting && !isAdLoaded) {
             SplashAdManager.updateRequestStatus(placementId, true)
 
+            flContainer = FrameLayout(owner.context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                )
+            }
             post(Schedulers.io()) {
                 atSplashAd = ATSplashAd(owner.context, flContainer, placementId, this)
             }
@@ -131,7 +130,9 @@ class SplashAdLoader(
         Log.e(logTag, "onAdRenderSuc")
 
         clearView()
-        flAdView.addView(flContainer)
+        if (flContainer != null) {
+            flAdView.addView(flContainer)
+        }
         SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
