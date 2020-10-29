@@ -139,6 +139,16 @@ class NativeAdLoader(
     }
 
     /**
+     * 广告请求
+     */
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        NativeAdCallback().apply(nativeAdCallback).onAdRequest?.invoke()
+    }
+
+    /**
      * 广告渲染成功
      */
     private fun onAdRenderSuc() {
@@ -165,6 +175,10 @@ class NativeAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
+        if (!isRequesting) {
+            onAdRequest()
+        }
+
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
             NativeManager.updateRequestStatus(placementId, true)
 

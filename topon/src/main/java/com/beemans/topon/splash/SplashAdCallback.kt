@@ -22,8 +22,6 @@ class SplashAdCallback {
 
     var onAdDismiss: ((info: ATAdInfo?) -> Boolean)? = null
 
-    var onAdTick: ((tickTime: Long) -> Unit)? = null
-
     var onAdTimeOut: (() -> Unit)? = null
 
     /**
@@ -66,13 +64,6 @@ class SplashAdCallback {
      */
     fun onAdDismiss(onAdDismiss: (info: ATAdInfo?) -> Boolean) {
         this.onAdDismiss = onAdDismiss
-    }
-
-    /**
-     * 广告的倒计时回调
-     */
-    fun onAdTick(onAdTick: (tickTime: Long) -> Unit) {
-        this.onAdTick = onAdTick
     }
 
     /**

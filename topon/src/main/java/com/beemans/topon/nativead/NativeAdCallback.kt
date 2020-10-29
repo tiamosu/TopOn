@@ -11,6 +11,8 @@ import com.anythink.nativead.api.ATNativeAdView
  */
 class NativeAdCallback {
 
+    var onAdRequest: (() -> Unit)? = null
+
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
     var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
@@ -30,10 +32,17 @@ class NativeAdCallback {
     var onAdCloseClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
 
     /**
+     * 广告请求
+     */
+    fun onAdRequest(onAdRequest: () -> Unit) {
+        this.onAdRequest = onAdRequest
+    }
+
+    /**
      * 广告加载失败
      */
-    fun onAdLoadFail(onAdAdLoadFail: (adError: AdError?) -> Unit) {
-        this.onAdLoadFail = onAdAdLoadFail
+    fun onAdLoadFail(onAdLoadFail: (adError: AdError?) -> Unit) {
+        this.onAdLoadFail = onAdLoadFail
     }
 
     /**
