@@ -62,8 +62,8 @@ class InterstitialAdLoader(
     //页面是否已经销毁了
     private var isDestroyed = false
 
-    //是否手动调用广告展示[show]
-    private var isManualShow = false
+    //是否手动调用广告请求
+    private var isManualRequest = false
 
     init {
         initAd()
@@ -104,8 +104,8 @@ class InterstitialAdLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting =
             InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
-        if (!isRequesting && isManualShow) {
-            isManualShow = false
+        if (!isRequesting && isManualRequest) {
+            isManualRequest = false
             onAdRequest()
         }
 
@@ -131,7 +131,9 @@ class InterstitialAdLoader(
      * @param isManualShow 是否手动调用进行展示
      */
     fun show(isManualShow: Boolean = true): InterstitialAdLoader {
-        this.isManualShow = isManualShow
+        if (isManualShow) {
+            isManualRequest = true
+        }
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
