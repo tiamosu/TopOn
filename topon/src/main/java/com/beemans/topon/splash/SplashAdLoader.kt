@@ -52,7 +52,11 @@ class SplashAdLoader(
     //是否超时
     private var isTimeOut = false
 
+    //页面是否已经销毁了
     private var isDestroyed = false
+
+    //是否手动调用广告展示[show]
+    private var isManualShow = true
 
     private var flContainer: FrameLayout? = null
 
@@ -77,15 +81,18 @@ class SplashAdLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show()
+                show(false)
             }
         }
     }
 
     /**
      * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(): SplashAdLoader {
+    fun show(isManualShow: Boolean = true): SplashAdLoader {
+        this.isManualShow = isManualShow
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
@@ -102,6 +109,11 @@ class SplashAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (!isRequesting && isManualShow) {
+            isManualShow = false
+            onAdRequest()
+        }
+
         if (!isRequesting && !isAdLoaded) {
             SplashAdManager.updateRequestStatus(placementId, true)
 
@@ -123,6 +135,16 @@ class SplashAdLoader(
             return true
         }
         return isRequesting
+    }
+
+    /**
+     * 广告请求
+     */
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        SplashAdCallback().apply(splashAdCallback).onAdRequest?.invoke()
     }
 
     /**
@@ -174,7 +196,7 @@ class SplashAdLoader(
         SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show()
+            show(false)
         }
         loadedLiveData.value = true
     }

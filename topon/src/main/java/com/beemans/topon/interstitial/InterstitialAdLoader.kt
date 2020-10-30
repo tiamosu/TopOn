@@ -59,7 +59,11 @@ class InterstitialAdLoader(
     //是否超时
     private var isTimeOut = false
 
+    //页面是否已经销毁了
     private var isDestroyed = false
+
+    //是否手动调用广告展示[show]
+    private var isManualShow = true
 
     init {
         initAd()
@@ -80,7 +84,7 @@ class InterstitialAdLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show()
+                show(false)
             }
         }
     }
@@ -100,6 +104,11 @@ class InterstitialAdLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting =
             InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (!isRequesting && isManualShow) {
+            isManualShow = false
+            onAdRequest()
+        }
+
         val isAdReady = atInterstitial?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
             InterstitialAdManager.updateRequestStatus(placementId, true)
@@ -118,8 +127,11 @@ class InterstitialAdLoader(
 
     /**
      * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(): InterstitialAdLoader {
+    fun show(isManualShow: Boolean = true): InterstitialAdLoader {
+        this.isManualShow = isManualShow
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
@@ -134,6 +146,16 @@ class InterstitialAdLoader(
         }
         onAdRenderSuc()
         return this
+    }
+
+    /**
+     * 广告请求
+     */
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdRequest?.invoke()
     }
 
     /**
@@ -170,7 +192,7 @@ class InterstitialAdLoader(
         InterstitialAdCallback().apply(interstitialAdCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show()
+            show(false)
         }
         loadedLiveData.value = true
     }

@@ -9,6 +9,8 @@ import com.anythink.core.api.AdError
  */
 class RewardAdCallback {
 
+    var onAdRequest: (() -> Unit)? = null
+
     var onAdRenderSuc: (() -> Unit)? = null
 
     var onAdVideoLoaded: (() -> Unit)? = null
@@ -28,6 +30,13 @@ class RewardAdCallback {
     var onAdVideoPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdTimeOut: (() -> Unit)? = null
+
+    /**
+     * 广告请求
+     */
+    fun onAdRequest(onAdRequest: () -> Unit) {
+        this.onAdRequest = onAdRequest
+    }
 
     /**
      * 广告渲染成功

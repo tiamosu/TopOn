@@ -9,6 +9,8 @@ import com.anythink.core.api.ATAdInfo
  */
 class NativeSplashCallback {
 
+    var onAdRequest: (() -> Unit)? = null
+
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
     var onAdLoaded: (() -> Unit)? = null
@@ -24,6 +26,13 @@ class NativeSplashCallback {
     var onAdTick: ((tickTime: Long) -> Unit)? = null
 
     var onAdTimeOver: (() -> Unit)? = null
+
+    /**
+     * 广告请求
+     */
+    fun onAdRequest(onAdRequest: () -> Unit) {
+        this.onAdRequest = onAdRequest
+    }
 
     /**
      * 广告渲染成功

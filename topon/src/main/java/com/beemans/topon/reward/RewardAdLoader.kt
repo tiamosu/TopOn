@@ -60,7 +60,11 @@ class RewardAdLoader(
     //是否超时
     private var isTimeOut = false
 
+    //页面是否已经销毁了
     private var isDestroyed = false
+
+    //是否手动调用广告展示[show]
+    private var isManualShow = true
 
     init {
         initAd()
@@ -88,7 +92,7 @@ class RewardAdLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show()
+                show(false)
             }
         }
     }
@@ -107,6 +111,11 @@ class RewardAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (!isRequesting && isManualShow) {
+            isManualShow = false
+            onAdRequest()
+        }
+
         val isAdReady = atRewardVideoAd?.isAdReady ?: false
         if (!isRequesting && !isAdReady) {
             RewardAdManager.updateRequestStatus(placementId, true)
@@ -125,8 +134,11 @@ class RewardAdLoader(
 
     /**
      * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(): RewardAdLoader {
+    fun show(isManualShow: Boolean = true): RewardAdLoader {
+        this.isManualShow = isManualShow
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
@@ -141,6 +153,16 @@ class RewardAdLoader(
         }
         onAdRenderSuc()
         return this
+    }
+
+    /**
+     * 广告请求
+     */
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        RewardAdCallback().apply(rewardAdCallback).onAdRequest?.invoke()
     }
 
     /**
@@ -177,7 +199,7 @@ class RewardAdLoader(
         RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show()
+            show(false)
         }
         loadedLiveData.value = true
     }

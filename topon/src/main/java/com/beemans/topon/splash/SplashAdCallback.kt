@@ -10,6 +10,8 @@ import com.anythink.core.api.AdError
  */
 class SplashAdCallback {
 
+    var onAdRequest: (() -> Unit)? = null
+
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
     var onAdLoaded: (() -> Unit)? = null
@@ -23,6 +25,13 @@ class SplashAdCallback {
     var onAdDismiss: ((info: ATAdInfo?) -> Boolean)? = null
 
     var onAdTimeOut: (() -> Unit)? = null
+
+    /**
+     * 广告请求
+     */
+    fun onAdRequest(onAdRequest: () -> Unit) {
+        this.onAdRequest = onAdRequest
+    }
 
     /**
      * 广告渲染成功

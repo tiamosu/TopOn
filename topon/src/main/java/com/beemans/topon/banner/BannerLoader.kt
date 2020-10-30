@@ -48,7 +48,11 @@ class BannerLoader(
     //广告加载成功
     private var isBannerLoaded = false
 
+    //页面是否已经销毁了
     private var isDestroyed = false
+
+    //是否手动调用广告展示[show]
+    private var isManualShow = true
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -69,7 +73,7 @@ class BannerLoader(
 
     private fun initAd() {
         atBannerView = ATBannerView(owner.context).apply {
-            setUnitId(placementId)
+            setPlacementId(placementId)
             setBannerAdListener(this@BannerLoader)
         }
         flSplashView.addView(atBannerView, layoutParams)
@@ -82,7 +86,7 @@ class BannerLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show()
+                show(false)
             }
         }
     }
@@ -97,9 +101,12 @@ class BannerLoader(
     }
 
     /**
-     * 广告显示
+     * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(): BannerLoader {
+    fun show(isManualShow: Boolean = true): BannerLoader {
+        this.isManualShow = isManualShow
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
@@ -119,6 +126,16 @@ class BannerLoader(
     }
 
     /**
+     * 广告请求
+     */
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        BannerCallback().apply(bannerCallback).onAdRequest?.invoke()
+    }
+
+    /**
      * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
     private fun onAdRenderSuc() {
@@ -134,6 +151,11 @@ class BannerLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
+        if (!isRequesting && isManualShow) {
+            isManualShow = false
+            onAdRequest()
+        }
+
         if (!isRequesting && !isBannerLoaded) {
             BannerManager.updateRequestStatus(placementId, true)
 
@@ -164,7 +186,7 @@ class BannerLoader(
         BannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show()
+            show(false)
         }
         loadedLiveData.value = true
     }

@@ -49,7 +49,11 @@ class NativeSplashLoader(
     //广告是否已经渲染
     private var isAdRendered = false
 
+    //页面是否已经销毁了
     private var isDestroyed = false
+
+    //是否手动调用广告展示[show]
+    private var isManualShow = true
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -92,15 +96,18 @@ class NativeSplashLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show()
+                show(false)
             }
         }
     }
 
     /**
      * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(): NativeSplashLoader {
+    fun show(isManualShow: Boolean = true): NativeSplashLoader {
+        this.isManualShow = isManualShow
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
@@ -109,6 +116,16 @@ class NativeSplashLoader(
         isShowAfterLoaded = false
         onAdRenderSuc()
         return this
+    }
+
+    /**
+     * 广告请求
+     */
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        NativeSplashCallback().apply(splashCallback).onAdRequest?.invoke()
     }
 
     /**
@@ -129,6 +146,11 @@ class NativeSplashLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        if (!isRequesting && isManualShow) {
+            isManualShow = false
+            onAdRequest()
+        }
+
         if (!isRequesting && !isAdLoaded) {
             NativeManager.updateRequestStatus(placementId, true)
 
@@ -172,7 +194,7 @@ class NativeSplashLoader(
         NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show()
+            show(false)
         }
         loadedLiveData.value = true
     }

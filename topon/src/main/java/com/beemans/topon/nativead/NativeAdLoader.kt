@@ -55,7 +55,11 @@ class NativeAdLoader(
     var isAdPlaying = false
         private set
 
+    //页面是否已经销毁了
     private var isDestroyed = false
+
+    //是否手动调用广告展示[show]
+    private var isManualShow = true
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -96,7 +100,7 @@ class NativeAdLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show()
+                show(false)
             }
         }
     }
@@ -112,8 +116,11 @@ class NativeAdLoader(
 
     /**
      * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(): NativeAdLoader {
+    fun show(isManualShow: Boolean = true): NativeAdLoader {
+        this.isManualShow = isManualShow
         isShowAfterLoaded = true
         if (makeAdRequest()) {
             return this
@@ -175,7 +182,8 @@ class NativeAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting) {
+        if (!isRequesting && isManualShow) {
+            isManualShow = false
             onAdRequest()
         }
 
@@ -219,7 +227,7 @@ class NativeAdLoader(
         NativeAdCallback().apply(nativeAdCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show()
+            show(false)
         }
         loadedLiveData.value = true
     }
