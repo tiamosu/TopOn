@@ -50,7 +50,7 @@ class NativeBannerLoader(
     private var isDestroyed = false
 
     //是否手动调用广告展示[show]
-    private var isManualShow = true
+    private var isManualShow = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {

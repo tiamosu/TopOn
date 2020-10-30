@@ -64,7 +64,7 @@ class RewardAdLoader(
     private var isDestroyed = false
 
     //是否手动调用广告展示[show]
-    private var isManualShow = true
+    private var isManualShow = false
 
     init {
         initAd()
