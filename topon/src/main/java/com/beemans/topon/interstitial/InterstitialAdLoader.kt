@@ -213,11 +213,11 @@ class InterstitialAdLoader(
             "onInterstitialAdLoadFail:${error?.printStackTrace()}   isManualRequested:$isManualRequestedForLoadFail"
         )
 
-        isManualRequestedForLoadFail = false
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
         InterstitialAdCallback().apply(interstitialAdCallback)
             .onAdLoadFail?.invoke(error, isManualRequestedForLoadFail)
+        isManualRequestedForLoadFail = false
     }
 
     /**
