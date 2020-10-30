@@ -52,7 +52,10 @@ class BannerLoader(
     private var isDestroyed = false
 
     //是否手动调用广告展示[show]
-    private var isManualShow = true
+    private var isManualShow = false
+
+    //是否已经请求过广告，确保广告请求只回调一次
+    private var isRequestedAd = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -132,6 +135,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
+        this.isRequestedAd = true
         BannerCallback().apply(bannerCallback).onAdRequest?.invoke()
     }
 
@@ -151,7 +155,7 @@ class BannerLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && isManualShow) {
+        if (!isRequesting && isManualShow && !isRequestedAd) {
             isManualShow = false
             onAdRequest()
         }
