@@ -58,11 +58,11 @@ class NativeAdLoader(
     //页面是否已经销毁了
     private var isDestroyed = false
 
-    //是否手动调用广告请求
-    private var isManualRequest = false
+    //是否进行广告请求回调
+    private var isRequestAdCallback = false
 
-    //是否是通过手动请求所加载的失败
-    private var isManualRequestedForLoadFail = false
+    //是否有进行初始化预加载广告请求
+    private var isInitPreloadForAdRequest = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -95,7 +95,10 @@ class NativeAdLoader(
             }
         }
 
-        preLoadAd()
+        if (isUsePreload) {
+            isInitPreloadForAdRequest = true
+            preLoadAd()
+        }
     }
 
     private fun createObserve() {
@@ -123,10 +126,11 @@ class NativeAdLoader(
      * @param isManualShow 是否手动调用进行展示
      */
     fun show(isManualShow: Boolean = true): NativeAdLoader {
-        if (isManualShow) {
-            isManualRequest = true
+        if (isManualShow && !isInitPreloadForAdRequest) {
+            isRequestAdCallback = true
         }
         isShowAfterLoaded = true
+        isInitPreloadForAdRequest = false
         if (makeAdRequest()) {
             return this
         }
@@ -157,7 +161,6 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        this.isManualRequestedForLoadFail = true
         NativeAdCallback().apply(nativeAdCallback).onAdRequest?.invoke()
     }
 
@@ -188,8 +191,8 @@ class NativeAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && isManualRequest) {
-            isManualRequest = false
+        if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
+            isRequestAdCallback = false
             onAdRequest()
         }
 
@@ -216,15 +219,10 @@ class NativeAdLoader(
      */
     override fun onNativeAdLoadFail(error: AdError?) {
         if (isDestroyed) return
-        Log.e(
-            logTag,
-            "onNativeAdLoadFail:${error?.printStackTrace()}   isManualRequested:$isManualRequestedForLoadFail"
-        )
+        Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
 
         NativeManager.updateRequestStatus(placementId, false)
-        NativeAdCallback().apply(nativeAdCallback)
-            .onAdLoadFail?.invoke(error, isManualRequestedForLoadFail)
-        isManualRequestedForLoadFail = false
+        NativeAdCallback().apply(nativeAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**

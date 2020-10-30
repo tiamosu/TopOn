@@ -15,7 +15,7 @@ class NativeAdCallback {
 
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
-    var onAdLoadFail: ((adError: AdError?, isManualRequested: Boolean) -> Unit)? = null
+    var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
 
     var onAdLoaded: (() -> Unit)? = null
 
@@ -41,7 +41,7 @@ class NativeAdCallback {
     /**
      * 广告加载失败
      */
-    fun onAdLoadFail(onAdLoadFail: (adError: AdError?, isManualRequested: Boolean) -> Unit) {
+    fun onAdLoadFail(onAdLoadFail: (adError: AdError?) -> Unit) {
         this.onAdLoadFail = onAdLoadFail
     }
 

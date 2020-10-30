@@ -33,11 +33,8 @@ class NativeAdFragment : BaseFragment() {
                     onAdRenderSuc { flAdView ->
                         nativeAd_flAd.addView(flAdView)
                     }
-                    onAdLoadFail { adError, _ ->
-                        Log.e(
-                            "xia",
-                            "${this.javaClass.simpleName}show:${adError?.printStackTrace()}"
-                        )
+                    onAdLoadFail {
+                        Log.e("xia", "${this.javaClass.simpleName}show:${it?.printStackTrace()}")
                     }
                     onAdCloseClick { _, _ ->
                         true
