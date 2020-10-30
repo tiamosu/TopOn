@@ -62,11 +62,11 @@ class InterstitialAdLoader(
     //页面是否已经销毁了
     private var isDestroyed = false
 
-    //是否手动调用广告请求
-    private var isManualRequest = false
+    //是否进行广告请求回调
+    private var isRequestAdCallback = false
 
-    //是否是通过手动请求所加载的失败
-    private var isManualRequestedForLoadFail = false
+    //是否有进行初始化预加载广告请求
+    private var isInitPreloadForAdRequest = false
 
     init {
         initAd()
@@ -79,7 +79,10 @@ class InterstitialAdLoader(
             atInterstitial?.setAdListener(this)
         }
 
-        preLoadAd()
+        if (isUsePreload) {
+            isInitPreloadForAdRequest = true
+            preLoadAd()
+        }
     }
 
     private fun createObserve() {
@@ -107,8 +110,8 @@ class InterstitialAdLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting =
             InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
-        if (!isRequesting && isManualRequest) {
-            isManualRequest = false
+        if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
+            isRequestAdCallback = false
             onAdRequest()
         }
 
@@ -134,10 +137,11 @@ class InterstitialAdLoader(
      * @param isManualShow 是否手动调用进行展示
      */
     fun show(isManualShow: Boolean = true): InterstitialAdLoader {
-        if (isManualShow) {
-            isManualRequest = true
+        if (isManualShow && !isInitPreloadForAdRequest) {
+            isRequestAdCallback = true
         }
         isShowAfterLoaded = true
+        isInitPreloadForAdRequest = false
         if (makeAdRequest()) {
             return this
         }
@@ -160,7 +164,6 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        this.isManualRequestedForLoadFail = true
         InterstitialAdCallback().apply(interstitialAdCallback).onAdRequest?.invoke()
     }
 
@@ -208,16 +211,11 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdLoadFail(error: AdError?) {
         if (isDestroyed || isTimeOut) return
-        Log.e(
-            logTag,
-            "onInterstitialAdLoadFail:${error?.printStackTrace()}   isManualRequested:$isManualRequestedForLoadFail"
-        )
+        Log.e(logTag, "onInterstitialAdLoadFail:${error?.printStackTrace()}")
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback)
-            .onAdLoadFail?.invoke(error, isManualRequestedForLoadFail)
-        isManualRequestedForLoadFail = false
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
