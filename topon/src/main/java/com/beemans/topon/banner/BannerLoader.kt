@@ -51,11 +51,11 @@ class BannerLoader(
     //页面是否已经销毁了
     private var isDestroyed = false
 
-    //是否手动调用广告展示[show]
-    private var isManualShow = false
+    //是否进行广告请求回调
+    private var isRequestAdCallback = false
 
-    //是否已经请求过广告，确保广告请求只回调一次
-    private var isRequestedAd = false
+    //是否有进行初始化预加载广告请求
+    private var isInitPreloadForAdRequest = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData: EventLiveData<Boolean> by lazy {
@@ -81,7 +81,11 @@ class BannerLoader(
         }
         flSplashView.addView(atBannerView, layoutParams)
         setVisibility(View.GONE)
-        preLoadAd()
+
+        if (isUsePreload) {
+            isInitPreloadForAdRequest = true
+            preLoadAd()
+        }
     }
 
     private fun createObserve() {
@@ -109,8 +113,11 @@ class BannerLoader(
      * @param isManualShow 是否手动调用进行展示
      */
     fun show(isManualShow: Boolean = true): BannerLoader {
-        this.isManualShow = isManualShow
+        if (isManualShow && !isInitPreloadForAdRequest) {
+            isRequestAdCallback = true
+        }
         isShowAfterLoaded = true
+        isInitPreloadForAdRequest = false
         if (makeAdRequest()) {
             return this
         }
@@ -135,7 +142,6 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        this.isRequestedAd = true
         BannerCallback().apply(bannerCallback).onAdRequest?.invoke()
     }
 
@@ -155,8 +161,10 @@ class BannerLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && isManualShow && !isRequestedAd) {
-            isManualShow = false
+        if (!isRequesting && !atBannerView.isVisible
+            && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))
+        ) {
+            isRequestAdCallback = false
             onAdRequest()
         }
 
