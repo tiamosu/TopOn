@@ -63,8 +63,11 @@ class RewardAdLoader(
     //页面是否已经销毁了
     private var isDestroyed = false
 
-    //是否手动调用广告展示[show]
-    private var isManualShow = false
+    //是否进行广告请求回调
+    private var isRequestAdCallback = false
+
+    //是否有进行初始化预加载广告请求
+    private var isInitPreloadForAdRequest = false
 
     init {
         initAd()
@@ -84,7 +87,10 @@ class RewardAdLoader(
             }
         }
 
-        preloadAd()
+        if (isUsePreload) {
+            isInitPreloadForAdRequest = true
+            preloadAd()
+        }
     }
 
     private fun createObserve() {
@@ -111,8 +117,8 @@ class RewardAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
-        if (!isRequesting && isManualShow) {
-            isManualShow = false
+        if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
+            isRequestAdCallback = false
             onAdRequest()
         }
 
@@ -138,8 +144,11 @@ class RewardAdLoader(
      * @param isManualShow 是否手动调用进行展示
      */
     fun show(isManualShow: Boolean = true): RewardAdLoader {
-        this.isManualShow = isManualShow
+        if (isManualShow && !isInitPreloadForAdRequest) {
+            isRequestAdCallback = true
+        }
         isShowAfterLoaded = true
+        isInitPreloadForAdRequest = false
         if (makeAdRequest()) {
             return this
         }

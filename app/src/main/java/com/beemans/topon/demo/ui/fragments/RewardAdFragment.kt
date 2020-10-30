@@ -1,6 +1,5 @@
 package com.beemans.topon.demo.ui.fragments
 
-import android.view.View
 import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
@@ -17,10 +16,6 @@ class RewardAdFragment : BaseFragment() {
     private var rewardAdLoader: RewardAdLoader? = null
 
     override fun getLayoutId() = R.layout.fragment_reward_ad
-
-    override fun initView(rootView: View?) {
-        TopOn.loadRewardAd(this, RewardAdConfig(Constant.REWARD_ID))
-    }
 
     override fun initEvent() {
         rewardAd_btnLoad.setOnClickListener {
