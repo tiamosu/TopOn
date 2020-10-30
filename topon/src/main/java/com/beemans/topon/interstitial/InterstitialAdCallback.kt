@@ -17,7 +17,7 @@ class InterstitialAdCallback {
 
     var onAdLoaded: (() -> Unit)? = null
 
-    var onAdLoadFail: ((error: AdError?) -> Unit)? = null
+    var onAdLoadFail: ((error: AdError?, isManualRequested: Boolean) -> Unit)? = null
 
     var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -62,7 +62,7 @@ class InterstitialAdCallback {
     /**
      * 广告加载失败回调
      */
-    fun onAdLoadFail(onAdLoadFail: (error: AdError?) -> Unit) {
+    fun onAdLoadFail(onAdLoadFail: (error: AdError?, isManualRequested: Boolean) -> Unit) {
         this.onAdLoadFail = onAdLoadFail
     }
 

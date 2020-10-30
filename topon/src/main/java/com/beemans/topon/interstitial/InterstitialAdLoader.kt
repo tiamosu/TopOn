@@ -65,6 +65,9 @@ class InterstitialAdLoader(
     //是否手动调用广告请求
     private var isManualRequest = false
 
+    //是否是通过手动请求所加载的失败
+    private var isManualRequestedForLoadFail = false
+
     init {
         initAd()
         createObserve()
@@ -157,6 +160,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
+        this.isManualRequestedForLoadFail = true
         InterstitialAdCallback().apply(interstitialAdCallback).onAdRequest?.invoke()
     }
 
@@ -204,11 +208,16 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdLoadFail(error: AdError?) {
         if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onInterstitialAdLoadFail:${error?.printStackTrace()}")
+        Log.e(
+            logTag,
+            "onInterstitialAdLoadFail:${error?.printStackTrace()}   isManualRequested:$isManualRequestedForLoadFail"
+        )
 
+        isManualRequestedForLoadFail = false
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error)
+        InterstitialAdCallback().apply(interstitialAdCallback)
+            .onAdLoadFail?.invoke(error, isManualRequestedForLoadFail)
     }
 
     /**
