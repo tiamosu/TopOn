@@ -23,19 +23,19 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 class NativeSplashLoader(
     private val owner: LifecycleOwner,
-    private val splashConfig: NativeSplashConfig,
-    private val splashCallback: NativeSplashCallback.() -> Unit
+    private val nativeSplashConfig: NativeSplashConfig,
+    private val nativeSplashCallback: NativeSplashCallback.() -> Unit
 ) : LifecycleObserver, ATNativeSplashListener {
 
     private var atNativeSplash: ATNativeSplash? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
 
-    private val nativeWidth by lazy { splashConfig.nativeWidth }
-    private val nativeHeight by lazy { splashConfig.nativeHeight }
+    private val nativeWidth by lazy { nativeSplashConfig.nativeWidth }
+    private val nativeHeight by lazy { nativeSplashConfig.nativeHeight }
 
     //广告位ID
-    private val placementId by lazy { splashConfig.placementId }
+    private val placementId by lazy { nativeSplashConfig.placementId }
 
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
@@ -127,7 +127,7 @@ class NativeSplashLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        NativeSplashCallback().apply(splashCallback).onAdRequest?.invoke()
+        NativeSplashCallback().apply(nativeSplashCallback).onAdRequest?.invoke()
     }
 
     /**
@@ -140,7 +140,7 @@ class NativeSplashLoader(
         clearView()
         isAdRendered = true
         flAdView.addView(flContainer)
-        NativeSplashCallback().apply(splashCallback).onAdRenderSuc?.invoke(flAdView)
+        NativeSplashCallback().apply(nativeSplashCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
     /**
@@ -163,8 +163,8 @@ class NativeSplashLoader(
                     null,
                     placementId,
                     localMap,
-                    splashConfig.requestTimeOut,
-                    splashConfig.fetchDelay,
+                    nativeSplashConfig.requestTimeOut,
+                    nativeSplashConfig.fetchDelay,
                     this
                 )
             }
@@ -193,7 +193,7 @@ class NativeSplashLoader(
 
         isAdLoaded = true
         NativeManager.updateRequestStatus(placementId, false)
-        NativeSplashCallback().apply(splashCallback).onAdLoaded?.invoke()
+        NativeSplashCallback().apply(nativeSplashCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
             show(false)
@@ -209,7 +209,7 @@ class NativeSplashLoader(
         Log.e(logTag, "onNoAdError:$errorMsg")
 
         NativeManager.updateRequestStatus(placementId, false)
-        NativeSplashCallback().apply(splashCallback).onAdError?.invoke(errorMsg)
+        NativeSplashCallback().apply(nativeSplashCallback).onAdError?.invoke(errorMsg)
     }
 
     /**
@@ -221,7 +221,7 @@ class NativeSplashLoader(
 
         isAdLoaded = false
         isAdPlaying = false
-        if (NativeSplashCallback().apply(splashCallback).onAdSkip?.invoke() == true) {
+        if (NativeSplashCallback().apply(nativeSplashCallback).onAdSkip?.invoke() == true) {
             clearView()
         }
     }
@@ -234,7 +234,7 @@ class NativeSplashLoader(
         Log.e(logTag, "onAdShow:${info.toString()}")
 
         isAdPlaying = true
-        NativeSplashCallback().apply(splashCallback).onAdShow?.invoke(info)
+        NativeSplashCallback().apply(nativeSplashCallback).onAdShow?.invoke(info)
     }
 
     /**
@@ -244,7 +244,7 @@ class NativeSplashLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdClick:${info.toString()}")
 
-        NativeSplashCallback().apply(splashCallback).onAdClick?.invoke(info)
+        NativeSplashCallback().apply(nativeSplashCallback).onAdClick?.invoke(info)
     }
 
     /**
@@ -254,7 +254,7 @@ class NativeSplashLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdTick:$tickTime")
 
-        NativeSplashCallback().apply(splashCallback).onAdTick?.invoke(tickTime)
+        NativeSplashCallback().apply(nativeSplashCallback).onAdTick?.invoke(tickTime)
     }
 
     /**
@@ -265,7 +265,7 @@ class NativeSplashLoader(
         Log.e(logTag, "onAdTimeOver")
 
         isAdPlaying = false
-        NativeSplashCallback().apply(splashCallback).onAdTimeOver?.invoke()
+        NativeSplashCallback().apply(nativeSplashCallback).onAdTimeOver?.invoke()
     }
 
     @Suppress("unused")

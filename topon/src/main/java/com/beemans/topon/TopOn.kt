@@ -56,10 +56,10 @@ object TopOn {
      */
     fun loadNativeSplash(
         owner: LifecycleOwner,
-        splashConfig: NativeSplashConfig,
-        splashCallback: NativeSplashCallback.() -> Unit = {}
+        nativeSplashConfig: NativeSplashConfig,
+        nativeSplashCallback: NativeSplashCallback.() -> Unit = {}
     ): NativeSplashLoader {
-        return NativeSplashLoader(owner, splashConfig, splashCallback)
+        return NativeSplashLoader(owner, nativeSplashConfig, nativeSplashCallback)
     }
 
     /**
@@ -90,10 +90,10 @@ object TopOn {
     fun loadBanner(
         owner: LifecycleOwner,
         bannerConfig: BannerConfig,
-        flSplashView: FrameLayout,
+        flContainer: FrameLayout,
         bannerCallback: BannerCallback.() -> Unit = {}
     ): BannerLoader {
-        return BannerLoader(owner, bannerConfig, flSplashView, bannerCallback)
+        return BannerLoader(owner, bannerConfig, flContainer, bannerCallback)
     }
 
     /**

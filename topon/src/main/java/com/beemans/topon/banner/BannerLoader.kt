@@ -25,7 +25,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class BannerLoader(
     private val owner: LifecycleOwner,
     private val bannerConfig: BannerConfig,
-    private val flSplashView: FrameLayout,
+    private val flContainer: FrameLayout,
     private val bannerCallback: BannerCallback.() -> Unit
 ) : LifecycleObserver, ATBannerListener {
 
@@ -79,7 +79,7 @@ class BannerLoader(
             setPlacementId(placementId)
             setBannerAdListener(this@BannerLoader)
         }
-        flSplashView.addView(atBannerView, layoutParams)
+        flContainer.addView(atBannerView, layoutParams)
         setVisibility(View.GONE)
 
         if (isUsePreload) {
