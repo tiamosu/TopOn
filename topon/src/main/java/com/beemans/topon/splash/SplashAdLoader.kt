@@ -124,8 +124,12 @@ class SplashAdLoader(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT,
                 )
-                //快手广告需要 container 参数必须设置id
-                id = R.id.splash_container_id
+
+                try {
+                    //快手广告需要 container 参数必须设置id
+                    id = R.id.tp_splash_container_id
+                } catch (e: Exception) {
+                }
             }
             post(Schedulers.io()) {
                 atSplashAd = ATSplashAd(owner.context, flContainer, placementId, this)

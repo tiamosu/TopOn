@@ -1,7 +1,7 @@
 @file:Suppress("unused", "SpellCheckingInspection")
 
 object Android {
-    const val applicationId = "com.beemans.weather.yz"
+    const val applicationId = "com.superapp.filemanager"
 
     const val compileSdkVersion = 30
     const val buildToolsVersion = "30.0.2"
@@ -14,7 +14,7 @@ object Android {
 
 object Versions {
     const val kotlin = "1.4.10"
-    const val fly = "1.5.4"
+    const val fly = "1.6.4"
     const val leakcanary = "2.5"
     const val constraintlayout = "2.0.2"
     const val viewpager2 = "1.0.0"
