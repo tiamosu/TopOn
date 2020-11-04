@@ -80,7 +80,7 @@ class BannerLoader(
             setBannerAdListener(this@BannerLoader)
         }
         flContainer.addView(atBannerView, layoutParams)
-        setVisibility(View.GONE)
+        hideAd()
 
         if (isUsePreload) {
             isInitPreloadForAdRequest = true
@@ -93,7 +93,7 @@ class BannerLoader(
 
         loadedLiveData.observe(owner) {
             if (isShowAfterLoaded) {
-                show(false)
+                show(isManualShow = false)
             }
         }
     }
@@ -112,7 +112,10 @@ class BannerLoader(
      *
      * @param isManualShow 是否手动调用进行展示
      */
-    fun show(isManualShow: Boolean = true): BannerLoader {
+    fun show(isReload: Boolean = false, isManualShow: Boolean = true): BannerLoader {
+        if (isReload) {
+            isBannerLoaded = false
+        }
         if (isManualShow && !isInitPreloadForAdRequest) {
             isRequestAdCallback = true
         }
@@ -127,11 +130,22 @@ class BannerLoader(
         return this
     }
 
+    fun showAd() {
+        setVisibility(View.VISIBLE)
+    }
+
+    fun hideAd() {
+        setVisibility(View.GONE)
+    }
+
     /**
      * 控制广告显隐
      */
-    fun setVisibility(visible: Int): BannerLoader {
+    private fun setVisibility(visible: Int): BannerLoader {
         atBannerView.visibility = visible
+        if (visible == View.GONE) {
+            isBannerLoaded = false
+        }
         return this
     }
 
@@ -152,7 +166,7 @@ class BannerLoader(
         if (isDestroyed || atBannerView.isVisible) return
         Log.e(logTag, "onAdRenderSuc")
 
-        setVisibility(View.VISIBLE)
+        showAd()
         BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke()
     }
 
@@ -198,7 +212,7 @@ class BannerLoader(
         BannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
 
         if (isShowAfterLoaded) {
-            show(false)
+            show(isManualShow = false)
         }
         loadedLiveData.value = true
     }
@@ -242,7 +256,7 @@ class BannerLoader(
         Log.e(logTag, "onBannerClose:${info.toString()}")
 
         if (BannerCallback().apply(bannerCallback).onAdClose?.invoke(info) == true) {
-            setVisibility(View.GONE)
+            hideAd()
         }
     }
 

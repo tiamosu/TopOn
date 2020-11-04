@@ -27,7 +27,7 @@ class BannerFragment : BaseFragment() {
                     onAdClose { true }
                 }
             }
-            bannerLoader?.show()
+            bannerLoader?.show(true)
         }
     }
 
