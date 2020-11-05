@@ -291,6 +291,7 @@ class InterstitialAdLoader(
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         InterstitialAdManager.release(placementId)
+        atInterstitial?.setAdListener(this)
         atInterstitial = null
     }
 }

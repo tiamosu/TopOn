@@ -265,6 +265,7 @@ class SplashAdLoader(
         handler.removeCallbacksAndMessages(null)
         clearView()
         SplashAdManager.release(placementId)
+        flContainer = null
         atSplashAd?.onDestory()
         atSplashAd = null
     }

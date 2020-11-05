@@ -27,7 +27,7 @@ class NativeBannerLoader(
     private val bannerCallback: NativeBannerCallback.() -> Unit
 ) : LifecycleObserver, ATNativeBannerListener {
 
-    private lateinit var atNativeBannerView: ATNativeBannerView
+    private var atNativeBannerView: ATNativeBannerView? = null
 
     private val logTag by lazy { this.javaClass.simpleName }
 
@@ -129,7 +129,7 @@ class NativeBannerLoader(
             NativeManager.updateRequestStatus(placementId, true)
 
             post(Schedulers.io()) {
-                atNativeBannerView.loadAd(null)
+                atNativeBannerView?.loadAd(null)
             }
             return true
         }
@@ -155,7 +155,9 @@ class NativeBannerLoader(
 
         clearView()
         isAdRendered = true
-        flAdView.addView(atNativeBannerView, layoutParams)
+        if (atNativeBannerView != null) {
+            flAdView.addView(atNativeBannerView, layoutParams)
+        }
         NativeBannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
@@ -260,5 +262,7 @@ class NativeBannerLoader(
         owner.lifecycle.removeObserver(this)
         clearView()
         NativeManager.release(placementId)
+        atNativeBannerView?.setAdListener(null)
+        atNativeBannerView = null
     }
 }
