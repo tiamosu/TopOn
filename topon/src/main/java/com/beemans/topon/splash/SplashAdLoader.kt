@@ -13,7 +13,6 @@ import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.splashad.api.ATSplashAd
 import com.anythink.splashad.api.ATSplashAdListener
-import com.beemans.topon.R
 import com.beemans.topon.ext.context
 import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
@@ -124,12 +123,6 @@ class SplashAdLoader(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT,
                 )
-
-                try {
-                    //快手广告需要 container 参数必须设置id
-                    id = R.id.tp_splash_container_id
-                } catch (e: Exception) {
-                }
             }
             post(Schedulers.io()) {
                 atSplashAd = ATSplashAd(owner.context, flContainer, placementId, this)
