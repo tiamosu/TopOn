@@ -5,16 +5,12 @@ import android.os.Looper
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.splashad.api.ATSplashAd
 import com.anythink.splashad.api.ATSplashAdListener
 import com.beemans.topon.ext.context
-import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -62,13 +58,13 @@ class SplashAdLoader(
     private val flAdView by lazy { FrameLayout(owner.context) }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
-    private val loadedLiveData: EventLiveData<Boolean> by lazy {
+    private val loadedLiveData by lazy {
         var liveData = SplashAdManager.loadedLiveDataMap[placementId]
         if (liveData == null) {
-            liveData = EventLiveData()
-            SplashAdManager.loadedLiveDataMap[placementId] = liveData
+            liveData = MutableLiveData()
+            SplashAdManager.loadedLiveDataMap[placementId] = liveData!!
         }
-        liveData
+        liveData!!
     }
 
     init {
@@ -78,11 +74,11 @@ class SplashAdLoader(
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
 
-        loadedLiveData.observe(owner) {
+        loadedLiveData.observe(owner, Observer {
             if (isShowAfterLoaded) {
                 show(false)
             }
-        }
+        })
     }
 
     /**

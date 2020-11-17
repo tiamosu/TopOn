@@ -1,6 +1,6 @@
 package com.beemans.topon.interstitial
 
-import com.tiamosu.fly.callback.EventLiveData
+import androidx.lifecycle.MutableLiveData
 
 /**
  * @author tiamosu
@@ -10,7 +10,7 @@ internal class InterstitialAdManager {
     private val requestingMap: MutableMap<String, Boolean> by lazy { mutableMapOf() }
 
     companion object {
-        val loadedLiveDataMap: MutableMap<String, EventLiveData<Boolean>> by lazy { mutableMapOf() }
+        val loadedLiveDataMap: MutableMap<String, MutableLiveData<Boolean>> by lazy { mutableMapOf() }
 
         private val instance: InterstitialAdManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
             InterstitialAdManager()

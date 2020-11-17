@@ -3,16 +3,12 @@ package com.beemans.topon.interstitial
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
 import com.anythink.interstitial.api.ATInterstitial
 import com.anythink.interstitial.api.ATInterstitialListener
 import com.beemans.topon.ext.context
-import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -41,13 +37,13 @@ class InterstitialAdLoader(
     private val requestTimeOut by lazy { interstitialAdConfig.requestTimeOut }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
-    private val loadedLiveData: EventLiveData<Boolean> by lazy {
+    private val loadedLiveData by lazy {
         var liveData = InterstitialAdManager.loadedLiveDataMap[placementId]
         if (liveData == null) {
-            liveData = EventLiveData()
-            InterstitialAdManager.loadedLiveDataMap[placementId] = liveData
+            liveData = MutableLiveData()
+            InterstitialAdManager.loadedLiveDataMap[placementId] = liveData!!
         }
-        liveData
+        liveData!!
     }
 
     //是否在广告加载完成进行播放
@@ -88,11 +84,11 @@ class InterstitialAdLoader(
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
 
-        loadedLiveData.observe(owner) {
+        loadedLiveData.observe(owner, Observer {
             if (isShowAfterLoaded) {
                 show(false)
             }
-        }
+        })
     }
 
     /**

@@ -3,17 +3,13 @@ package com.beemans.topon.nativead.splash
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.nativead.splash.api.ATNativeSplash
 import com.anythink.nativead.splash.api.ATNativeSplashListener
 import com.beemans.topon.ext.context
 import com.beemans.topon.nativead.NativeManager
-import com.tiamosu.fly.callback.EventLiveData
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -56,13 +52,13 @@ class NativeSplashLoader(
     private var isRequestAdCallback = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
-    private val loadedLiveData: EventLiveData<Boolean> by lazy {
+    private val loadedLiveData by lazy {
         var liveData = NativeManager.loadedLiveDataMap[placementId]
         if (liveData == null) {
-            liveData = EventLiveData()
-            NativeManager.loadedLiveDataMap[placementId] = liveData
+            liveData = MutableLiveData()
+            NativeManager.loadedLiveDataMap[placementId] = liveData!!
         }
-        liveData
+        liveData!!
     }
 
     //配置广告宽高
@@ -94,11 +90,11 @@ class NativeSplashLoader(
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
 
-        loadedLiveData.observe(owner) {
+        loadedLiveData.observe(owner, Observer {
             if (isShowAfterLoaded) {
                 show(false)
             }
-        }
+        })
     }
 
     /**
