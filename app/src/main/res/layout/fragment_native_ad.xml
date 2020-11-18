@@ -50,9 +50,9 @@
             android:id="@+id/nativeAd_flAd1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10pt"
             android:layout_marginBottom="10pt"
-            android:background="@android:color/white"
             android:minWidth="1pt"
             android:minHeight="1pt" />
 
@@ -92,9 +92,9 @@
             android:id="@+id/nativeAd_flAd2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10pt"
             android:layout_marginBottom="10pt"
-            android:background="@android:color/white"
             android:minWidth="1pt"
             android:minHeight="1pt" />
 
@@ -130,9 +130,9 @@
             android:id="@+id/nativeAd_flAd3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="10pt"
             android:layout_marginBottom="10pt"
-            android:background="@android:color/white"
             android:minWidth="1pt"
             android:minHeight="1pt" />
     </androidx.appcompat.widget.LinearLayoutCompat>
