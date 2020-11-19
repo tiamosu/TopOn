@@ -65,6 +65,14 @@ class RewardAdLoader(
     //是否有进行初始化预加载广告请求
     private var isInitPreloadForAdRequest = false
 
+    //广告信息对象
+    private val atAdInfo: ATAdInfo?
+        get() = atRewardVideoAd?.checkAdStatus()?.atTopAdInfo
+
+    //判断当前广告位是否正在加载广告
+    private val isLoading: Boolean
+        get() = atRewardVideoAd?.checkAdStatus()?.isLoading ?: false
+
     init {
         initAd()
         createObserve()
@@ -112,7 +120,8 @@ class RewardAdLoader(
      * 广告加载请求
      */
     private fun makeAdRequest(): Boolean {
-        val isRequesting = RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        val isRequesting =
+            RewardAdManager.isRequesting(placementId) || isLoading || isAdPlaying || isDestroyed
         if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
             isRequestAdCallback = false
             onAdRequest()
@@ -177,7 +186,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRenderSuc")
 
-        RewardAdCallback().apply(rewardAdCallback).onAdRenderSuc?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
 
     /**
@@ -201,7 +210,7 @@ class RewardAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
             show(false)
@@ -218,7 +227,7 @@ class RewardAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoFailed?.invoke(error)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoFailed?.invoke(error, atAdInfo)
     }
 
     /**

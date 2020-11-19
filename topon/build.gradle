@@ -37,6 +37,8 @@ dependencies {
     compileOnly Deps.fly
     compileOnly Deps.fly_imageloader_glide
     compileOnly Deps.androidx_constraint_layout
+    api Deps.design
+    api Deps.browser
 
     fileTree(include: ['*.aar'], dir: 'libs').each { file ->
         if (file.name.endsWith('.aar')) {

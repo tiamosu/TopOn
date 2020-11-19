@@ -11,11 +11,11 @@ class RewardAdCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
-    var onAdRenderSuc: (() -> Unit)? = null
+    var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdVideoLoaded: (() -> Unit)? = null
+    var onAdVideoLoaded: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdVideoFailed: ((error: AdError?) -> Unit)? = null
+    var onAdVideoFailed: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
 
     var onAdVideoClosed: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -41,21 +41,21 @@ class RewardAdCallback {
     /**
      * 广告渲染成功
      */
-    fun onAdRenderSuc(onAdRenderSuc: () -> Unit) {
+    fun onAdRenderSuc(onAdRenderSuc: (info: ATAdInfo?) -> Unit) {
         this.onAdRenderSuc = onAdRenderSuc
     }
 
     /**
      * 广告加载成功回调
      */
-    fun onAdVideoLoaded(onAdVideoLoaded: () -> Unit) {
+    fun onAdVideoLoaded(onAdVideoLoaded: (info: ATAdInfo?) -> Unit) {
         this.onAdVideoLoaded = onAdVideoLoaded
     }
 
     /**
      * 广告加载失败回调
      */
-    fun onAdVideoFailed(onAdVideoFailed: (error: AdError?) -> Unit) {
+    fun onAdVideoFailed(onAdVideoFailed: (error: AdError?, info: ATAdInfo?) -> Unit) {
         this.onAdVideoFailed = onAdVideoFailed
     }
 

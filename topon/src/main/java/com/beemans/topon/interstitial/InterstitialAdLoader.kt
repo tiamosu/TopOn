@@ -64,6 +64,14 @@ class InterstitialAdLoader(
     //是否有进行初始化预加载广告请求
     private var isInitPreloadForAdRequest = false
 
+    //广告信息对象
+    private val atAdInfo: ATAdInfo?
+        get() = atInterstitial?.checkAdStatus()?.atTopAdInfo
+
+    //判断当前广告位是否正在加载广告
+    private val isLoading: Boolean
+        get() = atInterstitial?.checkAdStatus()?.isLoading ?: false
+
     init {
         initAd()
         createObserve()
@@ -105,7 +113,7 @@ class InterstitialAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting =
-            InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+            InterstitialAdManager.isRequesting(placementId) || isLoading || isAdPlaying || isDestroyed
         if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
             isRequestAdCallback = false
             onAdRequest()
@@ -170,7 +178,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRenderSuc")
 
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdRenderSuc?.invoke()
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
 
     /**
@@ -194,7 +202,7 @@ class InterstitialAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoaded?.invoke()
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoaded?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
             show(false)
@@ -211,7 +219,7 @@ class InterstitialAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error, atAdInfo)
     }
 
     /**
