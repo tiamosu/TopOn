@@ -35,6 +35,12 @@ class SplashAdLoader(
     //请求超时时间
     private val requestTimeOut by lazy { splashAdConfig.requestTimeOut }
 
+    //各个平台参数信息
+    private val atMediationRequestInfo by lazy { splashAdConfig.atRequestInfo }
+
+    //本地参数
+    private val localMap by lazy { splashAdConfig.localMap }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -121,7 +127,14 @@ class SplashAdLoader(
                 )
             }
             post(Schedulers.io()) {
-                atSplashAd = ATSplashAd(owner.context, flContainer, placementId, this)
+                atSplashAd = ATSplashAd(
+                    owner.context,
+                    flContainer,
+                    placementId,
+                    localMap,
+                    atMediationRequestInfo,
+                    this
+                )
             }
 
             handler.postDelayed({

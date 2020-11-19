@@ -16,13 +16,13 @@ object Constant {
 //    const val SPLASH_ID = "b5f07004e8a85f"
 
     /** 穿山甲 **/
-//    const val APP_ID = "a5aa1f9deda26d"
-//    const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
-//    const val NATIVE_AD_ID = "b5c2c97629da0d"
-//    const val BANNER_ID = "b5baca45138428"
-//    const val INTERSTITIAL_ID = "b5baca585a8fef"
-//    const val REWARD_ID = "b5b728e7a08cd4"
-//    const val SPLASH_ID = "b5bea7c1b653ef"
+    const val APP_ID = "a5aa1f9deda26d"
+    const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
+    const val NATIVE_AD_ID = "b5c2c97629da0d"
+    const val BANNER_ID = "b5baca45138428"
+    const val INTERSTITIAL_ID = "b5baca585a8fef"
+    const val REWARD_ID = "b5b728e7a08cd4"
+    const val SPLASH_ID = "b5bea7c1b653ef"
 
     /** 广点通 **/
 //    const val APP_ID = "a5aa1f9deda26d"
@@ -34,11 +34,11 @@ object Constant {
 //    const val SPLASH_ID = "b5bea7bfd93f01"
 
     /** Admob **/
-    const val APP_ID = "a5aa1f9deda26d"
-    const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
-    const val NATIVE_AD_ID = "b5aa1fa501d9f6"
-    const val BANNER_ID = "b5baca41a2536f"
-    const val INTERSTITIAL_ID = "b5baca54674522"
-    const val REWARD_ID = "b5b449f025ec7c"
-    const val SPLASH_ID = "b5f73fe0c5db29"
+//    const val APP_ID = "a5aa1f9deda26d"
+//    const val APP_KEY = "4f7b9ac17decb9babec83aac078742c7"
+//    const val NATIVE_AD_ID = "b5aa1fa501d9f6"
+//    const val BANNER_ID = "b5baca41a2536f"
+//    const val INTERSTITIAL_ID = "b5baca54674522"
+//    const val REWARD_ID = "b5b449f025ec7c"
+//    const val SPLASH_ID = "b5f73fe0c5db29"
 }

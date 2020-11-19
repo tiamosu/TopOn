@@ -11,8 +11,7 @@
         android:id="@+id/nativeAdItem_flAd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/nativeAdItem_flImage"
-        android:layout_marginBottom="10pt" />
+        android:layout_above="@+id/nativeAdItem_flImage" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/nativeAdItem_tvFrom"
@@ -50,6 +49,7 @@
         android:layout_width="45pt"
         android:layout_height="45pt"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="10pt"
         android:scaleType="fitCenter"
         android:visibility="gone"
         tools:visibility="visible" />
