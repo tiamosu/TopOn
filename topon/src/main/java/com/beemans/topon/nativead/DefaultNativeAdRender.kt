@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
+import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
@@ -18,13 +20,18 @@ import com.beemans.topon.ext.loadAdImage
  */
 class DefaultNativeAdRender : BaseNativeAdRender() {
     private var developView: View? = null
+    private var backgroundColor: Int? = null
+
+    fun setBackground(@ColorInt backgroundColor: Int) {
+        this.backgroundColor = backgroundColor
+    }
 
     /**
      * 用于创建自定义的Native广告布局的View
      */
     override fun createView(context: Context, networkType: Int): View {
         if (developView == null) {
-            developView = View.inflate(context, R.layout.native_ad_item, null)
+            developView = View.inflate(context, R.layout.default_native_ad_item, null)
         }
         (developView?.parent as? ViewGroup)?.removeView(developView)
         return developView!!
@@ -34,6 +41,7 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
      * 用于实现广告内容渲染的方法，其中customNativeAd是广告素材的对象，可提供素材进行渲染
      */
     override fun renderAdView(view: View, ad: CustomNativeAd) {
+        val rlContent: RelativeLayout = view.findViewById(R.id.nativeAdItem_rlContent)
         val flContentArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flAd)
         val tvTitle: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvTitle)
         val tvDesc: AppCompatTextView = view.findViewById(R.id.nativeAdItem_tvDesc)
@@ -42,6 +50,8 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         val flIconArea: FrameLayout = view.findViewById(R.id.nativeAdItem_flImage)
         val ivChoiceLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivChoiceLogo)
         val ivLogo: AppCompatImageView = view.findViewById(R.id.nativeAdItem_ivLogo)
+
+        backgroundColor?.let { rlContent.setBackgroundColor(it) }
 
         val isNativeExpress = ad.isNativeExpress
         tvTitle.isVisible = !isNativeExpress

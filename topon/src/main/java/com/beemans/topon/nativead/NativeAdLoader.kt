@@ -50,6 +50,9 @@ class NativeAdLoader(
     //高度自适应
     private val isHighlyAdaptive by lazy { nativeAdConfig.isHighlyAdaptive }
 
+    //广告背景颜色
+    private val backgroundColor by lazy { nativeAdConfig.backgroundColor }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -78,8 +81,6 @@ class NativeAdLoader(
 
     private val flAdView by lazy { FrameLayout(owner.context) }
 
-    private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
-
     init {
         initAd()
         createObserve()
@@ -104,6 +105,9 @@ class NativeAdLoader(
             }
         }
 
+        if (nativeAdRender is DefaultNativeAdRender) {
+            backgroundColor?.let { nativeAdRender.setBackground(it) }
+        }
         if (isUsePreload) {
             isInitPreloadForAdRequest = true
             preLoadAd()
@@ -152,11 +156,7 @@ class NativeAdLoader(
 
             atNativeAdView.apply {
                 renderAdView(this, nativeAdRender)
-                if (nativeAdRender.clickView.isNotEmpty()) {
-                    prepare(this, nativeAdRender.clickView, null)
-                } else {
-                    prepare(this)
-                }
+                prepare(this, nativeAdRender.clickView, null)
                 onAdRenderSuc()
             }
         }
@@ -181,7 +181,7 @@ class NativeAdLoader(
         Log.e(logTag, "onAdRenderSuc")
 
         clearView()
-        flAdView.addView(atNativeAdView, layoutParams)
+        flAdView.addView(atNativeAdView)
         NativeAdCallback().apply(nativeAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
