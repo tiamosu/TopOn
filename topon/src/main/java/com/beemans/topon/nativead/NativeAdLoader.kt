@@ -53,6 +53,9 @@ class NativeAdLoader(
     //广告背景颜色
     private val backgroundColor by lazy { nativeAdConfig.backgroundColor }
 
+    //是否是自渲染
+    private val isCustomRender by lazy { nativeAdConfig.isCustomRender }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -80,6 +83,8 @@ class NativeAdLoader(
     }
 
     private val flAdView by lazy { FrameLayout(owner.context) }
+
+    private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
     init {
         initAd()
@@ -181,7 +186,13 @@ class NativeAdLoader(
         Log.e(logTag, "onAdRenderSuc")
 
         clearView()
-        flAdView.addView(atNativeAdView)
+
+        //自渲染广告需要加 LayoutParams，否则布局错乱
+        if (isCustomRender) {
+            flAdView.addView(atNativeAdView, layoutParams)
+        } else {
+            flAdView.addView(atNativeAdView)
+        }
         NativeAdCallback().apply(nativeAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
