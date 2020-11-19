@@ -29,7 +29,7 @@ class RewardAdCallback {
 
     var onAdVideoPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdTimeOut: (() -> Unit)? = null
+    var onAdTimeOut: ((info: ATAdInfo?) -> Unit)? = null
 
     /**
      * 广告请求
@@ -104,7 +104,7 @@ class RewardAdCallback {
     /**
      * 广告加载超时
      */
-    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
+    fun onAdTimeOut(onAdTimeOut: (info: ATAdInfo?) -> Unit) {
         this.onAdTimeOut = onAdTimeOut
     }
 }

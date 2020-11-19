@@ -13,7 +13,7 @@ class InterstitialAdCallback {
 
     var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdTimeOut: (() -> Unit)? = null
+    var onAdTimeOut: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdLoaded: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -48,7 +48,7 @@ class InterstitialAdCallback {
     /**
      * 广告加载超时
      */
-    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
+    fun onAdTimeOut(onAdTimeOut: (info: ATAdInfo?) -> Unit) {
         this.onAdTimeOut = onAdTimeOut
     }
 

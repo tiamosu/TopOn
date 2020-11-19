@@ -198,7 +198,7 @@ class RewardAdLoader(
 
         isTimeOut = true
         RewardAdManager.updateRequestStatus(placementId, false)
-        RewardAdCallback().apply(rewardAdCallback).onAdTimeOut?.invoke()
+        RewardAdCallback().apply(rewardAdCallback).onAdTimeOut?.invoke(atAdInfo)
     }
 
     /**

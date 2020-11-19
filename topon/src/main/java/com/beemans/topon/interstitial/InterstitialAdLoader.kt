@@ -190,7 +190,7 @@ class InterstitialAdLoader(
 
         isTimeOut = true
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke()
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke(atAdInfo)
     }
 
     /**
