@@ -230,7 +230,7 @@ class NativeAdLoader(
     /**
      * 获取广告对象
      */
-    private fun getNativeAd(): NativeAd? {
+    fun getNativeAd(): NativeAd? {
         return atNative?.nativeAd
     }
 
