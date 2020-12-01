@@ -1,5 +1,6 @@
 package com.beemans.topon.demo.ui.fragments
 
+import android.util.Log
 import com.beemans.topon.TopOn
 import com.beemans.topon.banner.BannerConfig
 import com.beemans.topon.banner.BannerLoader
@@ -26,10 +27,21 @@ class BannerFragment : BaseFragment() {
                 bannerLoader = TopOn.loadBanner(this, config, dataBinding.bannerFlAd) {
                     onAdRenderSuc {}
                     onAdClose { true }
+                    onAdAutoRefreshed {
+                        Log.e("xia", "onAdAutoRefreshed")
+                    }
                 }
             }
             bannerLoader?.show(true)
         }
+    }
+
+    override fun onFlySupportVisible() {
+        bannerLoader?.onFlySupportVisible()
+    }
+
+    override fun onFlySupportInvisible() {
+        bannerLoader?.onFlySupportInvisible()
     }
 
     override fun doBusiness() {

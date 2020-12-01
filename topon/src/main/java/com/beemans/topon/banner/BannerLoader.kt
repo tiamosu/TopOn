@@ -65,6 +65,9 @@ class BannerLoader(
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
+    //是否有在页面真实不可见时隐藏广告
+    private var isHideAdFromPageInvisible = false
+
     init {
         initAd()
         createObserve()
@@ -126,21 +129,47 @@ class BannerLoader(
         return this
     }
 
+    /**
+     * 显示广告
+     */
     fun showAd() {
         setVisibility(View.VISIBLE)
     }
 
-    fun hideAd() {
-        setVisibility(View.GONE)
+    /**
+     * 隐藏广告
+     */
+    fun hideAd(isReload: Boolean = true) {
+        setVisibility(View.GONE, isReload)
+    }
+
+    /**
+     * 页面真实可见时，进行广告展示
+     */
+    fun onFlySupportVisible() {
+        if (isHideAdFromPageInvisible) {
+            isHideAdFromPageInvisible = false
+            showAd()
+        }
+    }
+
+    /**
+     * 页面真实不可见时，进行广告隐藏，防止广告自动刷新浪费资源
+     */
+    fun onFlySupportInvisible() {
+        if (atBannerView?.isVisible == true) {
+            isHideAdFromPageInvisible = true
+            hideAd(false)
+        }
     }
 
     /**
      * 控制广告显隐
      */
-    private fun setVisibility(visible: Int): BannerLoader {
+    private fun setVisibility(visible: Int, isReload: Boolean = true): BannerLoader {
         if (atBannerView?.visibility != visible) {
             atBannerView?.visibility = visible
-            if (visible == View.GONE) {
+            if (visible == View.GONE && isReload) {
                 isBannerLoaded = false
             }
         }
