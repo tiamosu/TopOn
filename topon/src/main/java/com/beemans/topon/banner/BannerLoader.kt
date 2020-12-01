@@ -138,9 +138,11 @@ class BannerLoader(
      * 控制广告显隐
      */
     private fun setVisibility(visible: Int): BannerLoader {
-        atBannerView?.visibility = visible
-        if (visible == View.GONE) {
-            isBannerLoaded = false
+        if (atBannerView?.visibility != visible) {
+            atBannerView?.visibility = visible
+            if (visible == View.GONE) {
+                isBannerLoaded = false
+            }
         }
         return this
     }
