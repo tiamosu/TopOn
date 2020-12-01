@@ -1,83 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/main_viewPager"
+    <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:orientation="vertical">
 
-    <com.beemans.topon.demo.ui.view.tabview.TabBarLayout
-        android:id="@+id/main_tabBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="45pt"
-        android:background="@color/colorPrimary">
-
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/main_viewPager"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="信息流"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
+            android:layout_weight="1" />
 
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="信息流-Banner"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
+        <com.beemans.topon.demo.ui.view.tabview.TabBarLayout
+            android:id="@+id/main_tabBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="45pt"
+            android:background="@color/colorPrimary">
 
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="信息流-Splash"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="信息流"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
 
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="激励视频"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="信息流-Banner"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
 
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="插屏"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="信息流-Splash"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
 
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="横幅"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="激励视频"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
 
-        <com.beemans.topon.demo.ui.view.tabview.TabBarItem
-            android:layout_width="0pt"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:tbi_text="开屏"
-            app:tbi_textNormalColor="@android:color/white"
-            app:tbi_textSelectedColor="@color/colorAccent"
-            app:tbi_textSize="10pt" />
-    </com.beemans.topon.demo.ui.view.tabview.TabBarLayout>
-</androidx.appcompat.widget.LinearLayoutCompat>
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="插屏"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
+
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="横幅"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
+
+            <com.beemans.topon.demo.ui.view.tabview.TabBarItem
+                android:layout_width="0pt"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:tbi_text="开屏"
+                app:tbi_textNormalColor="@android:color/white"
+                app:tbi_textSelectedColor="@color/colorAccent"
+                app:tbi_textSize="10pt" />
+        </com.beemans.topon.demo.ui.view.tabview.TabBarLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

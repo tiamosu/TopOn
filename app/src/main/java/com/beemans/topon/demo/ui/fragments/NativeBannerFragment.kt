@@ -6,11 +6,11 @@ import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
+import com.beemans.topon.demo.databinding.FragmentNativeBannerBinding
 import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.ext.addAdView
 import com.beemans.topon.nativead.banner.NativeBannerConfig
 import com.beemans.topon.nativead.banner.NativeBannerLoader
-import kotlinx.android.synthetic.main.fragment_native_banner.*
 import kotlin.math.roundToInt
 
 /**
@@ -18,12 +18,13 @@ import kotlin.math.roundToInt
  * @date 2020/7/6.
  */
 class NativeBannerFragment : BaseFragment() {
+    private val dataBinding by lazy { binding as FragmentNativeBannerBinding }
     private val bannerLoaders: MutableMap<String, NativeBannerLoader> by lazy { mutableMapOf() }
 
     override fun getLayoutId() = R.layout.fragment_native_banner
 
     override fun initEvent() {
-        nativeBanner_btnShow.setOnClickListener {
+        dataBinding.nativeBannerBtnShow.setOnClickListener {
             loadNativeBanner1()
             loadNativeBanner2()
             loadNativeBanner3()
@@ -43,7 +44,7 @@ class NativeBannerFragment : BaseFragment() {
                 NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeBanner_flBanner.addAdView(flAdView)
+                    dataBinding.nativeBannerFlBanner.addAdView(flAdView)
                 }
                 onAdClose {
                     true
@@ -66,7 +67,7 @@ class NativeBannerFragment : BaseFragment() {
                 NativeBannerConfig(Constant.NATIVE_AD_ID, width, height, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeBanner_flBanner2.addAdView(flAdView)
+                    dataBinding.nativeBannerFlBanner2.addAdView(flAdView)
                 }
             }.also { bannerLoaders["2"] = it }
         }
@@ -84,7 +85,7 @@ class NativeBannerFragment : BaseFragment() {
                 NativeBannerConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px, bannerConfig)
             loader = TopOn.loadNativeBanner(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeBanner_flBanner3.addAdView(flAdView)
+                    dataBinding.nativeBannerFlBanner3.addAdView(flAdView)
                 }
             }.also { bannerLoaders["3"] = it }
         }

@@ -4,19 +4,20 @@ import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
+import com.beemans.topon.demo.databinding.FragmentNativeAdBinding
 import com.beemans.topon.demo.ext.isVisibleLocal
 import com.beemans.topon.demo.ext.pt2px
 import com.beemans.topon.demo.ext.setVisibleLocalListener
 import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.nativead.NativeAdLoader
 import com.tiamosu.fly.ext.clickNoRepeat
-import kotlinx.android.synthetic.main.fragment_native_ad.*
 
 /**
  * @author tiamosu
  * @date 2020/7/5.
  */
 class NativeAdFragment : BaseFragment() {
+    private val dataBinding by lazy { binding as FragmentNativeAdBinding }
     private val config by lazy { NativeAdConfig(Constant.NATIVE_AD_ID, 350.pt2px, 270.pt2px) }
 
     private var nativeAdLoader1: NativeAdLoader? = null
@@ -30,7 +31,7 @@ class NativeAdFragment : BaseFragment() {
 
     override fun initEvent() {
         //广告刷新
-        nativeAd_btnRefresh.clickNoRepeat {
+        dataBinding.nativeAdBtnRefresh.clickNoRepeat {
             isNativeAd1Refresh = true
             isNativeAd2Refresh = true
             isNativeAd3Refresh = true
@@ -40,18 +41,18 @@ class NativeAdFragment : BaseFragment() {
         //滑动监听，广告位置可见时进行刷新
         setVisibleLocalListener(
             views = listOf(
-                nativeAd_flAd1,
-                nativeAd_flAd2,
-                nativeAd_flAd3
+                dataBinding.nativeAdFlAd1,
+                dataBinding.nativeAdFlAd2,
+                dataBinding.nativeAdFlAd3,
             ),
-            nativeAd_nsv,
+            dataBinding.nativeAdNsv,
             isAddScrollListener = true
         ) { view, isVisible ->
             if (!isVisible) return@setVisibleLocalListener
             when (view) {
-                nativeAd_flAd1 -> loadNativeAd1()
-                nativeAd_flAd2 -> loadNativeAd2()
-                nativeAd_flAd3 -> loadNativeAd3()
+                dataBinding.nativeAdFlAd1 -> loadNativeAd1()
+                dataBinding.nativeAdFlAd2 -> loadNativeAd2()
+                dataBinding.nativeAdFlAd3 -> loadNativeAd3()
             }
         }
     }
@@ -61,13 +62,13 @@ class NativeAdFragment : BaseFragment() {
     }
 
     private fun loadNativeAd() {
-        nativeAd_flAd1.isVisibleLocal {
+        dataBinding.nativeAdFlAd1.isVisibleLocal {
             loadNativeAd1()
         }
-        nativeAd_flAd2.isVisibleLocal {
+        dataBinding.nativeAdFlAd2.isVisibleLocal {
             loadNativeAd2()
         }
-        nativeAd_flAd3.isVisibleLocal {
+        dataBinding.nativeAdFlAd3.isVisibleLocal {
             loadNativeAd3()
         }
     }
@@ -79,7 +80,7 @@ class NativeAdFragment : BaseFragment() {
         if (nativeAdLoader1 == null) {
             nativeAdLoader1 = TopOn.loadNativeAd(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeAd_flAd1.addView(flAdView)
+                    dataBinding.nativeAdFlAd1.addView(flAdView)
                 }
             }
         }
@@ -93,7 +94,7 @@ class NativeAdFragment : BaseFragment() {
         if (nativeAdLoader2 == null) {
             nativeAdLoader2 = TopOn.loadNativeAd(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeAd_flAd2.addView(flAdView)
+                    dataBinding.nativeAdFlAd2.addView(flAdView)
                 }
             }
         }
@@ -107,7 +108,7 @@ class NativeAdFragment : BaseFragment() {
         if (nativeAdLoader3 == null) {
             nativeAdLoader3 = TopOn.loadNativeAd(this, config) {
                 onAdRenderSuc { flAdView ->
-                    nativeAd_flAd3.addView(flAdView)
+                    dataBinding.nativeAdFlAd3.addView(flAdView)
                 }
             }
         }

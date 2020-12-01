@@ -5,30 +5,31 @@ import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
 import com.beemans.topon.demo.constant.Constant
+import com.beemans.topon.demo.databinding.FragmentSplashBinding
 import com.beemans.topon.splash.SplashAdConfig
 import com.beemans.topon.splash.SplashAdLoader
-import kotlinx.android.synthetic.main.fragment_splash.*
 
 /**
  * @author tiamosu
  * @date 2020/7/9.
  */
 class SplashFragment : BaseFragment() {
+    private val dataBinding by lazy { binding as FragmentSplashBinding }
     private var splashAdLoader: SplashAdLoader? = null
 
     override fun getLayoutId() = R.layout.fragment_splash
 
     override fun initEvent() {
-        splash_btnLoad.setOnClickListener {
+        dataBinding.splashBtnLoad.setOnClickListener {
             if (splashAdLoader == null) {
                 val config = SplashAdConfig(Constant.SPLASH_ID)
                 splashAdLoader = TopOn.loadSplash(this, config) {
                     onAdRenderSuc { flAdView ->
-                        splash_btnLoad.isVisible = false
-                        splash_flAd.addView(flAdView)
+                        dataBinding.splashBtnLoad.isVisible = false
+                        dataBinding.splashFlAd.addView(flAdView)
                     }
                     onAdDismiss {
-                        splash_btnLoad.isVisible = true
+                        dataBinding.splashBtnLoad.isVisible = true
                         true
                     }
                 }
