@@ -152,11 +152,7 @@ class InterstitialAdLoader(
 
         isTimeOut = false
         isShowAfterLoaded = false
-        if (interstitialAdConfig.scenario.isNotBlank()) {
-            atInterstitial?.show(owner.context, interstitialAdConfig.scenario)
-        } else {
-            atInterstitial?.show(owner.context)
-        }
+        atInterstitial?.show(owner.context, interstitialAdConfig.scenario)
         onAdRenderSuc()
         return this
     }
@@ -295,7 +291,7 @@ class InterstitialAdLoader(
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         InterstitialAdManager.release(placementId)
-        atInterstitial?.setAdListener(this)
+        atInterstitial?.setAdListener(null)
         atInterstitial = null
     }
 }
