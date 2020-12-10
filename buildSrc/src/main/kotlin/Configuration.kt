@@ -14,8 +14,8 @@ object Android {
 }
 
 object Versions {
-    const val kotlin = "1.4.20"
-    const val fly = "1.7.1"
+    const val kotlin = "1.4.21"
+    const val fly = "1.7.5"
     const val leakcanary = "2.5"
     const val constraintlayout = "2.0.4"
     const val viewpager2 = "1.0.0"
