@@ -15,7 +15,7 @@ class RewardAdCallback {
 
     var onAdVideoLoaded: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdVideoFailed: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoFailed: ((error: AdError?) -> Unit)? = null
 
     var onAdVideoClosed: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -29,7 +29,7 @@ class RewardAdCallback {
 
     var onAdVideoPlayClicked: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdTimeOut: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdTimeOut: (() -> Unit)? = null
 
     /**
      * 广告请求
@@ -55,7 +55,7 @@ class RewardAdCallback {
     /**
      * 广告加载失败回调
      */
-    fun onAdVideoFailed(onAdVideoFailed: (error: AdError?, info: ATAdInfo?) -> Unit) {
+    fun onAdVideoFailed(onAdVideoFailed: (error: AdError?) -> Unit) {
         this.onAdVideoFailed = onAdVideoFailed
     }
 
@@ -104,7 +104,7 @@ class RewardAdCallback {
     /**
      * 广告加载超时
      */
-    fun onAdTimeOut(onAdTimeOut: (info: ATAdInfo?) -> Unit) {
+    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
         this.onAdTimeOut = onAdTimeOut
     }
 }
