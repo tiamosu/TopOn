@@ -13,11 +13,11 @@ class InterstitialAdCallback {
 
     var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdTimeOut: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdTimeOut: (() -> Unit)? = null
 
     var onAdLoaded: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdLoadFail: ((error: AdError?, info: ATAdInfo?) -> Unit)? = null
+    var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
     var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -48,7 +48,7 @@ class InterstitialAdCallback {
     /**
      * 广告加载超时
      */
-    fun onAdTimeOut(onAdTimeOut: (info: ATAdInfo?) -> Unit) {
+    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
         this.onAdTimeOut = onAdTimeOut
     }
 
@@ -62,7 +62,7 @@ class InterstitialAdCallback {
     /**
      * 广告加载失败回调
      */
-    fun onAdLoadFail(onAdLoadFail: (error: AdError?, info: ATAdInfo?) -> Unit) {
+    fun onAdLoadFail(onAdLoadFail: (error: AdError?) -> Unit) {
         this.onAdLoadFail = onAdLoadFail
     }
 

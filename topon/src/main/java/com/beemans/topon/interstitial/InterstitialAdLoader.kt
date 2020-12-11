@@ -65,12 +65,7 @@ class InterstitialAdLoader(
     private var isInitPreloadForAdRequest = false
 
     //广告信息对象
-    private val atAdInfo: ATAdInfo?
-        get() = atInterstitial?.checkAdStatus()?.atTopAdInfo
-
-    //判断当前广告位是否正在加载广告
-    private val isLoading: Boolean
-        get() = atInterstitial?.checkAdStatus()?.isLoading ?: false
+    private var atAdInfo: ATAdInfo? = null
 
     init {
         initAd()
@@ -113,7 +108,7 @@ class InterstitialAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting =
-            InterstitialAdManager.isRequesting(placementId) || isLoading || isAdPlaying || isDestroyed
+            InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
         if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
             isRequestAdCallback = false
             onAdRequest()
@@ -186,7 +181,7 @@ class InterstitialAdLoader(
 
         isTimeOut = true
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke(atAdInfo)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke()
     }
 
     /**
@@ -198,6 +193,7 @@ class InterstitialAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
+        atAdInfo = atInterstitial?.checkAdStatus()?.atTopAdInfo
         InterstitialAdCallback().apply(interstitialAdCallback).onAdLoaded?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
@@ -215,7 +211,7 @@ class InterstitialAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error, atAdInfo)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
