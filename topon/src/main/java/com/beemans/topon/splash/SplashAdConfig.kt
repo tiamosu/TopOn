@@ -1,14 +1,16 @@
 package com.beemans.topon.splash
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import com.anythink.core.api.ATMediationRequestInfo
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 /**
  * @author tiamosu
  * @date 2020/7/9.
  */
+@Keep
 @Parcelize
 data class SplashAdConfig(
     val placementId: String,                                        //广告位ID

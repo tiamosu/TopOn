@@ -1,12 +1,14 @@
 package com.beemans.topon.reward
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
 
 /**
  * @author tiamosu
  * @date 2020/7/7.
  */
+@Keep
 @Parcelize
 data class RewardAdConfig(
     val placementId: String,            //广告位ID

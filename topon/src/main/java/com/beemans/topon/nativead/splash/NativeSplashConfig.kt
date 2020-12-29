@@ -1,12 +1,14 @@
 package com.beemans.topon.nativead.splash
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
 
 /**
  * @author tiamosu
  * @date 2020/7/6.
  */
+@Keep
 @Parcelize
 data class NativeSplashConfig(
     val placementId: String,            //广告位ID

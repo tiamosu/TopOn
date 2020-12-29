@@ -1,12 +1,14 @@
 package com.beemans.topon.nativead
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.Keep
+import kotlinx.parcelize.Parcelize
 
 /**
  * @author tiamosu
  * @date 2020/7/2.
  */
+@Keep
 @Parcelize
 data class NativeAdConfig(
     val placementId: String,                //广告位ID
