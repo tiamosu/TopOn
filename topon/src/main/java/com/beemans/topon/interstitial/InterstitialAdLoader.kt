@@ -46,6 +46,15 @@ class InterstitialAdLoader(
         liveData!!
     }
 
+    //观察者
+    private val observer by lazy {
+        Observer<Boolean> {
+            if (isShowAfterLoaded) {
+                show(false)
+            }
+        }
+    }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -86,12 +95,7 @@ class InterstitialAdLoader(
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
-
-        loadedLiveData.observe(owner, Observer {
-            if (isShowAfterLoaded) {
-                show(false)
-            }
-        })
+        loadedLiveData.observe(owner, observer)
     }
 
     /**
@@ -286,6 +290,7 @@ class InterstitialAdLoader(
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        loadedLiveData.removeObserver(observer)
         InterstitialAdManager.release(placementId)
         atInterstitial?.setAdListener(null)
         atInterstitial = null

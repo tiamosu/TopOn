@@ -61,6 +61,15 @@ class NativeSplashLoader(
         liveData!!
     }
 
+    //观察者
+    private val observer by lazy {
+        Observer<Boolean> {
+            if (isShowAfterLoaded) {
+                show(false)
+            }
+        }
+    }
+
     //配置广告宽高
     private val localMap: MutableMap<String, Any> by lazy { mutableMapOf() }
 
@@ -89,12 +98,7 @@ class NativeSplashLoader(
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
-
-        loadedLiveData.observe(owner, Observer {
-            if (isShowAfterLoaded) {
-                show(false)
-            }
-        })
+        loadedLiveData.observe(owner, observer)
     }
 
     /**
@@ -271,6 +275,7 @@ class NativeSplashLoader(
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        loadedLiveData.removeObserver(observer)
         clearView()
         NativeManager.release(placementId)
         atNativeSplash = null

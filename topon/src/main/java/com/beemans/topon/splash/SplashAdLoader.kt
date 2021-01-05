@@ -73,18 +73,22 @@ class SplashAdLoader(
         liveData!!
     }
 
+    //观察者
+    private val observer by lazy {
+        Observer<Boolean> {
+            if (isShowAfterLoaded) {
+                show(false)
+            }
+        }
+    }
+
     init {
         createObserve()
     }
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
-
-        loadedLiveData.observe(owner, Observer {
-            if (isShowAfterLoaded) {
-                show(false)
-            }
-        })
+        loadedLiveData.observe(owner, observer)
     }
 
     /**
@@ -271,6 +275,7 @@ class SplashAdLoader(
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        loadedLiveData.removeObserver(observer)
         handler.removeCallbacksAndMessages(null)
         clearView()
         SplashAdManager.release(placementId)

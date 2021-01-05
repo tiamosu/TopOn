@@ -63,6 +63,15 @@ class BannerLoader(
         liveData!!
     }
 
+    //观察者
+    private val observer by lazy {
+        Observer<Boolean> {
+            if (isShowAfterLoaded) {
+                show(isManualShow = false)
+            }
+        }
+    }
+
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
 
     //是否有在页面真实不可见时隐藏广告
@@ -89,12 +98,7 @@ class BannerLoader(
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
-
-        loadedLiveData.observe(owner, Observer {
-            if (isShowAfterLoaded) {
-                show(isManualShow = false)
-            }
-        })
+        loadedLiveData.observe(owner, observer)
     }
 
     /**
@@ -314,6 +318,7 @@ class BannerLoader(
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        loadedLiveData.removeObserver(observer)
         clearView()
         BannerManager.release(placementId)
         atBannerView?.setBannerAdListener(null)

@@ -47,6 +47,15 @@ class RewardAdLoader(
         liveData!!
     }
 
+    //观察者
+    private val observer by lazy {
+        Observer<Boolean> {
+            if (isShowAfterLoaded) {
+                show(false)
+            }
+        }
+    }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -94,12 +103,7 @@ class RewardAdLoader(
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
-
-        loadedLiveData.observe(owner, Observer {
-            if (isShowAfterLoaded) {
-                show(false)
-            }
-        })
+        loadedLiveData.observe(owner, observer)
     }
 
     /**
@@ -301,6 +305,7 @@ class RewardAdLoader(
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        loadedLiveData.removeObserver(observer)
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.release(placementId)
         atRewardVideoAd?.setAdListener(null)

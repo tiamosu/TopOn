@@ -60,8 +60,7 @@ class NativeAdLoader(
     private var isShowAfterLoaded = false
 
     //广告正在播放
-    var isAdPlaying = false
-        private set
+    private var isAdPlaying = false
 
     //页面是否已经销毁了
     private var isDestroyed = false
