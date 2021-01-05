@@ -21,8 +21,10 @@
                 android:text="刷新" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/nativeAd_btnTest"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="测试" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="wrap_content"

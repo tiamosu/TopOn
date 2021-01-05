@@ -82,6 +82,15 @@ class NativeAdLoader(
         liveData!!
     }
 
+    //观察者
+    private val observer by lazy {
+        Observer<Boolean> {
+            if (isShowAfterLoaded) {
+                show(false)
+            }
+        }
+    }
+
     private val flAdView by lazy { FrameLayout(owner.context) }
 
     private val layoutParams by lazy { ViewGroup.LayoutParams(nativeWidth, nativeHeight) }
@@ -121,12 +130,7 @@ class NativeAdLoader(
 
     private fun createObserve() {
         owner.lifecycle.addObserver(this)
-
-        loadedLiveData.observe(owner, Observer {
-            if (isShowAfterLoaded) {
-                show(false)
-            }
-        })
+        loadedLiveData.observe(owner, observer)
     }
 
     /**
@@ -355,6 +359,7 @@ class NativeAdLoader(
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
+        loadedLiveData.removeObserver(observer)
         clearView()
         NativeManager.release(placementId)
         nativeAd?.destory()

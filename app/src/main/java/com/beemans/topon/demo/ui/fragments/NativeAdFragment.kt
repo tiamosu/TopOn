@@ -11,6 +11,7 @@ import com.beemans.topon.demo.ext.setVisibleLocalListener
 import com.beemans.topon.nativead.NativeAdConfig
 import com.beemans.topon.nativead.NativeAdLoader
 import com.tiamosu.fly.ext.clickNoRepeat
+import com.tiamosu.fly.ext.navigate
 
 /**
  * @author tiamosu
@@ -36,6 +37,10 @@ class NativeAdFragment : BaseFragment() {
             isNativeAd2Refresh = true
             isNativeAd3Refresh = true
             loadNativeAd()
+        }
+
+        dataBinding.nativeAdBtnTest.clickNoRepeat {
+            navigate(R.id.action_to_nativeAdFragment)
         }
 
         //滑动监听，广告位置可见时进行刷新

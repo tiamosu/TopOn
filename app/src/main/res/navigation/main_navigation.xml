@@ -8,15 +8,18 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.beemans.topon.demo.ui.fragments.MainFragment"
-        tools:layout="@layout/fragment_main">
-
-        <action
-            android:id="@+id/action_nativeAdFragment_to_nativeAdFragment"
-            app:destination="@id/nativeAdFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_main" />
 
     <fragment
         android:id="@+id/nativeAdFragment"
         android:name="com.beemans.topon.demo.ui.fragments.NativeAdFragment"
         tools:layout="@layout/fragment_native_ad" />
+
+    <action
+        android:id="@+id/action_to_nativeAdFragment"
+        app:destination="@id/nativeAdFragment"
+        app:enterAnim="@anim/slide_enter"
+        app:exitAnim="@anim/slide_exit"
+        app:popEnterAnim="@anim/slide_pop_enter"
+        app:popExitAnim="@anim/slide_pop_exit" />
 </navigation>
