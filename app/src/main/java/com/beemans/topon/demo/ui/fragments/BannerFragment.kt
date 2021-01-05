@@ -23,7 +23,7 @@ class BannerFragment : BaseFragment() {
     override fun initEvent() {
         dataBinding.bannerBtnLoad.setOnClickListener {
             if (bannerLoader == null) {
-                val config = BannerConfig(Constant.BANNER_ID, 375.pt2px, 180.pt2px)
+                val config = BannerConfig(Constant.BANNER_ID, 375.pt2px, 90.pt2px)
                 bannerLoader = TopOn.loadBanner(this, config, dataBinding.bannerFlAd) {
                     onAdRenderSuc {}
                     onAdClose { true }
