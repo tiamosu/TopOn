@@ -39,7 +39,7 @@ fun ViewGroup.addAdView(adView: View) {
 /**
  * 加载广告图片
  */
-fun ImageView.loadAdImage(any: Any) {
+fun ImageView.loadAdImage(any: Any?) {
     ImageConfigImpl
         .load(any)
         .into(this)

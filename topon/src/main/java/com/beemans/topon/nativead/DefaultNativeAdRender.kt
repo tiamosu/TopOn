@@ -1,7 +1,6 @@
 package com.beemans.topon.nativead
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -65,7 +64,7 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
         val params = FrameLayout.LayoutParams(-1, -2)
 
         //个性化模板
-        if (ad.isNativeExpress) {
+        if (isNativeExpress) {
             if (mediaView != null) {
                 if (flContentArea.childCount > 0) {
                     flContentArea.removeAllViews()
@@ -119,8 +118,7 @@ class DefaultNativeAdRender : BaseNativeAdRender() {
 
         //获取AdLogo的Bitmap
         if (ivLogo.isVisible) {
-            val adLogo: Bitmap? = ad.adLogo
-            ivLogo.setImageBitmap(adLogo)
+            ivLogo.setImageBitmap(ad.adLogo)
         }
 
         //获取广告大图的渲染容器（仅部分广告平台会存在），有可能是静态图和视频。
