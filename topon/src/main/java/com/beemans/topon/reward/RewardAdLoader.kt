@@ -77,6 +77,9 @@ class RewardAdLoader(
     //广告信息对象
     private var atAdInfo: ATAdInfo? = null
 
+    //是否真正下发奖励
+    private var isReward = false
+
     init {
         initAd()
         createObserve()
@@ -157,7 +160,6 @@ class RewardAdLoader(
             return this
         }
 
-        isTimeOut = false
         isShowAfterLoaded = false
         if (rewardAdConfig.scenario.isNotBlank()) {
             atRewardVideoAd?.show(owner.context, rewardAdConfig.scenario)
@@ -175,6 +177,8 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
+        isReward = false
+        isTimeOut = false
         RewardAdCallback().apply(rewardAdCallback).onAdRequest?.invoke()
     }
 
@@ -238,7 +242,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdClosed:${info.toString()}")
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoClosed?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoClosed?.invoke(info, isReward)
         preloadAd()
     }
 
@@ -249,6 +253,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onReward:${info.toString()}")
 
+        isReward = true
         RewardAdCallback().apply(rewardAdCallback).onAdReward?.invoke(info)
     }
 

@@ -17,7 +17,7 @@ class RewardAdCallback {
 
     var onAdVideoFailed: ((error: AdError?) -> Unit)? = null
 
-    var onAdVideoClosed: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdVideoClosed: ((info: ATAdInfo?, isReward: Boolean) -> Unit)? = null
 
     var onAdReward: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -62,7 +62,7 @@ class RewardAdCallback {
     /**
      * 广告关闭回调，建议在此回调中调用load进行广告的加载，方便下一次广告的展示
      */
-    fun onAdVideoClosed(onAdVideoClosed: (info: ATAdInfo?) -> Unit) {
+    fun onAdVideoClosed(onAdVideoClosed: (info: ATAdInfo?, isReward: Boolean) -> Unit) {
         this.onAdVideoClosed = onAdVideoClosed
     }
 

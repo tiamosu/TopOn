@@ -1,5 +1,6 @@
 package com.beemans.topon.demo.ui.fragments
 
+import android.util.Log
 import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
@@ -22,7 +23,17 @@ class RewardAdFragment : BaseFragment() {
         dataBinding.rewardAdBtnLoad.setOnClickListener {
             if (rewardAdLoader == null) {
                 val config = RewardAdConfig(Constant.REWARD_ID)
-                rewardAdLoader = TopOn.loadRewardAd(this, config)
+                rewardAdLoader = TopOn.loadRewardAd(this, config) {
+                    onAdRequest {
+                        Log.e("xia", "onAdRequest")
+                    }
+                    onAdReward {
+                        Log.e("xia", "onAdReward")
+                    }
+                    onAdVideoClosed { _, isReward ->
+                        Log.e("xia", "isReward:$isReward")
+                    }
+                }
             }
             rewardAdLoader?.show()
         }

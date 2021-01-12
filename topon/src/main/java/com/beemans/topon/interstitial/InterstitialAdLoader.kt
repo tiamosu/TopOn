@@ -149,7 +149,6 @@ class InterstitialAdLoader(
             return this
         }
 
-        isTimeOut = false
         isShowAfterLoaded = false
         atInterstitial?.show(owner.context, interstitialAdConfig.scenario)
         onAdRenderSuc()
@@ -163,6 +162,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
+        isTimeOut = false
         InterstitialAdCallback().apply(interstitialAdCallback).onAdRequest?.invoke()
     }
 

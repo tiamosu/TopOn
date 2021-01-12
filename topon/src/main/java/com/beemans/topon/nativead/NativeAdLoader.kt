@@ -156,9 +156,8 @@ class NativeAdLoader(
             return this
         }
 
-        isAdPlaying = false
-        isShowAfterLoaded = false
         nativeAd?.apply {
+            isShowAfterLoaded = false
             setNativeEventListener(this@NativeAdLoader)
             setDislikeCallbackListener(this@NativeAdLoader)
 
@@ -178,6 +177,7 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
+        isAdPlaying = false
         NativeAdCallback().apply(nativeAdCallback).onAdRequest?.invoke()
     }
 

@@ -105,7 +105,6 @@ class SplashAdLoader(
             return this
         }
 
-        isTimeOut = false
         isShowAfterLoaded = false
         onAdRenderSuc()
         return this
@@ -156,6 +155,7 @@ class SplashAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
+        isTimeOut = false
         SplashAdCallback().apply(splashAdCallback).onAdRequest?.invoke()
     }
 
