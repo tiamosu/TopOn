@@ -5,7 +5,7 @@ object Android {
     const val applicationId = "com.superapp.filemanager"
 
     const val compileSdkVersion = 30
-    const val buildToolsVersion = "30.0.2"
+    const val buildToolsVersion = "30.0.3"
     const val minSdkVersion = 21
     const val targetSdkVersion = 30
 
@@ -15,12 +15,12 @@ object Android {
 
 object Versions {
     const val kotlin = "1.4.21"
-    const val fly = "1.7.7"
-    const val leakcanary = "2.5"
+    const val fly = "1.8.1"
+    const val leakcanary = "2.6"
     const val constraintlayout = "2.0.4"
     const val viewpager2 = "1.0.0"
-    const val support = "28.0.0"
     const val browser = "1.2.0"
+    const val material = "1.2.1"
 }
 
 object Deps {
@@ -33,12 +33,12 @@ object Deps {
     const val androidx_constraint_layout =
         "androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}"
     const val androidx_viewpager2 = "androidx.viewpager2:viewpager2:${Versions.viewpager2}"
-    const val browser = "androidx.browser:browser:${Versions.browser}"
 
     // leakcanary 检测内存泄漏
     const val leakcanary_android =
         "com.squareup.leakcanary:leakcanary-android:${Versions.leakcanary}"
 
-    //快手需配置
-    const val design = "com.android.support:design:${Versions.support}"
+    //topon 需添加
+    const val browser = "androidx.browser:browser:${Versions.browser}"
+    const val material = "com.google.android.material:material:${Versions.material}"
 }

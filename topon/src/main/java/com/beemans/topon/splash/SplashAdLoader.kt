@@ -47,9 +47,6 @@ class SplashAdLoader(
     //广告正在播放
     private var isAdPlaying = false
 
-    //广告加载完成
-    private var isAdLoaded = false
-
     //是否超时
     private var isTimeOut = false
 
@@ -106,6 +103,10 @@ class SplashAdLoader(
         }
 
         isShowAfterLoaded = false
+        flContainer = FrameLayout(owner.context).apply {
+            layoutParams = FrameLayout.LayoutParams(-1, -1)
+        }
+        atSplashAd?.show(owner.context, flContainer)
         onAdRenderSuc()
         return this
     }
@@ -120,24 +121,23 @@ class SplashAdLoader(
             onAdRequest()
         }
 
-        if (!isRequesting && !isAdLoaded) {
+        val isAdReady = atSplashAd?.isAdReady ?: false
+        if (!isRequesting && !isAdReady) {
             SplashAdManager.updateRequestStatus(placementId, true)
 
-            flContainer = FrameLayout(owner.context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                )
-            }
             post(Schedulers.io()) {
-                atSplashAd = ATSplashAd(
+                ATSplashAd(
                     owner.context,
-                    flContainer,
                     placementId,
-                    localMap,
                     atMediationRequestInfo,
-                    this
-                )
+                    this,
+                    requestTimeOut.toInt()
+                ).apply {
+                    setLocalExtra(localMap)
+                    loadAd()
+                }.also {
+                    atSplashAd = it
+                }
             }
 
             handler.postDelayed({
@@ -202,7 +202,6 @@ class SplashAdLoader(
         if (isDestroyed || isTimeOut) return
         Log.e(logTag, "onAdLoaded")
 
-        isAdLoaded = true
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke()
@@ -255,17 +254,8 @@ class SplashAdLoader(
 
         if (SplashAdCallback().apply(splashAdCallback).onAdDismiss?.invoke(info) == true) {
             isAdPlaying = false
-            isAdLoaded = false
             clearView()
         }
-    }
-
-    /**
-     * 广告的倒计时回调
-     */
-    override fun onAdTick(tickTime: Long) {
-        if (isDestroyed) return
-        Log.e(logTag, "onAdTick:$tickTime")
     }
 
     @Suppress("unused")
