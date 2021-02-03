@@ -1,5 +1,6 @@
 package com.beemans.topon.demo.ui.fragments
 
+import android.util.Log
 import com.beemans.topon.TopOn
 import com.beemans.topon.demo.R
 import com.beemans.topon.demo.base.BaseFragment
@@ -22,7 +23,11 @@ class InterstitialAdFragment : BaseFragment() {
         dataBinding.interstitialAdBtnLoad.setOnClickListener {
             if (interstitialAdLoader == null) {
                 val config = InterstitialAdConfig(Constant.INTERSTITIAL_ID)
-                interstitialAdLoader = TopOn.loadInterstitialAd(this, config)
+                interstitialAdLoader = TopOn.loadInterstitialAd(this, config) {
+                    onAdRenderSuc { info ->
+                        Log.e("xia", "onAdRenderSuc:$info")
+                    }
+                }
             }
             interstitialAdLoader?.show()
         }

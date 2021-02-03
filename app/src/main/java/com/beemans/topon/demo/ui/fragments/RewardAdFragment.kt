@@ -27,6 +27,9 @@ class RewardAdFragment : BaseFragment() {
                     onAdRequest {
                         Log.e("xia", "onAdRequest")
                     }
+                    onAdRenderSuc { info ->
+                        Log.e("xia", "onAdRenderSuc:$info")
+                    }
                     onAdReward {
                         Log.e("xia", "onAdReward")
                     }
