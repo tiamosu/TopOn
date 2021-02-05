@@ -34,6 +34,9 @@ class BannerLoader(
     //广告位ID
     private val placementId by lazy { bannerConfig.placementId }
 
+    //本地参数
+    private val localExtra by lazy { bannerConfig.localExtra }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -70,6 +73,9 @@ class BannerLoader(
     //是否有在页面真实不可见时隐藏广告
     private var isHideAdFromPageInvisible = false
 
+    //广告信息对象
+    private var atAdInfo: ATAdInfo? = null
+
     init {
         initAd()
         createObserve()
@@ -78,10 +84,10 @@ class BannerLoader(
     private fun initAd() {
         atBannerView = ATBannerView(owner.context).apply {
             setPlacementId(placementId)
+            setLocalExtra(localExtra)
             setBannerAdListener(this@BannerLoader)
         }
         flContainer.addView(atBannerView, layoutParams)
-        hideAd()
     }
 
     private fun createObserve() {
@@ -98,6 +104,8 @@ class BannerLoader(
 
     /**
      * 广告加载显示
+     *
+     * @param isReload 是否重新加载广告，默认为false
      */
     fun show(isReload: Boolean = false): BannerLoader {
         return showAd(isReload)
@@ -165,6 +173,9 @@ class BannerLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isBannerLoaded) {
+            //某些平台广告要求ATBannerView为VISIBLE状态才能正常获取广告
+            showAd()
+
             if (isRequestAdCallback) {
                 isRequestAdCallback = false
                 onAdRequest()
@@ -201,18 +212,10 @@ class BannerLoader(
      * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
     private fun onAdRenderSuc() {
-        if (isDestroyed || atBannerView?.isVisible == true) return
-        Log.e(logTag, "onAdRenderSuc")
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
-        showAd()
-        BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke()
-    }
-
-    private fun clearView() {
-        val parent = atBannerView?.parent
-        if (parent is ViewGroup && parent.childCount > 0) {
-            parent.removeAllViews()
-        }
+        BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
 
     /**
@@ -220,11 +223,12 @@ class BannerLoader(
      */
     override fun onBannerLoaded() {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerLoaded")
+        atAdInfo = atBannerView?.checkAdStatus()?.atTopAdInfo
+        Log.e(logTag, "onAdLoadSuc:${atAdInfo?.toString()}")
 
         isBannerLoaded = true
         BannerManager.updateRequestStatus(placementId, false)
-        BannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke()
+        BannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
             showAd(isManualShow = false)
@@ -237,7 +241,7 @@ class BannerLoader(
      */
     override fun onBannerFailed(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdLoadFail:${error?.printStackTrace()}")
 
         BannerManager.updateRequestStatus(placementId, false)
         BannerCallback().apply(bannerCallback).onAdLoadFail?.invoke(error)
@@ -248,7 +252,7 @@ class BannerLoader(
      */
     override fun onBannerShow(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerShow:${info.toString()}")
+        Log.e(logTag, "onAdShow:${info.toString()}")
 
         BannerCallback().apply(bannerCallback).onAdShow?.invoke(info)
     }
@@ -258,7 +262,7 @@ class BannerLoader(
      */
     override fun onBannerClicked(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerClicked:${info.toString()}")
+        Log.e(logTag, "onAdClick:${info.toString()}")
 
         BannerCallback().apply(bannerCallback).onAdClick?.invoke(info)
     }
@@ -268,7 +272,7 @@ class BannerLoader(
      */
     override fun onBannerClose(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerClose:${info.toString()}")
+        Log.e(logTag, "onAdClose:${info.toString()}")
 
         if (BannerCallback().apply(bannerCallback).onAdClose?.invoke(info) == true) {
             hideAd()
@@ -280,7 +284,7 @@ class BannerLoader(
      */
     override fun onBannerAutoRefreshed(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerAutoRefreshed:${info.toString()}")
+        Log.e(logTag, "onAdAutoRefresh:${info.toString()}")
 
         BannerCallback().apply(bannerCallback).onAdAutoRefresh?.invoke(info)
     }
@@ -290,15 +294,22 @@ class BannerLoader(
      */
     override fun onBannerAutoRefreshFail(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onBannerAutoRefreshFail:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdAutoRefreshFail:${error?.printStackTrace()}")
 
         BannerCallback().apply(bannerCallback).onAdAutoRefreshFail?.invoke(error)
+    }
+
+    private fun clearView() {
+        val parent = atBannerView?.parent
+        if (parent is ViewGroup && parent.childCount > 0) {
+            parent.removeAllViews()
+        }
     }
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)

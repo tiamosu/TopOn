@@ -39,7 +39,7 @@ class SplashAdLoader(
     private val atMediationRequestInfo by lazy { splashAdConfig.atRequestInfo }
 
     //本地参数
-    private val localMap by lazy { splashAdConfig.localMap }
+    private val localExtra by lazy { splashAdConfig.localExtra }
 
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
@@ -133,7 +133,7 @@ class SplashAdLoader(
                     this,
                     requestTimeOut.toInt()
                 ).apply {
-                    setLocalExtra(localMap)
+                    setLocalExtra(localExtra)
                     loadAd()
                 }.also {
                     atSplashAd = it

@@ -11,11 +11,11 @@ class BannerCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
-    var onAdLoadSuc: (() -> Unit)? = null
+    var onAdLoadSuc: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    var onAdRenderSuc: (() -> Unit)? = null
+    var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -37,7 +37,7 @@ class BannerCallback {
     /**
      * 广告加载成功回调
      */
-    fun onAdLoadSuc(onAdLoadSuc: () -> Unit) {
+    fun onAdLoadSuc(onAdLoadSuc: (info: ATAdInfo?) -> Unit) {
         this.onAdLoadSuc = onAdLoadSuc
     }
 
@@ -51,7 +51,7 @@ class BannerCallback {
     /**
      * 广告渲染成功
      */
-    fun onAdRenderSuc(onAdRenderSuc: () -> Unit) {
+    fun onAdRenderSuc(onAdRenderSuc: (info: ATAdInfo?) -> Unit) {
         this.onAdRenderSuc = onAdRenderSuc
     }
 
