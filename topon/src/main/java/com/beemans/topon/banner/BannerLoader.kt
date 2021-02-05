@@ -3,6 +3,7 @@ package com.beemans.topon.banner
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.contains
 import androidx.core.view.isVisible
 import androidx.lifecycle.*
 import com.anythink.banner.api.ATBannerListener
@@ -75,6 +76,9 @@ class BannerLoader(
 
     //广告信息对象
     private var atAdInfo: ATAdInfo? = null
+
+    //加载广告成功是否进行渲染
+    private var isRenderAd = false
 
     init {
         initAd()
@@ -163,7 +167,10 @@ class BannerLoader(
         }
 
         isShowAfterLoaded = false
-        onAdRenderSuc()
+        if (isRenderAd) {
+            isRenderAd = false
+            onAdRenderSuc()
+        }
         return this
     }
 
@@ -215,6 +222,9 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
+        if (atBannerView != null && !flContainer.contains(atBannerView!!)) {
+            flContainer.addView(atBannerView, layoutParams)
+        }
         BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
 
@@ -227,6 +237,7 @@ class BannerLoader(
         Log.e(logTag, "onAdLoadSuc:${atAdInfo?.toString()}")
 
         isBannerLoaded = true
+        isRenderAd = true
         BannerManager.updateRequestStatus(placementId, false)
         BannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke(atAdInfo)
 
@@ -275,7 +286,7 @@ class BannerLoader(
         Log.e(logTag, "onAdClose:${info.toString()}")
 
         if (BannerCallback().apply(bannerCallback).onAdClose?.invoke(info) == true) {
-            hideAd()
+            clearView()
         }
     }
 
@@ -300,9 +311,13 @@ class BannerLoader(
     }
 
     private fun clearView() {
+        isBannerLoaded = false
         val parent = atBannerView?.parent
         if (parent is ViewGroup && parent.childCount > 0) {
             parent.removeAllViews()
+        }
+        if (flContainer.childCount > 0) {
+            flContainer.removeAllViews()
         }
     }
 
