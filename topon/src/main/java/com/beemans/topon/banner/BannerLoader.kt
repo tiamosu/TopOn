@@ -90,8 +90,10 @@ class BannerLoader(
             setPlacementId(placementId)
             setLocalExtra(localExtra)
             setBannerAdListener(this@BannerLoader)
+        }.apply {
+            layoutParams = this@BannerLoader.layoutParams
+            flContainer.addView(this)
         }
-        flContainer.addView(atBannerView, layoutParams)
     }
 
     private fun createObserve() {
@@ -223,7 +225,7 @@ class BannerLoader(
         Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
         if (atBannerView != null && !flContainer.contains(atBannerView!!)) {
-            flContainer.addView(atBannerView, layoutParams)
+            flContainer.addView(atBannerView)
         }
         BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
@@ -312,12 +314,8 @@ class BannerLoader(
 
     private fun clearView() {
         isBannerLoaded = false
-        val parent = atBannerView?.parent
-        if (parent is ViewGroup && parent.childCount > 0) {
-            parent.removeAllViews()
-        }
-        if (flContainer.childCount > 0) {
-            flContainer.removeAllViews()
+        if (atBannerView != null && flContainer.contains(atBannerView!!)) {
+            flContainer.removeView(atBannerView)
         }
     }
 
