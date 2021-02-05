@@ -1,7 +1,6 @@
 package com.beemans.topon.banner
 
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
@@ -32,9 +31,6 @@ class BannerLoader(
     private val nativeWidth by lazy { bannerConfig.nativeWidth }
     private val nativeHeight by lazy { bannerConfig.nativeHeight }
 
-    //是否进行广告预加载
-    private val isUsePreload by lazy { bannerConfig.isUsePreload }
-
     //广告位ID
     private val placementId by lazy { bannerConfig.placementId }
 
@@ -50,9 +46,6 @@ class BannerLoader(
     //是否进行广告请求回调
     private var isRequestAdCallback = false
 
-    //是否有进行初始化预加载广告请求
-    private var isInitPreloadForAdRequest = false
-
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData by lazy {
         var liveData = BannerManager.loadedLiveDataMap[placementId]
@@ -67,7 +60,7 @@ class BannerLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                show(isManualShow = false)
+                showAd(isManualShow = false)
             }
         }
     }
@@ -89,11 +82,6 @@ class BannerLoader(
         }
         flContainer.addView(atBannerView, layoutParams)
         hideAd()
-
-        if (isUsePreload) {
-            isInitPreloadForAdRequest = true
-            preLoadAd()
-        }
     }
 
     private fun createObserve() {
@@ -104,47 +92,15 @@ class BannerLoader(
     /**
      * 广告预加载
      */
-    private fun preLoadAd() {
-        if (isUsePreload) {
-            makeAdRequest()
-        }
+    fun preLoadAd() {
+        makeAdRequest()
     }
 
     /**
      * 广告加载显示
-     *
-     * @param isManualShow 是否手动调用进行展示
      */
-    fun show(isReload: Boolean = false, isManualShow: Boolean = true): BannerLoader {
-        if (isReload) {
-            isBannerLoaded = false
-        }
-        if (isManualShow && !isInitPreloadForAdRequest) {
-            isRequestAdCallback = true
-        }
-        isShowAfterLoaded = true
-        isInitPreloadForAdRequest = false
-        if (makeAdRequest()) {
-            return this
-        }
-
-        isShowAfterLoaded = false
-        onAdRenderSuc()
-        return this
-    }
-
-    /**
-     * 显示广告
-     */
-    fun showAd() {
-        setVisibility(View.VISIBLE)
-    }
-
-    /**
-     * 隐藏广告
-     */
-    fun hideAd(isReload: Boolean = true) {
-        setVisibility(View.GONE, isReload)
+    fun show(isReload: Boolean = false): BannerLoader {
+        return showAd(isReload)
     }
 
     /**
@@ -163,20 +119,71 @@ class BannerLoader(
     fun onFlySupportInvisible() {
         if (atBannerView?.isVisible == true) {
             isHideAdFromPageInvisible = true
-            hideAd(false)
+            hideAd()
         }
+    }
+
+    /**
+     * 显示广告
+     */
+    private fun showAd() {
+        setVisibility(true)
+    }
+
+    /**
+     * 隐藏广告
+     */
+    private fun hideAd() {
+        setVisibility(false)
+    }
+
+    /**
+     * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
+     */
+    private fun showAd(isReload: Boolean = false, isManualShow: Boolean = true): BannerLoader {
+        if (isReload) {
+            isBannerLoaded = false
+        }
+        if (isManualShow) {
+            isRequestAdCallback = true
+        }
+        isShowAfterLoaded = true
+        if (makeAdRequest()) {
+            return this
+        }
+
+        isShowAfterLoaded = false
+        onAdRenderSuc()
+        return this
+    }
+
+    /**
+     * 广告请求加载
+     */
+    private fun makeAdRequest(): Boolean {
+        val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
+        if (!isRequesting && !isBannerLoaded) {
+            if (isRequestAdCallback) {
+                isRequestAdCallback = false
+                onAdRequest()
+            }
+            BannerManager.updateRequestStatus(placementId, true)
+
+            post(Schedulers.io()) {
+                atBannerView?.loadAd()
+            }
+            return true
+        }
+        return isRequesting
     }
 
     /**
      * 控制广告显隐
      */
-    private fun setVisibility(visible: Int, isReload: Boolean = true): BannerLoader {
-        if (atBannerView?.visibility != visible) {
-            atBannerView?.visibility = visible
-            if (visible == View.GONE && isReload) {
-                isBannerLoaded = false
-            }
-        }
+    private fun setVisibility(isVisible: Boolean): BannerLoader {
+        atBannerView?.isVisible = isVisible
         return this
     }
 
@@ -201,29 +208,6 @@ class BannerLoader(
         BannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke()
     }
 
-    /**
-     * 广告请求加载
-     */
-    private fun makeAdRequest(): Boolean {
-        val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && atBannerView?.isVisible == false
-            && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))
-        ) {
-            isRequestAdCallback = false
-            onAdRequest()
-        }
-
-        if (!isRequesting && !isBannerLoaded) {
-            BannerManager.updateRequestStatus(placementId, true)
-
-            post(Schedulers.io()) {
-                atBannerView?.loadAd()
-            }
-            return true
-        }
-        return isRequesting
-    }
-
     private fun clearView() {
         val parent = atBannerView?.parent
         if (parent is ViewGroup && parent.childCount > 0) {
@@ -243,7 +227,7 @@ class BannerLoader(
         BannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
-            show(isManualShow = false)
+            showAd(isManualShow = false)
         }
         loadedLiveData.value = true
     }
