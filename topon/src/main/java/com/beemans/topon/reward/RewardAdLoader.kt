@@ -31,9 +31,6 @@ class RewardAdLoader(
     //广告位ID
     private val placementId by lazy { rewardAdConfig.placementId }
 
-    //是否进行广告预加载
-    private val isUsePreload by lazy { rewardAdConfig.isUsePreload }
-
     //请求超时时间
     private val requestTimeOut by lazy { rewardAdConfig.requestTimeOut }
 
@@ -51,7 +48,7 @@ class RewardAdLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                show(false)
+                showAd(false)
             }
         }
     }
@@ -70,9 +67,6 @@ class RewardAdLoader(
 
     //是否进行广告请求回调
     private var isRequestAdCallback = false
-
-    //是否有进行初始化预加载广告请求
-    private var isInitPreloadForAdRequest = false
 
     //广告信息对象
     private var atAdInfo: ATAdInfo? = null
@@ -97,11 +91,6 @@ class RewardAdLoader(
                 }.let(this::setLocalExtra)
             }
         }
-
-        if (isUsePreload) {
-            isInitPreloadForAdRequest = true
-            preloadAd()
-        }
     }
 
     private fun createObserve() {
@@ -112,10 +101,33 @@ class RewardAdLoader(
     /**
      * 激励视频预加载
      */
-    private fun preloadAd() {
-        if (isUsePreload) {
-            makeAdRequest()
+    fun preloadAd() {
+        makeAdRequest()
+    }
+
+    /**
+     * 广告加载显示
+     */
+    fun show(): RewardAdLoader {
+        return showAd(true)
+    }
+
+    /**
+     * @param isManualShow 是否手动调用进行展示
+     */
+    private fun showAd(isManualShow: Boolean = true): RewardAdLoader {
+        if (isManualShow) {
+            isRequestAdCallback = true
         }
+        isShowAfterLoaded = true
+        if (makeAdRequest()) {
+            return this
+        }
+
+        isShowAfterLoaded = false
+        atRewardVideoAd?.show(owner.context, rewardAdConfig.scenario)
+        onAdRenderSuc()
+        return this
     }
 
     /**
@@ -124,7 +136,7 @@ class RewardAdLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting =
             RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
-        if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
+        if (!isRequesting && isRequestAdCallback) {
             isRequestAdCallback = false
             onAdRequest()
         }
@@ -133,41 +145,17 @@ class RewardAdLoader(
         if (!isRequesting && !isAdReady) {
             RewardAdManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atRewardVideoAd?.load()
-            }
-
+            //开始进行超时倒计时
             handler.postDelayed({
                 onAdTimeOut()
             }, requestTimeOut)
+
+            post(Schedulers.io()) {
+                atRewardVideoAd?.load()
+            }
             return true
         }
         return isRequesting
-    }
-
-    /**
-     * 广告加载显示
-     *
-     * @param isManualShow 是否手动调用进行展示
-     */
-    fun show(isManualShow: Boolean = true): RewardAdLoader {
-        if (isManualShow && !isInitPreloadForAdRequest) {
-            isRequestAdCallback = true
-        }
-        isShowAfterLoaded = true
-        isInitPreloadForAdRequest = false
-        if (makeAdRequest()) {
-            return this
-        }
-
-        isShowAfterLoaded = false
-        if (rewardAdConfig.scenario.isNotBlank()) {
-            atRewardVideoAd?.show(owner.context, rewardAdConfig.scenario)
-        } else {
-            atRewardVideoAd?.show(owner.context)
-        }
-        onAdRenderSuc()
-        return this
     }
 
     /**
@@ -217,7 +205,7 @@ class RewardAdLoader(
         RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
-            show(false)
+            showAd(false)
         }
         loadedLiveData.value = true
     }
@@ -243,7 +231,6 @@ class RewardAdLoader(
 
         isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onAdVideoClosed?.invoke(info, isReward)
-        preloadAd()
     }
 
     /**
