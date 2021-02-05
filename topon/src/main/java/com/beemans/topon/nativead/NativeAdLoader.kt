@@ -256,7 +256,7 @@ class NativeAdLoader(
         Log.e(logTag, "onNativeAdLoaded")
 
         NativeManager.updateRequestStatus(placementId, false)
-        NativeAdCallback().apply(nativeAdCallback).onAdLoaded?.invoke()
+        NativeAdCallback().apply(nativeAdCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
             show(false)
@@ -303,7 +303,7 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdImpressed:${info.toString()}")
 
-        NativeAdCallback().apply(nativeAdCallback).onAdImpressed?.invoke(view, info)
+        NativeAdCallback().apply(nativeAdCallback).onAdShow?.invoke(view, info)
         preLoadAd()
     }
 
@@ -314,7 +314,7 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdClicked:${info.toString()}")
 
-        NativeAdCallback().apply(nativeAdCallback).onAdClicked?.invoke(view, info)
+        NativeAdCallback().apply(nativeAdCallback).onAdClick?.invoke(view, info)
     }
 
     /**
@@ -324,7 +324,7 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdCloseButtonClick:${info.toString()}")
 
-        if (NativeAdCallback().apply(nativeAdCallback).onAdCloseClick?.invoke(view, info) == true) {
+        if (NativeAdCallback().apply(nativeAdCallback).onAdClose?.invoke(view, info) == true) {
             isAdPlaying = false
             clearView()
             nativeAd?.setDislikeCallbackListener(null)

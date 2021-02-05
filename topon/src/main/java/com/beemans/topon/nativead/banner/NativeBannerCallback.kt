@@ -11,21 +11,21 @@ class NativeBannerCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
+    var onAdLoadSuc: (() -> Unit)? = null
+
+    var onAdLoadFail: ((errorMsg: String?) -> Unit)? = null
+
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
-
-    var onAdLoaded: (() -> Unit)? = null
-
-    var onAdError: ((errorMsg: String?) -> Unit)? = null
-
-    var onAdAutoRefresh: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdAutoRefreshFail: ((errorMsg: String?) -> Unit)? = null
-
     var onAdClose: (() -> Boolean)? = null
+
+    var onAdAutoRefresh: ((info: ATAdInfo?) -> Unit)? = null
+
+    var onAdAutoRefreshFail: ((errorMsg: String?) -> Unit)? = null
 
     /**
      * 广告请求
@@ -35,31 +35,24 @@ class NativeBannerCallback {
     }
 
     /**
-     * 广告渲染成功
-     */
-    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
-        this.onAdRenderSuc = onAdRenderSuc
-    }
-
-    /**
      * 广告加载成功
      */
-    fun onAdLoaded(onAdLoaded: () -> Unit) {
-        this.onAdLoaded = onAdLoaded
+    fun onAdLoadSuc(onAdLoadSuc: () -> Unit) {
+        this.onAdLoadSuc = onAdLoadSuc
     }
 
     /**
      * 广告加载失败
      */
-    fun onAdError(onAdError: (errorMsg: String?) -> Unit) {
-        this.onAdError = onAdError
+    fun onAdLoadFail(onAdLoadFail: (errorMsg: String?) -> Unit) {
+        this.onAdLoadFail = onAdLoadFail
     }
 
     /**
-     * 广告刷新回调
+     * 广告渲染成功
      */
-    fun onAdAutoRefresh(onAdAutoRefresh: (info: ATAdInfo?) -> Unit) {
-        this.onAdAutoRefresh = onAdAutoRefresh
+    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
+        this.onAdRenderSuc = onAdRenderSuc
     }
 
     /**
@@ -77,16 +70,23 @@ class NativeBannerCallback {
     }
 
     /**
-     * 广告刷新失败回调
-     */
-    fun onAdAutoRefreshFail(onAdAutoRefreshFail: (errorMsg: String?) -> Unit) {
-        this.onAdAutoRefreshFail = onAdAutoRefreshFail
-    }
-
-    /**
      * 关闭广告
      */
     fun onAdClose(onAdClose: () -> Boolean) {
         this.onAdClose = onAdClose
+    }
+
+    /**
+     * 广告刷新回调
+     */
+    fun onAdAutoRefresh(onAdAutoRefresh: (info: ATAdInfo?) -> Unit) {
+        this.onAdAutoRefresh = onAdAutoRefresh
+    }
+
+    /**
+     * 广告刷新失败回调
+     */
+    fun onAdAutoRefreshFail(onAdAutoRefreshFail: (errorMsg: String?) -> Unit) {
+        this.onAdAutoRefreshFail = onAdAutoRefreshFail
     }
 }

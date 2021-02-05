@@ -33,7 +33,7 @@ class RewardAdFragment : BaseFragment() {
                     onAdReward {
                         Log.e("xia", "onAdReward")
                     }
-                    onAdVideoClosed { _, isReward ->
+                    onAdClose { _, isReward ->
                         Log.e("xia", "isReward:$isReward")
                     }
                 }

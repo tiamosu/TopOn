@@ -28,7 +28,7 @@ class SplashFragment : BaseFragment() {
                         dataBinding.splashBtnLoad.isVisible = false
                         dataBinding.splashFlAd.addView(flAdView)
                     }
-                    onAdDismiss {
+                    onAdClose {
                         dataBinding.splashBtnLoad.isVisible = true
                         true
                     }

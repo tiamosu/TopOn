@@ -193,7 +193,7 @@ class NativeSplashLoader(
 
         isAdLoaded = true
         NativeManager.updateRequestStatus(placementId, false)
-        NativeSplashCallback().apply(nativeSplashCallback).onAdLoaded?.invoke()
+        NativeSplashCallback().apply(nativeSplashCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
             show(false)
@@ -209,7 +209,7 @@ class NativeSplashLoader(
         Log.e(logTag, "onNoAdError:$errorMsg")
 
         NativeManager.updateRequestStatus(placementId, false)
-        NativeSplashCallback().apply(nativeSplashCallback).onAdError?.invoke(errorMsg)
+        NativeSplashCallback().apply(nativeSplashCallback).onAdLoadFail?.invoke(errorMsg)
     }
 
     /**

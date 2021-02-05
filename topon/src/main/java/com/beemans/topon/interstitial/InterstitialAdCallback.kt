@@ -11,17 +11,17 @@ class InterstitialAdCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
-    var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
-
-    var onAdTimeOut: (() -> Unit)? = null
-
-    var onAdLoaded: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdLoadSuc: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdLoadTimeOut: (() -> Unit)? = null
+
+    var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+
+    var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdClose: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -39,24 +39,10 @@ class InterstitialAdCallback {
     }
 
     /**
-     * 广告渲染成功
-     */
-    fun onAdRenderSuc(onAdRenderSuc: (info: ATAdInfo?) -> Unit) {
-        this.onAdRenderSuc = onAdRenderSuc
-    }
-
-    /**
-     * 广告加载超时
-     */
-    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
-        this.onAdTimeOut = onAdTimeOut
-    }
-
-    /**
      * 广告加载成功回调
      */
-    fun onAdLoaded(onAdLoaded: (info: ATAdInfo?) -> Unit) {
-        this.onAdLoaded = onAdLoaded
+    fun onAdLoadSuc(onAdLoadSuc: (info: ATAdInfo?) -> Unit) {
+        this.onAdLoadSuc = onAdLoadSuc
     }
 
     /**
@@ -67,10 +53,17 @@ class InterstitialAdCallback {
     }
 
     /**
-     * 广告点击
+     * 广告加载超时
      */
-    fun onAdClicked(onAdClicked: (info: ATAdInfo?) -> Unit) {
-        this.onAdClicked = onAdClicked
+    fun onAdLoadTimeOut(onAdLoadTimeOut: () -> Unit) {
+        this.onAdLoadTimeOut = onAdLoadTimeOut
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    fun onAdRenderSuc(onAdRenderSuc: (info: ATAdInfo?) -> Unit) {
+        this.onAdRenderSuc = onAdRenderSuc
     }
 
     /**
@@ -78,6 +71,13 @@ class InterstitialAdCallback {
      */
     fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
         this.onAdShow = onAdShow
+    }
+
+    /**
+     * 广告点击
+     */
+    fun onAdClick(onAdClick: (info: ATAdInfo?) -> Unit) {
+        this.onAdClick = onAdClick
     }
 
     /**

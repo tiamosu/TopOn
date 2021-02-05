@@ -204,7 +204,7 @@ class SplashAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
-        SplashAdCallback().apply(splashAdCallback).onAdLoaded?.invoke()
+        SplashAdCallback().apply(splashAdCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
             show(false)
@@ -221,7 +221,7 @@ class SplashAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
-        SplashAdCallback().apply(splashAdCallback).onAdError?.invoke(error)
+        SplashAdCallback().apply(splashAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
@@ -252,7 +252,7 @@ class SplashAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdDismiss:${info.toString()}")
 
-        if (SplashAdCallback().apply(splashAdCallback).onAdDismiss?.invoke(info) == true) {
+        if (SplashAdCallback().apply(splashAdCallback).onAdClose?.invoke(info) == true) {
             isAdPlaying = false
             clearView()
         }

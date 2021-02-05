@@ -181,7 +181,7 @@ class NativeBannerLoader(
 
         isAdLoaded = true
         NativeManager.updateRequestStatus(placementId, false)
-        NativeBannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
+        NativeBannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
             show(false)
@@ -197,7 +197,7 @@ class NativeBannerLoader(
         Log.e(logTag, "onAdError:$errorMsg")
 
         NativeManager.updateRequestStatus(placementId, false)
-        NativeBannerCallback().apply(bannerCallback).onAdError?.invoke(errorMsg)
+        NativeBannerCallback().apply(bannerCallback).onAdLoadFail?.invoke(errorMsg)
     }
 
     /**

@@ -13,11 +13,17 @@ class NativeAdCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
-    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+    var onAdLoadSuc: (() -> Unit)? = null
 
     var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
 
-    var onAdLoaded: (() -> Unit)? = null
+    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+
+    var onAdShow: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
+
+    var onAdClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
+
+    var onAdClose: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
 
     var onAdVideoStart: ((view: ATNativeAdView?) -> Unit)? = null
 
@@ -25,17 +31,18 @@ class NativeAdCallback {
 
     var onAdVideoProgress: ((view: ATNativeAdView?, progress: Int) -> Unit)? = null
 
-    var onAdClicked: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
-
-    var onAdImpressed: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
-
-    var onAdCloseClick: ((view: ATNativeAdView?, info: ATAdInfo?) -> Boolean)? = null
-
     /**
      * 广告请求
      */
     fun onAdRequest(onAdRequest: () -> Unit) {
         this.onAdRequest = onAdRequest
+    }
+
+    /**
+     * 广告加载成功
+     */
+    fun onAdLoadSuc(onAdLoadSuc: () -> Unit) {
+        this.onAdLoadSuc = onAdLoadSuc
     }
 
     /**
@@ -46,17 +53,31 @@ class NativeAdCallback {
     }
 
     /**
-     * 广告加载成功
-     */
-    fun onAdLoaded(onAdLoaded: () -> Unit) {
-        this.onAdLoaded = onAdLoaded
-    }
-
-    /**
      * 广告渲染成功
      */
     fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
         this.onAdRenderSuc = onAdRenderSuc
+    }
+
+    /**
+     * 广告展示回调
+     */
+    fun onAdShow(onAdShow: (view: ATNativeAdView?, info: ATAdInfo?) -> Unit) {
+        this.onAdShow = onAdShow
+    }
+
+    /**
+     * 点击广告
+     */
+    fun onAdClick(onAdClick: (view: ATNativeAdView?, info: ATAdInfo?) -> Unit) {
+        this.onAdClick = onAdClick
+    }
+
+    /**
+     * 对广告不感兴趣等，进行广告关闭点击
+     */
+    fun onAdClose(onAdClose: (view: ATNativeAdView?, info: ATAdInfo?) -> Boolean) {
+        this.onAdClose = onAdClose
     }
 
     /**
@@ -78,26 +99,5 @@ class NativeAdCallback {
      */
     fun onAdVideoProgress(onAdVideoProgress: (view: ATNativeAdView?, progress: Int) -> Unit) {
         this.onAdVideoProgress = onAdVideoProgress
-    }
-
-    /**
-     * 点击广告
-     */
-    fun onAdClicked(onAdClicked: (view: ATNativeAdView?, info: ATAdInfo?) -> Unit) {
-        this.onAdClicked = onAdClicked
-    }
-
-    /**
-     * 广告展示回调
-     */
-    fun onAdImpressed(onAdImpressed: (view: ATNativeAdView?, info: ATAdInfo?) -> Unit) {
-        this.onAdImpressed = onAdImpressed
-    }
-
-    /**
-     * 对广告不感兴趣等，进行广告关闭点击
-     */
-    fun onAdCloseClick(onAdCloseClick: (view: ATNativeAdView?, info: ATAdInfo?) -> Boolean) {
-        this.onAdCloseClick = onAdCloseClick
     }
 }

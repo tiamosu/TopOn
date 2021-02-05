@@ -27,7 +27,7 @@ class BannerFragment : BaseFragment() {
                 bannerLoader = TopOn.loadBanner(this, config, dataBinding.bannerFlAd) {
                     onAdRenderSuc {}
                     onAdClose { true }
-                    onAdAutoRefreshed {
+                    onAdAutoRefresh {
                         Log.e("xia", "onAdAutoRefreshed")
                     }
                 }

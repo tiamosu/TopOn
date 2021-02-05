@@ -240,7 +240,7 @@ class BannerLoader(
 
         isBannerLoaded = true
         BannerManager.updateRequestStatus(placementId, false)
-        BannerCallback().apply(bannerCallback).onAdLoaded?.invoke()
+        BannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
             show(isManualShow = false)
@@ -256,7 +256,7 @@ class BannerLoader(
         Log.e(logTag, "onBannerFailed:${error?.printStackTrace()}")
 
         BannerManager.updateRequestStatus(placementId, false)
-        BannerCallback().apply(bannerCallback).onAdFailed?.invoke(error)
+        BannerCallback().apply(bannerCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
@@ -276,7 +276,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerClicked:${info.toString()}")
 
-        BannerCallback().apply(bannerCallback).onAdClicked?.invoke(info)
+        BannerCallback().apply(bannerCallback).onAdClick?.invoke(info)
     }
 
     /**
@@ -298,7 +298,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onBannerAutoRefreshed:${info.toString()}")
 
-        BannerCallback().apply(bannerCallback).onAdAutoRefreshed?.invoke(info)
+        BannerCallback().apply(bannerCallback).onAdAutoRefresh?.invoke(info)
     }
 
     /**

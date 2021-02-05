@@ -11,19 +11,19 @@ class BannerCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
+    var onAdLoadSuc: (() -> Unit)? = null
+
+    var onAdLoadFail: ((error: AdError?) -> Unit)? = null
+
     var onAdRenderSuc: (() -> Unit)? = null
 
-    var onAdLoaded: (() -> Unit)? = null
-
-    var onAdFailed: ((error: AdError?) -> Unit)? = null
-
-    var onAdClicked: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdClose: ((info: ATAdInfo?) -> Boolean)? = null
 
-    var onAdAutoRefreshed: ((info: ATAdInfo?) -> Unit)? = null
+    var onAdAutoRefresh: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdAutoRefreshFail: ((error: AdError?) -> Unit)? = null
 
@@ -35,6 +35,20 @@ class BannerCallback {
     }
 
     /**
+     * 广告加载成功回调
+     */
+    fun onAdLoadScu(onAdLoadSuc: () -> Unit) {
+        this.onAdLoadSuc = onAdLoadSuc
+    }
+
+    /**
+     * 广告加载失败回调
+     */
+    fun onAdLoadFail(onAdLoadFail: (error: AdError?) -> Unit) {
+        this.onAdLoadFail = onAdLoadFail
+    }
+
+    /**
      * 广告渲染成功
      */
     fun onAdRenderSuc(onAdRenderSuc: () -> Unit) {
@@ -42,31 +56,17 @@ class BannerCallback {
     }
 
     /**
-     * 广告加载成功回调
+     * 广告展示回调
      */
-    fun onAdLoaded(onAdLoaded: () -> Unit) {
-        this.onAdLoaded = onAdLoaded
-    }
-
-    /**
-     * 广告加载失败回调
-     */
-    fun onAdFailed(onAdFailed: (error: AdError?) -> Unit) {
-        this.onAdFailed = onAdFailed
+    fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
+        this.onAdShow = onAdShow
     }
 
     /**
      * 广告点击
      */
-    fun onAdClicked(onAdClicked: (info: ATAdInfo?) -> Unit) {
-        this.onAdClicked = onAdClicked
-    }
-
-    /**
-     * 广告展示回调
-     */
-    fun onAdShow(onAdShow: (info: ATAdInfo?) -> Unit) {
-        this.onAdShow = onAdShow
+    fun onAdClick(onAdClick: (info: ATAdInfo?) -> Unit) {
+        this.onAdClick = onAdClick
     }
 
     /**
@@ -79,8 +79,8 @@ class BannerCallback {
     /**
      * 广告自动刷新回调
      */
-    fun onAdAutoRefreshed(onAdAutoRefreshed: (info: ATAdInfo?) -> Unit) {
-        this.onAdAutoRefreshed = onAdAutoRefreshed
+    fun onAdAutoRefresh(onAdAutoRefresh: (info: ATAdInfo?) -> Unit) {
+        this.onAdAutoRefresh = onAdAutoRefresh
     }
 
     /**

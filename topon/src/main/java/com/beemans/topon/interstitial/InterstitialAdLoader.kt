@@ -185,7 +185,7 @@ class InterstitialAdLoader(
 
         isTimeOut = true
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdTimeOut?.invoke()
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadTimeOut?.invoke()
     }
 
     /**
@@ -198,7 +198,7 @@ class InterstitialAdLoader(
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
         atAdInfo = atInterstitial?.checkAdStatus()?.atTopAdInfo
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoaded?.invoke(atAdInfo)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadSuc?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
             show(false)
@@ -225,7 +225,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onInterstitialAdClicked:${info.toString()}")
 
-        InterstitialAdCallback().apply(interstitialAdCallback).onAdClicked?.invoke(info)
+        InterstitialAdCallback().apply(interstitialAdCallback).onAdClick?.invoke(info)
     }
 
     /**

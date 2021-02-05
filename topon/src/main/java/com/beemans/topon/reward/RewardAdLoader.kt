@@ -202,7 +202,7 @@ class RewardAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke(atAdInfo)
+        RewardAdCallback().apply(rewardAdCallback).onAdLoadSuc?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
             showAd(false)
@@ -219,7 +219,7 @@ class RewardAdLoader(
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoFailed?.invoke(error)
+        RewardAdCallback().apply(rewardAdCallback).onAdLoadFail?.invoke(error)
     }
 
     /**
@@ -230,7 +230,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdClosed:${info?.toString()}")
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoClosed?.invoke(info, isReward)
+        RewardAdCallback().apply(rewardAdCallback).onAdClose?.invoke(info, isReward)
     }
 
     /**
@@ -255,7 +255,7 @@ class RewardAdLoader(
         )
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayFailed?.invoke(error, info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoFail?.invoke(error, info)
     }
 
     /**
@@ -266,7 +266,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdPlayStart:${info?.toString()}")
 
         isAdPlaying = true
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayStart?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoStart?.invoke(info)
     }
 
     /**
@@ -277,7 +277,7 @@ class RewardAdLoader(
         Log.e(logTag, "onRewardedVideoAdPlayEnd:${info?.toString()}")
 
         isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayEnd?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdVideoEnd?.invoke(info)
     }
 
     /**
@@ -287,7 +287,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onRewardedVideoAdPlayClicked:${info?.toString()}")
 
-        RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayClicked?.invoke(info)
+        RewardAdCallback().apply(rewardAdCallback).onAdClick?.invoke(info)
     }
 
     @Suppress("unused")

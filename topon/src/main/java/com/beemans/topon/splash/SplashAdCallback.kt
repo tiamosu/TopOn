@@ -12,19 +12,19 @@ class SplashAdCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
+    var onAdLoadSuc: (() -> Unit)? = null
+
+    var onAdLoadFail: ((error: AdError?) -> Unit)? = null
+
+    var onAdTimeOut: (() -> Unit)? = null
+
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
-
-    var onAdLoaded: (() -> Unit)? = null
-
-    var onAdError: ((error: AdError?) -> Unit)? = null
 
     var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdDismiss: ((info: ATAdInfo?) -> Boolean)? = null
-
-    var onAdTimeOut: (() -> Unit)? = null
+    var onAdClose: ((info: ATAdInfo?) -> Boolean)? = null
 
     /**
      * 广告请求
@@ -34,24 +34,31 @@ class SplashAdCallback {
     }
 
     /**
-     * 广告渲染成功
-     */
-    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
-        this.onAdRenderSuc = onAdRenderSuc
-    }
-
-    /**
      * 广告加载成功
      */
-    fun onAdLoaded(onAdLoaded: () -> Unit) {
-        this.onAdLoaded = onAdLoaded
+    fun onAdLoadSuc(onAdLoadSuc: () -> Unit) {
+        this.onAdLoadSuc = onAdLoadSuc
     }
 
     /**
      * 广告加载失败
      */
-    fun onAdError(onAdError: (error: AdError?) -> Unit) {
-        this.onAdError = onAdError
+    fun onAdLoadFail(onAdLoadFail: (error: AdError?) -> Unit) {
+        this.onAdLoadFail = onAdLoadFail
+    }
+
+    /**
+     * 广告超时
+     */
+    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
+        this.onAdTimeOut = onAdTimeOut
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
+        this.onAdRenderSuc = onAdRenderSuc
     }
 
     /**
@@ -71,14 +78,7 @@ class SplashAdCallback {
     /**
      * 广告关闭回调
      */
-    fun onAdDismiss(onAdDismiss: (info: ATAdInfo?) -> Boolean) {
-        this.onAdDismiss = onAdDismiss
-    }
-
-    /**
-     * 广告超时
-     */
-    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
-        this.onAdTimeOut = onAdTimeOut
+    fun onAdClose(onAdClose: (info: ATAdInfo?) -> Boolean) {
+        this.onAdClose = onAdClose
     }
 }
