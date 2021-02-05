@@ -182,7 +182,7 @@ class SplashAdLoader(
 
         isTimeOut = true
         SplashAdManager.updateRequestStatus(placementId, false)
-        SplashAdCallback().apply(splashAdCallback).onAdTimeOut?.invoke()
+        SplashAdCallback().apply(splashAdCallback).onAdLoadTimeOut?.invoke()
     }
 
     private fun clearView() {

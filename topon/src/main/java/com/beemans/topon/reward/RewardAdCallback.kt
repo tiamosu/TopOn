@@ -15,7 +15,7 @@ class RewardAdCallback {
 
     var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    var onAdTimeOut: (() -> Unit)? = null
+    var onAdLoadTimeOut: (() -> Unit)? = null
 
     var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -55,8 +55,8 @@ class RewardAdCallback {
     /**
      * 广告加载超时
      */
-    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
-        this.onAdTimeOut = onAdTimeOut
+    fun onAdLoadTimeOut(onAdLoadTimeOut: () -> Unit) {
+        this.onAdLoadTimeOut = onAdLoadTimeOut
     }
 
     /**

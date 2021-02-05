@@ -37,7 +37,7 @@ class BannerCallback {
     /**
      * 广告加载成功回调
      */
-    fun onAdLoadScu(onAdLoadSuc: () -> Unit) {
+    fun onAdLoadSuc(onAdLoadSuc: () -> Unit) {
         this.onAdLoadSuc = onAdLoadSuc
     }
 

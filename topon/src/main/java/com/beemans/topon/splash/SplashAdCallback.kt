@@ -16,7 +16,7 @@ class SplashAdCallback {
 
     var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
-    var onAdTimeOut: (() -> Unit)? = null
+    var onAdLoadTimeOut: (() -> Unit)? = null
 
     var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
 
@@ -50,8 +50,8 @@ class SplashAdCallback {
     /**
      * 广告超时
      */
-    fun onAdTimeOut(onAdTimeOut: () -> Unit) {
-        this.onAdTimeOut = onAdTimeOut
+    fun onAdLoadTimeOut(onAdLoadTimeOut: () -> Unit) {
+        this.onAdLoadTimeOut = onAdLoadTimeOut
     }
 
     /**
