@@ -42,7 +42,7 @@ class BannerLoader(
     private var isShowAfterLoaded = false
 
     //广告加载成功
-    private var isBannerLoaded = false
+    private var isAdLoaded = false
 
     //页面是否已经销毁了
     private var isDestroyed = false
@@ -87,12 +87,12 @@ class BannerLoader(
 
     private fun initAd() {
         atBannerView = ATBannerView(owner.context).apply {
+            layoutParams = this@BannerLoader.layoutParams
+            flContainer.addView(this)
+
             setPlacementId(placementId)
             setLocalExtra(localExtra)
             setBannerAdListener(this@BannerLoader)
-        }.apply {
-            layoutParams = this@BannerLoader.layoutParams
-            flContainer.addView(this)
         }
     }
 
@@ -158,7 +158,7 @@ class BannerLoader(
      */
     private fun showAd(isReload: Boolean = false, isManualShow: Boolean = true): BannerLoader {
         if (isReload) {
-            isBannerLoaded = false
+            isAdLoaded = false
         }
         if (isManualShow) {
             isRequestAdCallback = true
@@ -169,10 +169,7 @@ class BannerLoader(
         }
 
         isShowAfterLoaded = false
-        if (isRenderAd) {
-            isRenderAd = false
-            onAdRenderSuc()
-        }
+        onAdRenderSuc()
         return this
     }
 
@@ -181,7 +178,7 @@ class BannerLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && !isBannerLoaded) {
+        if (!isRequesting && !isAdLoaded) {
             //某些平台广告要求ATBannerView为VISIBLE状态才能正常获取广告
             showAd()
 
@@ -221,9 +218,10 @@ class BannerLoader(
      * 广告渲染成功，在已渲染添加到 View 容器上时，通过 [setVisibility] 来控制广告显隐
      */
     private fun onAdRenderSuc() {
-        if (isDestroyed) return
+        if (isDestroyed || !isRenderAd) return
         Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
+        isRenderAd = false
         if (atBannerView != null && !flContainer.contains(atBannerView!!)) {
             flContainer.addView(atBannerView)
         }
@@ -238,7 +236,7 @@ class BannerLoader(
         atAdInfo = atBannerView?.checkAdStatus()?.atTopAdInfo
         Log.e(logTag, "onAdLoadSuc:${atAdInfo?.toString()}")
 
-        isBannerLoaded = true
+        isAdLoaded = true
         isRenderAd = true
         BannerManager.updateRequestStatus(placementId, false)
         BannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke(atAdInfo)
@@ -313,7 +311,7 @@ class BannerLoader(
     }
 
     private fun clearView() {
-        isBannerLoaded = false
+        isAdLoaded = false
         if (atBannerView != null && flContainer.contains(atBannerView!!)) {
             flContainer.removeView(atBannerView)
         }

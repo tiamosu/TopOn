@@ -3,13 +3,17 @@ package com.beemans.topon.nativead.banner
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.contains
 import androidx.lifecycle.*
 import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
 import com.anythink.nativead.banner.api.ATNativeBannerListener
 import com.anythink.nativead.banner.api.ATNativeBannerView
+import com.anythink.network.gdt.GDTATConst
+import com.anythink.network.toutiao.TTATConst
 import com.beemans.topon.ext.context
 import com.beemans.topon.nativead.NativeManager
+import com.qq.e.ads.nativ.ADSize
 import com.tiamosu.fly.utils.post
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -33,14 +37,17 @@ class NativeBannerLoader(
     //广告位ID
     private val placementId by lazy { bannerConfig.placementId }
 
+    //高度自适应
+    private val isHighlyAdaptive by lazy { bannerConfig.isHighlyAdaptive }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
     //广告加载完成
     private var isAdLoaded = false
 
-    //广告是否已经渲染
-    private var isAdRendered = false
+    //加载广告成功是否进行渲染
+    private var isRenderAd = false
 
     //页面是否已经销毁了
     private var isDestroyed = false
@@ -62,7 +69,7 @@ class NativeBannerLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                show(false)
+                showAd(false)
             }
         }
     }
@@ -78,11 +85,20 @@ class NativeBannerLoader(
 
     private fun initAd() {
         atNativeBannerView = ATNativeBannerView(owner.context).apply {
+            layoutParams = this@NativeBannerLoader.layoutParams
+
             //配置广告宽高
             val localMap: MutableMap<String, Any> = mutableMapOf()
             localMap.apply {
                 put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
                 put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
+
+                if (isHighlyAdaptive) {
+                    //穿山甲
+                    put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, 0)
+                    //广点通
+                    put(GDTATConst.AD_HEIGHT, ADSize.AUTO_HEIGHT)
+                }
             }.let(this::setLocalExtra)
 
             setBannerConfig(bannerConfig.atBannerConfig)
@@ -98,10 +114,17 @@ class NativeBannerLoader(
 
     /**
      * 广告加载显示
+     */
+    fun show(): NativeBannerLoader {
+        return showAd()
+    }
+
+    /**
+     * 广告加载显示
      *
      * @param isManualShow 是否手动调用进行展示
      */
-    fun show(isManualShow: Boolean = true): NativeBannerLoader {
+    private fun showAd(isManualShow: Boolean = true): NativeBannerLoader {
         if (isManualShow) {
             isRequestAdCallback = true
         }
@@ -120,12 +143,11 @@ class NativeBannerLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && isRequestAdCallback) {
-            isRequestAdCallback = false
-            onAdRequest()
-        }
-
         if (!isRequesting && !isAdLoaded) {
+            if (isRequestAdCallback) {
+                isRequestAdCallback = false
+                onAdRequest()
+            }
             NativeManager.updateRequestStatus(placementId, true)
 
             post(Schedulers.io()) {
@@ -150,26 +172,14 @@ class NativeBannerLoader(
      * 广告渲染成功
      */
     private fun onAdRenderSuc() {
-        if (isDestroyed || isAdRendered) return
+        if (isDestroyed || !isRenderAd) return
         Log.e(logTag, "onAdRenderSuc")
 
-        clearView()
-        isAdRendered = true
-        if (atNativeBannerView != null) {
-            flAdView.addView(atNativeBannerView, layoutParams)
+        isRenderAd = false
+        if (atNativeBannerView != null && !flAdView.contains(atNativeBannerView!!)) {
+            flAdView.addView(atNativeBannerView)
         }
         NativeBannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(flAdView)
-    }
-
-    private fun clearView() {
-        isAdRendered = false
-        val parent = flAdView.parent
-        if (parent is ViewGroup && parent.childCount > 0) {
-            parent.removeAllViews()
-        }
-        if (flAdView.childCount > 0) {
-            flAdView.removeAllViews()
-        }
     }
 
     /**
@@ -177,14 +187,15 @@ class NativeBannerLoader(
      */
     override fun onAdLoaded() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdLoaded")
+        Log.e(logTag, "onAdLoadSuc")
 
         isAdLoaded = true
+        isRenderAd = true
         NativeManager.updateRequestStatus(placementId, false)
         NativeBannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
-            show(false)
+            showAd(false)
         }
         loadedLiveData.value = true
     }
@@ -194,7 +205,7 @@ class NativeBannerLoader(
      */
     override fun onAdError(errorMsg: String?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdError:$errorMsg")
+        Log.e(logTag, "onAdLoadFail:$errorMsg")
 
         NativeManager.updateRequestStatus(placementId, false)
         NativeBannerCallback().apply(bannerCallback).onAdLoadFail?.invoke(errorMsg)
@@ -215,7 +226,7 @@ class NativeBannerLoader(
      */
     override fun onAutoRefresh(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAutoRefresh:${info.toString()}")
+        Log.e(logTag, "onAdAutoRefresh:${info.toString()}")
 
         NativeBannerCallback().apply(bannerCallback).onAdAutoRefresh?.invoke(info)
     }
@@ -225,7 +236,7 @@ class NativeBannerLoader(
      */
     override fun onAutoRefreshFail(errorMsg: String?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAutoRefreshFail:$errorMsg")
+        Log.e(logTag, "onAdAutoRefreshFail:$errorMsg")
 
         NativeBannerCallback().apply(bannerCallback).onAdAutoRefreshFail?.invoke(errorMsg)
     }
@@ -248,8 +259,18 @@ class NativeBannerLoader(
         Log.e(logTag, "onAdClose")
 
         if (NativeBannerCallback().apply(bannerCallback).onAdClose?.invoke() == true) {
-            isAdLoaded = false
             clearView()
+        }
+    }
+
+    private fun clearView() {
+        isAdLoaded = false
+        if (atNativeBannerView != null && flAdView.contains(atNativeBannerView!!)) {
+            flAdView.removeView(atNativeBannerView)
+        }
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.contains(flAdView)) {
+            parent.removeView(flAdView)
         }
     }
 

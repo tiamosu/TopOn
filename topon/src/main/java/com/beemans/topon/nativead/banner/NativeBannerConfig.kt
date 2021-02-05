@@ -16,5 +16,6 @@ data class NativeBannerConfig(
     val placementId: String,        //广告位ID
     val nativeWidth: Int,           //广告视图宽度
     val nativeHeight: Int,          //广告视图高度
-    val atBannerConfig: @RawValue ATNativeBannerConfig = ATNativeBannerConfig() //NativeBanner的本地设置项
+    val atBannerConfig: @RawValue ATNativeBannerConfig = ATNativeBannerConfig(), //NativeBanner的本地设置项
+    val isHighlyAdaptive: Boolean = true,   //高度自适应（目前只支持穿山甲、广点通）
 ) : Parcelable
