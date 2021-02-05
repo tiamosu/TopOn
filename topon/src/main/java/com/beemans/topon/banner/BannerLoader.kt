@@ -154,6 +154,7 @@ class BannerLoader(
     /**
      * 广告加载显示
      *
+     * @param isReload 是否重新加载广告，默认为false
      * @param isManualShow 是否手动调用进行展示
      */
     private fun showAd(isReload: Boolean = false, isManualShow: Boolean = true): BannerLoader {

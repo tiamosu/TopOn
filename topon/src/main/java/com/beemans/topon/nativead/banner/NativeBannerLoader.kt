@@ -69,7 +69,7 @@ class NativeBannerLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                showAd(false)
+                showAd(isManualShow = false)
             }
         }
     }
@@ -114,17 +114,26 @@ class NativeBannerLoader(
 
     /**
      * 广告加载显示
+     *
+     * @param isReload 是否重新加载广告，默认为false
      */
-    fun show(): NativeBannerLoader {
-        return showAd()
+    fun show(isReload: Boolean = false): NativeBannerLoader {
+        return showAd(isReload)
     }
 
     /**
      * 广告加载显示
      *
+     * @param isReload 是否重新加载广告，默认为false
      * @param isManualShow 是否手动调用进行展示
      */
-    private fun showAd(isManualShow: Boolean = true): NativeBannerLoader {
+    private fun showAd(
+        isReload: Boolean = false,
+        isManualShow: Boolean = true
+    ): NativeBannerLoader {
+        if (isReload) {
+            isAdLoaded = false
+        }
         if (isManualShow) {
             isRequestAdCallback = true
         }
@@ -179,6 +188,10 @@ class NativeBannerLoader(
         if (atNativeBannerView != null && !flAdView.contains(atNativeBannerView!!)) {
             flAdView.addView(atNativeBannerView)
         }
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.contains(flAdView)) {
+            parent.removeView(flAdView)
+        }
         NativeBannerCallback().apply(bannerCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
@@ -195,7 +208,7 @@ class NativeBannerLoader(
         NativeBannerCallback().apply(bannerCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
-            showAd(false)
+            showAd(isManualShow = false)
         }
         loadedLiveData.value = true
     }

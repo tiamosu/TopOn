@@ -25,9 +25,9 @@ class NativeBannerFragment : BaseFragment() {
 
     override fun initEvent() {
         dataBinding.nativeBannerBtnShow.setOnClickListener {
-            loadNativeBanner1()
+//            loadNativeBanner1()
             loadNativeBanner2()
-            loadNativeBanner3()
+//            loadNativeBanner3()
         }
     }
 
@@ -69,9 +69,10 @@ class NativeBannerFragment : BaseFragment() {
                 onAdRenderSuc { flAdView ->
                     dataBinding.nativeBannerFlBanner2.addAdView(flAdView)
                 }
+                onAdClose { true }
             }.also { bannerLoaders["2"] = it }
         }
-        loader.show()
+        loader.show(true)
     }
 
     private fun loadNativeBanner3() {
