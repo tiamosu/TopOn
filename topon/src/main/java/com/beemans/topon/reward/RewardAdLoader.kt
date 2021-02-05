@@ -175,7 +175,7 @@ class RewardAdLoader(
      */
     private fun onAdRenderSuc() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdRenderSuc")
+        Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
         RewardAdCallback().apply(rewardAdCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
@@ -197,11 +197,11 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdLoaded() {
         if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onRewardedVideoAdLoaded")
+        atAdInfo = atRewardVideoAd?.checkAdStatus()?.atTopAdInfo
+        Log.e(logTag, "onRewardedVideoAdLoaded:${atAdInfo?.toString()}")
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
-        atAdInfo = atRewardVideoAd?.checkAdStatus()?.atTopAdInfo
         RewardAdCallback().apply(rewardAdCallback).onAdVideoLoaded?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
@@ -227,7 +227,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdClosed(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdClosed:${info.toString()}")
+        Log.e(logTag, "onRewardedVideoAdClosed:${info?.toString()}")
 
         isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onAdVideoClosed?.invoke(info, isReward)
@@ -238,7 +238,7 @@ class RewardAdLoader(
      */
     override fun onReward(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onReward:${info.toString()}")
+        Log.e(logTag, "onReward:${info?.toString()}")
 
         isReward = true
         RewardAdCallback().apply(rewardAdCallback).onAdReward?.invoke(info)
@@ -251,7 +251,7 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(
             logTag,
-            "onRewardedVideoAdPlayFailed:${error?.printStackTrace()}   info:${info.toString()}"
+            "onRewardedVideoAdPlayFailed:${error?.printStackTrace()}   info:${info?.toString()}"
         )
 
         isAdPlaying = false
@@ -263,7 +263,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayStart(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdPlayStart:${info.toString()}")
+        Log.e(logTag, "onRewardedVideoAdPlayStart:${info?.toString()}")
 
         isAdPlaying = true
         RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayStart?.invoke(info)
@@ -274,7 +274,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayEnd(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdPlayEnd:${info.toString()}")
+        Log.e(logTag, "onRewardedVideoAdPlayEnd:${info?.toString()}")
 
         isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayEnd?.invoke(info)
@@ -285,7 +285,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayClicked(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdPlayClicked:${info.toString()}")
+        Log.e(logTag, "onRewardedVideoAdPlayClicked:${info?.toString()}")
 
         RewardAdCallback().apply(rewardAdCallback).onAdVideoPlayClicked?.invoke(info)
     }
