@@ -254,7 +254,7 @@ class BannerLoader(
      */
     override fun onBannerFailed(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdLoadFail:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdLoadFail:${error?.fullErrorInfo}")
 
         BannerManager.updateRequestStatus(placementId, false)
         BannerCallback().apply(bannerCallback).onAdLoadFail?.invoke(error)
@@ -307,7 +307,7 @@ class BannerLoader(
      */
     override fun onBannerAutoRefreshFail(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdAutoRefreshFail:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdAutoRefreshFail:${error?.fullErrorInfo}")
 
         BannerCallback().apply(bannerCallback).onAdAutoRefreshFail?.invoke(error)
     }

@@ -30,11 +30,14 @@ class InterstitialAdLoader(
     //广告位ID
     private val placementId by lazy { interstitialAdConfig.placementId }
 
-    //是否进行广告预加载
-    private val isUsePreload by lazy { interstitialAdConfig.isUsePreload }
-
     //请求超时时间
     private val requestTimeOut by lazy { interstitialAdConfig.requestTimeOut }
+
+    //本地参数
+    private val localExtra by lazy { interstitialAdConfig.localExtra }
+
+    //广告场景
+    private val scenario by lazy { interstitialAdConfig.scenario }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData by lazy {
@@ -50,7 +53,7 @@ class InterstitialAdLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                show(false)
+                showAd(false)
             }
         }
     }
@@ -58,20 +61,14 @@ class InterstitialAdLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告正在播放
-    private var isAdPlaying = false
-
     //是否超时
-    private var isTimeOut = false
+    private var isAdLoadTimeOut = false
 
     //页面是否已经销毁了
     private var isDestroyed = false
 
     //是否进行广告请求回调
     private var isRequestAdCallback = false
-
-    //是否有进行初始化预加载广告请求
-    private var isInitPreloadForAdRequest = false
 
     //广告信息对象
     private var atAdInfo: ATAdInfo? = null
@@ -82,14 +79,9 @@ class InterstitialAdLoader(
     }
 
     private fun initAd() {
-        if (atInterstitial == null) {
-            atInterstitial = ATInterstitial(owner.context, placementId)
-            atInterstitial?.setAdListener(this)
-        }
-
-        if (isUsePreload) {
-            isInitPreloadForAdRequest = true
-            preLoadAd()
+        atInterstitial = ATInterstitial(owner.context, placementId).apply {
+            setLocalExtra(localExtra)
+            setAdListener(this@InterstitialAdLoader)
         }
     }
 
@@ -101,10 +93,35 @@ class InterstitialAdLoader(
     /**
      * 广告预加载
      */
-    private fun preLoadAd() {
-        if (isUsePreload) {
-            makeAdRequest()
+    fun preLoadAd() {
+        makeAdRequest()
+    }
+
+    /**
+     * 广告加载显示
+     */
+    fun show(): InterstitialAdLoader {
+        return showAd()
+    }
+
+    /**
+     * 广告加载显示
+     *
+     * @param isManualShow 是否手动调用进行展示
+     */
+    private fun showAd(isManualShow: Boolean = true): InterstitialAdLoader {
+        if (isManualShow) {
+            isRequestAdCallback = true
         }
+        isShowAfterLoaded = true
+        if (makeAdRequest()) {
+            return this
+        }
+
+        isShowAfterLoaded = false
+        atInterstitial?.show(owner.context, scenario)
+        onAdRenderSuc()
+        return this
     }
 
     /**
@@ -112,8 +129,8 @@ class InterstitialAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting =
-            InterstitialAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
-        if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
+            InterstitialAdManager.isRequesting(placementId) || isDestroyed
+        if (!isRequesting && isRequestAdCallback) {
             isRequestAdCallback = false
             onAdRequest()
         }
@@ -126,33 +143,13 @@ class InterstitialAdLoader(
                 atInterstitial?.load()
             }
 
+            //开始进行超时倒计时
             handler.postDelayed({
-                onInterstitialAdTimeOut()
+                onAdLoadTimeOut()
             }, requestTimeOut)
             return true
         }
         return isRequesting
-    }
-
-    /**
-     * 广告加载显示
-     *
-     * @param isManualShow 是否手动调用进行展示
-     */
-    fun show(isManualShow: Boolean = true): InterstitialAdLoader {
-        if (isManualShow && !isInitPreloadForAdRequest) {
-            isRequestAdCallback = true
-        }
-        isShowAfterLoaded = true
-        isInitPreloadForAdRequest = false
-        if (makeAdRequest()) {
-            return this
-        }
-
-        isShowAfterLoaded = false
-        atInterstitial?.show(owner.context, interstitialAdConfig.scenario)
-        onAdRenderSuc()
-        return this
     }
 
     /**
@@ -162,7 +159,7 @@ class InterstitialAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        isTimeOut = false
+        isAdLoadTimeOut = false
         InterstitialAdCallback().apply(interstitialAdCallback).onAdRequest?.invoke()
     }
 
@@ -171,7 +168,7 @@ class InterstitialAdLoader(
      */
     private fun onAdRenderSuc() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdRenderSuc")
+        Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
         InterstitialAdCallback().apply(interstitialAdCallback).onAdRenderSuc?.invoke(atAdInfo)
     }
@@ -179,11 +176,11 @@ class InterstitialAdLoader(
     /**
      * 广告加载超时
      */
-    private fun onInterstitialAdTimeOut() {
+    private fun onAdLoadTimeOut() {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdTimeOut")
+        Log.e(logTag, "onAdLoadTimeOut")
 
-        isTimeOut = true
+        isAdLoadTimeOut = true
         InterstitialAdManager.updateRequestStatus(placementId, false)
         InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadTimeOut?.invoke()
     }
@@ -192,16 +189,17 @@ class InterstitialAdLoader(
      * 广告加载成功回调
      */
     override fun onInterstitialAdLoaded() {
-        if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onInterstitialAdLoaded")
+        atAdInfo = atInterstitial?.checkAdStatus()?.atTopAdInfo
+
+        if (isDestroyed || isAdLoadTimeOut) return
+        Log.e(logTag, "onAdLoadSuc:${atAdInfo?.toString()}")
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
-        atAdInfo = atInterstitial?.checkAdStatus()?.atTopAdInfo
         InterstitialAdCallback().apply(interstitialAdCallback).onAdLoadSuc?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
-            show(false)
+            showAd(false)
         }
         loadedLiveData.value = true
     }
@@ -210,8 +208,8 @@ class InterstitialAdLoader(
      * 广告加载失败回调
      */
     override fun onInterstitialAdLoadFail(error: AdError?) {
-        if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onInterstitialAdLoadFail:${error?.printStackTrace()}")
+        if (isDestroyed || isAdLoadTimeOut) return
+        Log.e(logTag, "onAdLoadFail:${error?.fullErrorInfo}")
 
         handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.updateRequestStatus(placementId, false)
@@ -223,7 +221,7 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdClicked(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdClicked:${info.toString()}")
+        Log.e(logTag, "onAdClick:${info.toString()}")
 
         InterstitialAdCallback().apply(interstitialAdCallback).onAdClick?.invoke(info)
     }
@@ -233,7 +231,7 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdShow(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdShow:${info.toString()}")
+        Log.e(logTag, "onAdShow:${info.toString()}")
 
         InterstitialAdCallback().apply(interstitialAdCallback).onAdShow?.invoke(info)
     }
@@ -243,11 +241,9 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdClose(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdClose:${info.toString()}")
+        Log.e(logTag, "onAdClose:${info.toString()}")
 
-        isAdPlaying = false
         InterstitialAdCallback().apply(interstitialAdCallback).onAdClose?.invoke(info)
-        preLoadAd()
     }
 
     /**
@@ -255,9 +251,8 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdVideoStart(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdVideoStart:${info.toString()}")
+        Log.e(logTag, "onAdVideoStart:${info.toString()}")
 
-        isAdPlaying = true
         InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoStart?.invoke(info)
     }
 
@@ -266,9 +261,8 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdVideoEnd(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdVideoEnd:${info.toString()}")
+        Log.e(logTag, "onAdVideoEnd:${info.toString()}")
 
-        isAdPlaying = false
         InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoEnd?.invoke(info)
     }
 
@@ -277,20 +271,20 @@ class InterstitialAdLoader(
      */
     override fun onInterstitialAdVideoError(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onInterstitialAdVideoError:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdVideoError:${error?.fullErrorInfo}")
 
-        isAdPlaying = false
         InterstitialAdCallback().apply(interstitialAdCallback).onAdVideoError?.invoke(error)
     }
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
         loadedLiveData.removeObserver(observer)
+        handler.removeCallbacksAndMessages(null)
         InterstitialAdManager.release(placementId)
         atInterstitial?.setAdListener(null)
         atInterstitial = null
