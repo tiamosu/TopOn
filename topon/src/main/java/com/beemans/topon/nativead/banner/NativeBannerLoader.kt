@@ -271,13 +271,13 @@ class NativeBannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdClose")
 
+        isAdLoaded = false
         if (NativeBannerCallback().apply(bannerCallback).onAdClose?.invoke() == true) {
             clearView()
         }
     }
 
     private fun clearView() {
-        isAdLoaded = false
         if (atNativeBannerView != null && flAdView.contains(atNativeBannerView!!)) {
             flAdView.removeView(atNativeBannerView)
         }

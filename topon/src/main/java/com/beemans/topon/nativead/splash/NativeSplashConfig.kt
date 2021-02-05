@@ -15,5 +15,6 @@ data class NativeSplashConfig(
     val nativeWidth: Int,               //广告视图宽度
     val nativeHeight: Int = 0,          //广告视图高度，可传0进行自适应
     val requestTimeOut: Long = 5000,    //请求超时时间
-    val fetchDelay: Long = 5000         //广告展示的倒计时总时长
+    val fetchDelay: Long = 5000,        //广告展示的倒计时总时长
+    val isHighlyAdaptive: Boolean = true,   //高度自适应（目前只支持穿山甲、广点通）
 ) : Parcelable
