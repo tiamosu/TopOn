@@ -38,6 +38,12 @@ class NativeSplashLoader(
     //高度自适应
     private val isHighlyAdaptive by lazy { nativeSplashConfig.isHighlyAdaptive }
 
+    //请求超时时间
+    private val requestTimeOut by lazy { nativeSplashConfig.requestTimeOut }
+
+    //广告展示的倒计时总时长
+    private val fetchDelay by lazy { nativeSplashConfig.fetchDelay }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -149,8 +155,8 @@ class NativeSplashLoader(
                     null,
                     placementId,
                     localMap,
-                    nativeSplashConfig.requestTimeOut,
-                    nativeSplashConfig.fetchDelay,
+                    requestTimeOut,
+                    fetchDelay,
                     this
                 )
             }
@@ -192,7 +198,7 @@ class NativeSplashLoader(
      */
     override fun onAdLoaded() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdLoaded")
+        Log.e(logTag, "onAdLoadSuc")
 
         isAdLoaded = true
         isRenderAd = true
@@ -210,7 +216,7 @@ class NativeSplashLoader(
      */
     override fun onNoAdError(errorMsg: String?) {
         if (isDestroyed) return
-        Log.e(logTag, "onNoAdError:$errorMsg")
+        Log.e(logTag, "onAdLoadFail:$errorMsg")
 
         NativeManager.updateRequestStatus(placementId, false)
         NativeSplashCallback().apply(nativeSplashCallback).onAdLoadFail?.invoke(errorMsg)
@@ -282,7 +288,7 @@ class NativeSplashLoader(
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)

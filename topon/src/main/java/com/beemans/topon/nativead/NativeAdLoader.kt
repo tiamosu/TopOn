@@ -3,6 +3,7 @@ package com.beemans.topon.nativead
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.contains
 import androidx.lifecycle.*
 import com.anythink.core.api.ATAdConst
 import com.anythink.core.api.ATAdInfo
@@ -44,9 +45,6 @@ class NativeAdLoader(
     private val nativeWidth by lazy { nativeAdConfig.nativeWidth }
     private val nativeHeight by lazy { nativeAdConfig.nativeHeight }
 
-    //是否进行广告预加载
-    private val isUsePreload by lazy { nativeAdConfig.isUsePreload }
-
     //高度自适应
     private val isHighlyAdaptive by lazy { nativeAdConfig.isHighlyAdaptive }
 
@@ -59,17 +57,11 @@ class NativeAdLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告正在播放
-    private var isAdPlaying = false
-
     //页面是否已经销毁了
     private var isDestroyed = false
 
     //是否进行广告请求回调
     private var isRequestAdCallback = false
-
-    //是否有进行初始化预加载广告请求
-    private var isInitPreloadForAdRequest = false
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData by lazy {
@@ -85,7 +77,7 @@ class NativeAdLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                show(false)
+                showAd(isManualShow = false)
             }
         }
     }
@@ -100,30 +92,24 @@ class NativeAdLoader(
     }
 
     private fun initAd() {
-        if (atNative == null) {
-            atNative = ATNative(owner.context, placementId, this).apply {
-                //配置广告宽高
-                val localMap: MutableMap<String, Any> = mutableMapOf()
-                localMap.apply {
-                    put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
-                    put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
+        atNative = ATNative(owner.context, placementId, this).apply {
+            //配置广告宽高
+            val localMap: MutableMap<String, Any> = mutableMapOf()
+            localMap.apply {
+                put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
+                put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
 
-                    if (isHighlyAdaptive) {
-                        //穿山甲
-                        put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, 0)
-                        //广点通
-                        put(GDTATConst.AD_HEIGHT, ADSize.AUTO_HEIGHT)
-                    }
-                }.let(this::setLocalExtra)
-            }
+                if (isHighlyAdaptive) {
+                    //穿山甲
+                    put(TTATConst.NATIVE_AD_IMAGE_HEIGHT, 0)
+                    //广点通
+                    put(GDTATConst.AD_HEIGHT, ADSize.AUTO_HEIGHT)
+                }
+            }.let(this::setLocalExtra)
         }
 
         if (nativeAdRender is DefaultNativeAdRender) {
             backgroundColor?.let { nativeAdRender.setBackground(it) }
-        }
-        if (isUsePreload) {
-            isInitPreloadForAdRequest = true
-            preLoadAd()
         }
     }
 
@@ -135,10 +121,22 @@ class NativeAdLoader(
     /**
      * 广告预加载
      */
-    private fun preLoadAd() {
-        if (isUsePreload) {
-            makeAdRequest()
-        }
+    fun preLoadAd() {
+        makeAdRequest()
+    }
+
+    /**
+     * 广告加载显示
+     */
+    fun show(): NativeAdLoader {
+        return showAd()
+    }
+
+    /**
+     * 获取广告对象
+     */
+    fun getNativeAd(): NativeAd? {
+        return atNative?.nativeAd
     }
 
     /**
@@ -146,67 +144,25 @@ class NativeAdLoader(
      *
      * @param isManualShow 是否手动调用进行展示
      */
-    fun show(isManualShow: Boolean = true): NativeAdLoader {
-        if (isManualShow && !isInitPreloadForAdRequest) {
+    private fun showAd(isManualShow: Boolean = true): NativeAdLoader {
+        if (isManualShow) {
             isRequestAdCallback = true
         }
         isShowAfterLoaded = true
-        isInitPreloadForAdRequest = false
         if (makeAdRequest()) {
             return this
         }
 
+        isShowAfterLoaded = false
         nativeAd?.apply {
-            isShowAfterLoaded = false
             setNativeEventListener(this@NativeAdLoader)
             setDislikeCallbackListener(this@NativeAdLoader)
 
-            atNativeAdView.apply {
-                renderAdView(this, nativeAdRender)
-                prepare(this, nativeAdRender.clickView, null)
-                onAdRenderSuc()
-            }
+            renderAdView(atNativeAdView, nativeAdRender)
+            prepare(atNativeAdView, nativeAdRender.clickView, null)
+            onAdRenderSuc()
         }
         return this
-    }
-
-    /**
-     * 广告请求
-     */
-    private fun onAdRequest() {
-        if (isDestroyed) return
-        Log.e(logTag, "onAdRequest")
-
-        isAdPlaying = false
-        NativeAdCallback().apply(nativeAdCallback).onAdRequest?.invoke()
-    }
-
-    /**
-     * 广告渲染成功
-     */
-    private fun onAdRenderSuc() {
-        if (isDestroyed) return
-        Log.e(logTag, "onAdRenderSuc")
-
-        clearView()
-
-        //自渲染广告需要加 LayoutParams，否则布局错乱
-        if (isCustomRender) {
-            flAdView.addView(atNativeAdView, layoutParams)
-        } else {
-            flAdView.addView(atNativeAdView)
-        }
-        NativeAdCallback().apply(nativeAdCallback).onAdRenderSuc?.invoke(flAdView)
-    }
-
-    private fun clearView() {
-        val parent = flAdView.parent
-        if (parent is ViewGroup && parent.childCount > 0) {
-            parent.removeAllViews()
-        }
-        if (flAdView.childCount > 0) {
-            flAdView.removeAllViews()
-        }
     }
 
     /**
@@ -214,7 +170,7 @@ class NativeAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting = NativeManager.isRequesting(placementId) || isDestroyed
-        if (!isRequesting && (isInitPreloadForAdRequest || (!isInitPreloadForAdRequest && isRequestAdCallback))) {
+        if (!isRequesting && isRequestAdCallback) {
             isRequestAdCallback = false
             onAdRequest()
         }
@@ -231,10 +187,35 @@ class NativeAdLoader(
     }
 
     /**
-     * 获取广告对象
+     * 广告请求
      */
-    fun getNativeAd(): NativeAd? {
-        return atNative?.nativeAd
+    private fun onAdRequest() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRequest")
+
+        NativeAdCallback().apply(nativeAdCallback).onAdRequest?.invoke()
+    }
+
+    /**
+     * 广告渲染成功
+     */
+    private fun onAdRenderSuc() {
+        if (isDestroyed) return
+        Log.e(logTag, "onAdRenderSuc")
+
+        //自渲染广告需要加 LayoutParams，否则布局错乱
+        if (!flAdView.contains(atNativeAdView)) {
+            if (isCustomRender) {
+                flAdView.addView(atNativeAdView, layoutParams)
+            } else {
+                flAdView.addView(atNativeAdView)
+            }
+        }
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.contains(flAdView)) {
+            parent.removeView(flAdView)
+        }
+        NativeAdCallback().apply(nativeAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
 
     /**
@@ -242,7 +223,7 @@ class NativeAdLoader(
      */
     override fun onNativeAdLoadFail(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onNativeAdLoadFail:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdLoadFail:${error?.printStackTrace()}")
 
         NativeManager.updateRequestStatus(placementId, false)
         NativeAdCallback().apply(nativeAdCallback).onAdLoadFail?.invoke(error)
@@ -253,13 +234,13 @@ class NativeAdLoader(
      */
     override fun onNativeAdLoaded() {
         if (isDestroyed) return
-        Log.e(logTag, "onNativeAdLoaded")
+        Log.e(logTag, "onAdLoadSuc")
 
         NativeManager.updateRequestStatus(placementId, false)
         NativeAdCallback().apply(nativeAdCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
-            show(false)
+            showAd(isManualShow = false)
         }
         loadedLiveData.value = true
     }
@@ -271,7 +252,6 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdVideoStart")
 
-        isAdPlaying = true
         NativeAdCallback().apply(nativeAdCallback).onAdVideoStart?.invoke(view)
     }
 
@@ -282,7 +262,6 @@ class NativeAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdVideoEnd")
 
-        isAdPlaying = false
         NativeAdCallback().apply(nativeAdCallback).onAdVideoEnd?.invoke(view)
     }
 
@@ -301,10 +280,9 @@ class NativeAdLoader(
      */
     override fun onAdImpressed(view: ATNativeAdView?, info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdImpressed:${info.toString()}")
+        Log.e(logTag, "onAdShow:${info.toString()}")
 
         NativeAdCallback().apply(nativeAdCallback).onAdShow?.invoke(view, info)
-        preLoadAd()
     }
 
     /**
@@ -312,7 +290,7 @@ class NativeAdLoader(
      */
     override fun onAdClicked(view: ATNativeAdView?, info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdClicked:${info.toString()}")
+        Log.e(logTag, "onAdClick:${info.toString()}")
 
         NativeAdCallback().apply(nativeAdCallback).onAdClick?.invoke(view, info)
     }
@@ -322,12 +300,20 @@ class NativeAdLoader(
      */
     override fun onAdCloseButtonClick(view: ATNativeAdView?, info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdCloseButtonClick:${info.toString()}")
+        Log.e(logTag, "onAdClose:${info.toString()}")
 
         if (NativeAdCallback().apply(nativeAdCallback).onAdClose?.invoke(view, info) == true) {
-            isAdPlaying = false
             clearView()
-            nativeAd?.setDislikeCallbackListener(null)
+        }
+    }
+
+    private fun clearView() {
+        if (flAdView.contains(atNativeAdView)) {
+            flAdView.removeView(atNativeAdView)
+        }
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.contains(flAdView)) {
+            parent.removeView(flAdView)
         }
     }
 
@@ -336,7 +322,7 @@ class NativeAdLoader(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private fun onResume(owner: LifecycleOwner) {
-        Log.e(logTag, "onResume")
+        Log.e(logTag, "onAdLoaderResume")
         nativeAd?.onResume()
     }
 
@@ -345,7 +331,7 @@ class NativeAdLoader(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     private fun onPause(owner: LifecycleOwner) {
-        Log.e(logTag, "onPause")
+        Log.e(logTag, "onAdLoaderPause")
         nativeAd?.onPause()
     }
 
@@ -354,7 +340,7 @@ class NativeAdLoader(
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)

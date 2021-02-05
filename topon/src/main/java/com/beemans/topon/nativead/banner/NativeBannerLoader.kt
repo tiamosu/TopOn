@@ -40,6 +40,9 @@ class NativeBannerLoader(
     //高度自适应
     private val isHighlyAdaptive by lazy { bannerConfig.isHighlyAdaptive }
 
+    //NativeBanner的本地设置项
+    private val atBannerConfig by lazy { bannerConfig.atBannerConfig }
+
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
@@ -101,7 +104,7 @@ class NativeBannerLoader(
                 }
             }.let(this::setLocalExtra)
 
-            setBannerConfig(bannerConfig.atBannerConfig)
+            setBannerConfig(atBannerConfig)
             setUnitId(placementId)
             setAdListener(this@NativeBannerLoader)
         }
@@ -290,7 +293,7 @@ class NativeBannerLoader(
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)

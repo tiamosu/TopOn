@@ -286,6 +286,7 @@ class BannerLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdClose:${info.toString()}")
 
+        isAdLoaded = false
         if (BannerCallback().apply(bannerCallback).onAdClose?.invoke(info) == true) {
             clearView()
         }
@@ -312,7 +313,6 @@ class BannerLoader(
     }
 
     private fun clearView() {
-        isAdLoaded = false
         if (atBannerView != null && flContainer.contains(atBannerView!!)) {
             flContainer.removeView(atBannerView)
         }
