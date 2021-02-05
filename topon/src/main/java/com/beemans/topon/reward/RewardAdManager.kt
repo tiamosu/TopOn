@@ -12,9 +12,7 @@ internal class RewardAdManager {
     companion object {
         val loadedLiveDataMap: MutableMap<String, MutableLiveData<Boolean>> by lazy { mutableMapOf() }
 
-        private val instance: RewardAdManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            RewardAdManager()
-        }
+        private val instance by lazy { RewardAdManager() }
 
         fun isRequesting(placementId: String): Boolean {
             return instance.requestingMap[placementId] == true

@@ -12,9 +12,7 @@ internal class BannerManager {
     companion object {
         val loadedLiveDataMap: MutableMap<String, MutableLiveData<Boolean>> by lazy { mutableMapOf() }
 
-        private val instance: BannerManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            BannerManager()
-        }
+        private val instance by lazy { BannerManager() }
 
         fun isRequesting(placementId: String): Boolean {
             return instance.requestingMap[placementId] == true

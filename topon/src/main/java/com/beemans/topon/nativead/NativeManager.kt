@@ -12,9 +12,7 @@ internal class NativeManager {
     companion object {
         val loadedLiveDataMap: MutableMap<String, MutableLiveData<Boolean>> by lazy { mutableMapOf() }
 
-        private val instance: NativeManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            NativeManager()
-        }
+        private val instance by lazy { NativeManager() }
 
         fun isRequesting(placementId: String): Boolean {
             return instance.requestingMap[placementId] == true

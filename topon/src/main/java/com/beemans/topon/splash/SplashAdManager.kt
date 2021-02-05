@@ -12,9 +12,7 @@ internal class SplashAdManager {
     companion object {
         val loadedLiveDataMap: MutableMap<String, MutableLiveData<Boolean>> by lazy { mutableMapOf() }
 
-        private val instance: SplashAdManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            SplashAdManager()
-        }
+        private val instance by lazy { SplashAdManager() }
 
         fun isRequesting(placementId: String): Boolean {
             return instance.requestingMap[placementId] == true

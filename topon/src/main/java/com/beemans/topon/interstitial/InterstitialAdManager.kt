@@ -12,9 +12,7 @@ internal class InterstitialAdManager {
     companion object {
         val loadedLiveDataMap: MutableMap<String, MutableLiveData<Boolean>> by lazy { mutableMapOf() }
 
-        private val instance: InterstitialAdManager by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-            InterstitialAdManager()
-        }
+        private val instance by lazy { InterstitialAdManager() }
 
         fun isRequesting(placementId: String): Boolean {
             return instance.requestingMap[placementId] == true
