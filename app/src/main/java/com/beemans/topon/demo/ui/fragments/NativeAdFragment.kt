@@ -83,6 +83,12 @@ class NativeAdFragment : BaseFragment() {
         isNativeAd1Refresh = false
 
         if (nativeAdLoader1 == null) {
+            val config = NativeAdConfig(
+                Constant.NATIVE_AD_ID,
+                350.pt2px,
+                270.pt2px,
+                isHighlyAdaptive = false
+            )
             nativeAdLoader1 = TopOn.loadNativeAd(this, config) {
                 onAdRenderSuc { flAdView ->
                     dataBinding.nativeAdFlAd1.addView(flAdView)

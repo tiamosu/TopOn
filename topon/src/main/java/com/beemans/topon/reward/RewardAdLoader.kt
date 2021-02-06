@@ -34,6 +34,15 @@ class RewardAdLoader(
     //请求超时时间
     private val requestTimeOut by lazy { rewardAdConfig.requestTimeOut }
 
+    //（可选）用于服务器激励，用户唯一ID
+    private val userId by lazy { rewardAdConfig.userId }
+
+    //（可选）用于服务器激励，用户自定义数据
+    private val customData by lazy { rewardAdConfig.customData }
+
+    //广告展示场景，可从后台创建场景参数
+    private val scenario by lazy { rewardAdConfig.scenario }
+
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData by lazy {
         var liveData = RewardAdManager.loadedLiveDataMap[placementId]
@@ -56,11 +65,8 @@ class RewardAdLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告正在播放
-    private var isAdPlaying = false
-
     //是否超时
-    private var isTimeOut = false
+    private var isAdLoadTimeOut = false
 
     //页面是否已经销毁了
     private var isDestroyed = false
@@ -72,7 +78,7 @@ class RewardAdLoader(
     private var atAdInfo: ATAdInfo? = null
 
     //是否真正下发奖励
-    private var isReward = false
+    private var isAdReward = false
 
     init {
         initAd()
@@ -80,16 +86,13 @@ class RewardAdLoader(
     }
 
     private fun initAd() {
-        if (atRewardVideoAd == null) {
-            atRewardVideoAd = ATRewardVideoAd(owner.context, placementId).apply {
-                setAdListener(this@RewardAdLoader)
+        atRewardVideoAd = ATRewardVideoAd(owner.context, placementId).apply {
+            setAdListener(this@RewardAdLoader)
 
-                val localMap: MutableMap<String, Any> = mutableMapOf()
-                localMap.apply {
-                    put(ATAdConst.KEY.USER_ID, rewardAdConfig.userId)
-                    put(ATAdConst.KEY.USER_CUSTOM_DATA, rewardAdConfig.customData)
-                }.let(this::setLocalExtra)
-            }
+            mutableMapOf<String, Any>().apply {
+                put(ATAdConst.KEY.USER_ID, userId)
+                put(ATAdConst.KEY.USER_CUSTOM_DATA, customData)
+            }.let(this::setLocalExtra)
         }
     }
 
@@ -109,7 +112,7 @@ class RewardAdLoader(
      * 广告加载显示
      */
     fun show(): RewardAdLoader {
-        return showAd(true)
+        return showAd()
     }
 
     /**
@@ -125,7 +128,7 @@ class RewardAdLoader(
         }
 
         isShowAfterLoaded = false
-        atRewardVideoAd?.show(owner.context, rewardAdConfig.scenario)
+        atRewardVideoAd?.show(owner.context, scenario)
         onAdRenderSuc()
         return this
     }
@@ -135,7 +138,7 @@ class RewardAdLoader(
      */
     private fun makeAdRequest(): Boolean {
         val isRequesting =
-            RewardAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+            RewardAdManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && isRequestAdCallback) {
             isRequestAdCallback = false
             onAdRequest()
@@ -145,14 +148,14 @@ class RewardAdLoader(
         if (!isRequesting && !isAdReady) {
             RewardAdManager.updateRequestStatus(placementId, true)
 
+            post(Schedulers.io()) {
+                atRewardVideoAd?.load()
+            }
+
             //开始进行超时倒计时
             handler.postDelayed({
                 onAdTimeOut()
             }, requestTimeOut)
-
-            post(Schedulers.io()) {
-                atRewardVideoAd?.load()
-            }
             return true
         }
         return isRequesting
@@ -165,8 +168,8 @@ class RewardAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        isReward = false
-        isTimeOut = false
+        isAdReward = false
+        isAdLoadTimeOut = false
         RewardAdCallback().apply(rewardAdCallback).onAdRequest?.invoke()
     }
 
@@ -185,9 +188,9 @@ class RewardAdLoader(
      */
     private fun onAdTimeOut() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdTimeOut")
+        Log.e(logTag, "onAdLoadTimeOut")
 
-        isTimeOut = true
+        isAdLoadTimeOut = true
         RewardAdManager.updateRequestStatus(placementId, false)
         RewardAdCallback().apply(rewardAdCallback).onAdLoadTimeOut?.invoke()
     }
@@ -196,9 +199,10 @@ class RewardAdLoader(
      * 广告加载成功回调
      */
     override fun onRewardedVideoAdLoaded() {
-        if (isDestroyed || isTimeOut) return
         atAdInfo = atRewardVideoAd?.checkAdStatus()?.atTopAdInfo
-        Log.e(logTag, "onRewardedVideoAdLoaded:${atAdInfo?.toString()}")
+
+        if (isDestroyed || isAdLoadTimeOut) return
+        Log.e(logTag, "onAdLoadSuc:${atAdInfo?.toString()}")
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
@@ -214,8 +218,8 @@ class RewardAdLoader(
      * 广告加载失败回调
      */
     override fun onRewardedVideoAdFailed(error: AdError?) {
-        if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onRewardedVideoAdFailed:${error?.printStackTrace()}")
+        if (isDestroyed || isAdLoadTimeOut) return
+        Log.e(logTag, "onAdLoadFail:${error?.printStackTrace()}")
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
@@ -227,10 +231,9 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdClosed(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdClosed:${info?.toString()}")
+        Log.e(logTag, "onAdClose:${info?.toString()}")
 
-        isAdPlaying = false
-        RewardAdCallback().apply(rewardAdCallback).onAdClose?.invoke(info, isReward)
+        RewardAdCallback().apply(rewardAdCallback).onAdClose?.invoke(info, isAdReward)
     }
 
     /**
@@ -238,9 +241,9 @@ class RewardAdLoader(
      */
     override fun onReward(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onReward:${info?.toString()}")
+        Log.e(logTag, "onAdReward:${info?.toString()}")
 
-        isReward = true
+        isAdReward = true
         RewardAdCallback().apply(rewardAdCallback).onAdReward?.invoke(info)
     }
 
@@ -249,12 +252,8 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayFailed(error: AdError?, info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(
-            logTag,
-            "onRewardedVideoAdPlayFailed:${error?.printStackTrace()}   info:${info?.toString()}"
-        )
+        Log.e(logTag, "onAdVideoFail:${error?.printStackTrace()}   info:${info?.toString()}")
 
-        isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onAdVideoFail?.invoke(error, info)
     }
 
@@ -263,9 +262,8 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayStart(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdPlayStart:${info?.toString()}")
+        Log.e(logTag, "onAdVideoStart:${info?.toString()}")
 
-        isAdPlaying = true
         RewardAdCallback().apply(rewardAdCallback).onAdVideoStart?.invoke(info)
     }
 
@@ -274,9 +272,8 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayEnd(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdPlayEnd:${info?.toString()}")
+        Log.e(logTag, "onAdVideoEnd:${info?.toString()}")
 
-        isAdPlaying = false
         RewardAdCallback().apply(rewardAdCallback).onAdVideoEnd?.invoke(info)
     }
 
@@ -285,7 +282,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayClicked(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onRewardedVideoAdPlayClicked:${info?.toString()}")
+        Log.e(logTag, "onAdClick:${info?.toString()}")
 
         RewardAdCallback().apply(rewardAdCallback).onAdClick?.invoke(info)
     }
@@ -293,7 +290,7 @@ class RewardAdLoader(
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)

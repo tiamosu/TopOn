@@ -133,13 +133,6 @@ class NativeAdLoader(
     }
 
     /**
-     * 获取广告对象
-     */
-    fun getNativeAd(): NativeAd? {
-        return atNative?.nativeAd
-    }
-
-    /**
      * 广告加载显示
      *
      * @param isManualShow 是否手动调用进行展示
@@ -184,6 +177,13 @@ class NativeAdLoader(
             return true
         }
         return isRequesting
+    }
+
+    /**
+     * 获取广告对象
+     */
+    private fun getNativeAd(): NativeAd? {
+        return atNative?.nativeAd
     }
 
     /**
