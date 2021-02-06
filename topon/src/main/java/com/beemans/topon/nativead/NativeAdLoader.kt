@@ -94,8 +94,7 @@ class NativeAdLoader(
     private fun initAd() {
         atNative = ATNative(owner.context, placementId, this).apply {
             //配置广告宽高
-            val localMap: MutableMap<String, Any> = mutableMapOf()
-            localMap.apply {
+            mutableMapOf<String, Any>().apply {
                 put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
                 put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
 
@@ -223,7 +222,7 @@ class NativeAdLoader(
      */
     override fun onNativeAdLoadFail(error: AdError?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdLoadFail:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdLoadFail:${error?.fullErrorInfo}")
 
         NativeManager.updateRequestStatus(placementId, false)
         NativeAdCallback().apply(nativeAdCallback).onAdLoadFail?.invoke(error)

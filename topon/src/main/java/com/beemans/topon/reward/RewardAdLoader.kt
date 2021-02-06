@@ -154,7 +154,7 @@ class RewardAdLoader(
 
             //开始进行超时倒计时
             handler.postDelayed({
-                onAdTimeOut()
+                onAdLoadTimeOut()
             }, requestTimeOut)
             return true
         }
@@ -186,7 +186,7 @@ class RewardAdLoader(
     /**
      * 广告加载超时
      */
-    private fun onAdTimeOut() {
+    private fun onAdLoadTimeOut() {
         if (isDestroyed) return
         Log.e(logTag, "onAdLoadTimeOut")
 
@@ -219,7 +219,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdFailed(error: AdError?) {
         if (isDestroyed || isAdLoadTimeOut) return
-        Log.e(logTag, "onAdLoadFail:${error?.printStackTrace()}")
+        Log.e(logTag, "onAdLoadFail:${error?.fullErrorInfo}")
 
         handler.removeCallbacksAndMessages(null)
         RewardAdManager.updateRequestStatus(placementId, false)
@@ -252,7 +252,7 @@ class RewardAdLoader(
      */
     override fun onRewardedVideoAdPlayFailed(error: AdError?, info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdVideoFail:${error?.printStackTrace()}   info:${info?.toString()}")
+        Log.e(logTag, "onAdVideoFail:${error?.fullErrorInfo}   info:${info?.toString()}")
 
         RewardAdCallback().apply(rewardAdCallback).onAdVideoFail?.invoke(error, info)
     }

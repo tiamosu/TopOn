@@ -91,8 +91,7 @@ class NativeBannerLoader(
             layoutParams = this@NativeBannerLoader.layoutParams
 
             //配置广告宽高
-            val localMap: MutableMap<String, Any> = mutableMapOf()
-            localMap.apply {
+            mutableMapOf<String, Any>().apply {
                 put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
                 put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
 

@@ -79,7 +79,7 @@ class NativeSplashLoader(
     }
 
     //配置广告宽高
-    private val localMap: MutableMap<String, Any> by lazy {
+    private val localExtra by lazy {
         mutableMapOf<String, Any>().apply {
             put(ATAdConst.KEY.AD_WIDTH, nativeWidth)
             put(ATAdConst.KEY.AD_HEIGHT, nativeHeight)
@@ -154,7 +154,7 @@ class NativeSplashLoader(
                     flContainer,
                     null,
                     placementId,
-                    localMap,
+                    localExtra,
                     requestTimeOut,
                     fetchDelay,
                     this

@@ -5,6 +5,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.contains
 import androidx.lifecycle.*
 import com.anythink.core.api.ATAdInfo
 import com.anythink.core.api.AdError
@@ -44,11 +45,8 @@ class SplashAdLoader(
     //是否在广告加载完成进行播放
     private var isShowAfterLoaded = false
 
-    //广告正在播放
-    private var isAdPlaying = false
-
     //是否超时
-    private var isTimeOut = false
+    private var isAdLoadTimeOut = false
 
     //页面是否已经销毁了
     private var isDestroyed = false
@@ -59,6 +57,8 @@ class SplashAdLoader(
     private var flContainer: FrameLayout? = null
 
     private val flAdView by lazy { FrameLayout(owner.context) }
+
+    private val layoutParams by lazy { FrameLayout.LayoutParams(-1, -1) }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData by lazy {
@@ -74,7 +74,7 @@ class SplashAdLoader(
     private val observer by lazy {
         Observer<Boolean> {
             if (isShowAfterLoaded) {
-                show(false)
+                showAd(isManualShow = false)
             }
         }
     }
@@ -90,10 +90,17 @@ class SplashAdLoader(
 
     /**
      * 广告加载显示
+     */
+    fun show(): SplashAdLoader {
+        return showAd()
+    }
+
+    /**
+     * 广告加载显示
      *
      * @param isManualShow 是否手动调用进行展示
      */
-    fun show(isManualShow: Boolean = true): SplashAdLoader {
+    private fun showAd(isManualShow: Boolean = true): SplashAdLoader {
         if (isManualShow) {
             isRequestAdCallback = true
         }
@@ -104,7 +111,7 @@ class SplashAdLoader(
 
         isShowAfterLoaded = false
         flContainer = FrameLayout(owner.context).apply {
-            layoutParams = FrameLayout.LayoutParams(-1, -1)
+            layoutParams = this@SplashAdLoader.layoutParams
         }
         atSplashAd?.show(owner.context, flContainer)
         onAdRenderSuc()
@@ -115,7 +122,7 @@ class SplashAdLoader(
      * 广告请求加载
      */
     private fun makeAdRequest(): Boolean {
-        val isRequesting = SplashAdManager.isRequesting(placementId) || isAdPlaying || isDestroyed
+        val isRequesting = SplashAdManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && isRequestAdCallback) {
             isRequestAdCallback = false
             onAdRequest()
@@ -126,7 +133,7 @@ class SplashAdLoader(
             SplashAdManager.updateRequestStatus(placementId, true)
 
             post(Schedulers.io()) {
-                ATSplashAd(
+                atSplashAd = ATSplashAd(
                     owner.context,
                     placementId,
                     atMediationRequestInfo,
@@ -135,13 +142,12 @@ class SplashAdLoader(
                 ).apply {
                     setLocalExtra(localExtra)
                     loadAd()
-                }.also {
-                    atSplashAd = it
                 }
             }
 
+            //开始进行超时倒计时
             handler.postDelayed({
-                onAdTimeOut()
+                onAdLoadTimeOut()
             }, requestTimeOut)
             return true
         }
@@ -155,7 +161,7 @@ class SplashAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRequest")
 
-        isTimeOut = false
+        isAdLoadTimeOut = false
         SplashAdCallback().apply(splashAdCallback).onAdRequest?.invoke()
     }
 
@@ -167,7 +173,7 @@ class SplashAdLoader(
         Log.e(logTag, "onAdRenderSuc")
 
         clearView()
-        if (flContainer != null) {
+        if (flContainer != null && !flAdView.contains(flContainer!!)) {
             flAdView.addView(flContainer)
         }
         SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView)
@@ -176,38 +182,28 @@ class SplashAdLoader(
     /**
      * 广告超时
      */
-    private fun onAdTimeOut() {
+    private fun onAdLoadTimeOut() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdTimeOut")
+        Log.e(logTag, "onAdLoadTimeOut")
 
-        isTimeOut = true
+        isAdLoadTimeOut = true
         SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdLoadTimeOut?.invoke()
-    }
-
-    private fun clearView() {
-        val parent = flAdView.parent
-        if (parent is ViewGroup && parent.childCount > 0) {
-            parent.removeAllViews()
-        }
-        if (flAdView.childCount > 0) {
-            flAdView.removeAllViews()
-        }
     }
 
     /**
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
-        if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onAdLoaded")
+        if (isDestroyed || isAdLoadTimeOut) return
+        Log.e(logTag, "onAdLoadSuc")
 
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
         SplashAdCallback().apply(splashAdCallback).onAdLoadSuc?.invoke()
 
         if (isShowAfterLoaded) {
-            show(false)
+            showAd(isManualShow = false)
         }
         loadedLiveData.value = true
     }
@@ -216,8 +212,8 @@ class SplashAdLoader(
      * 广告加载失败回调
      */
     override fun onNoAdError(error: AdError?) {
-        if (isDestroyed || isTimeOut) return
-        Log.e(logTag, "onNoAdError:${error?.printStackTrace()}")
+        if (isDestroyed || isAdLoadTimeOut) return
+        Log.e(logTag, "onAdLoadFail:${error?.fullErrorInfo}")
 
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
@@ -231,7 +227,6 @@ class SplashAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdShow:${info.toString()}")
 
-        isAdPlaying = true
         SplashAdCallback().apply(splashAdCallback).onAdShow?.invoke(info)
     }
 
@@ -250,18 +245,27 @@ class SplashAdLoader(
      */
     override fun onAdDismiss(info: ATAdInfo?) {
         if (isDestroyed) return
-        Log.e(logTag, "onAdDismiss:${info.toString()}")
+        Log.e(logTag, "onAdClose:${info.toString()}")
 
         if (SplashAdCallback().apply(splashAdCallback).onAdClose?.invoke(info) == true) {
-            isAdPlaying = false
             clearView()
+        }
+    }
+
+    private fun clearView() {
+        if (flAdView.childCount > 0) {
+            flAdView.removeAllViews()
+        }
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.contains(flAdView)) {
+            parent.removeView(flAdView)
         }
     }
 
     @Suppress("unused")
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy(owner: LifecycleOwner) {
-        Log.e(logTag, "onDestroy")
+        Log.e(logTag, "onAdLoaderDestroy")
 
         isDestroyed = true
         owner.lifecycle.removeObserver(this)
