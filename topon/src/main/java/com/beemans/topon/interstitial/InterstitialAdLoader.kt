@@ -139,8 +139,11 @@ class InterstitialAdLoader(
         if (!isRequesting && !isAdReady) {
             InterstitialAdManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atInterstitial?.load()
+            try {
+                post(Schedulers.io()) {
+                    atInterstitial?.load()
+                }
+            } catch (e: Exception) {
             }
 
             //开始进行超时倒计时

@@ -148,8 +148,11 @@ class RewardAdLoader(
         if (!isRequesting && !isAdReady) {
             RewardAdManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atRewardVideoAd?.load()
+            try {
+                post(Schedulers.io()) {
+                    atRewardVideoAd?.load()
+                }
+            } catch (e: Exception) {
             }
 
             //开始进行超时倒计时

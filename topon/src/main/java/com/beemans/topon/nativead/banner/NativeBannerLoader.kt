@@ -161,8 +161,11 @@ class NativeBannerLoader(
             }
             NativeManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atNativeBannerView?.loadAd(null)
+            try {
+                post(Schedulers.io()) {
+                    atNativeBannerView?.loadAd(null)
+                }
+            } catch (e: Exception) {
             }
             return true
         }

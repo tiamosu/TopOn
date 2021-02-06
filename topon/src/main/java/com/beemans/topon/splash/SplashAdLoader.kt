@@ -134,17 +134,20 @@ class SplashAdLoader(
         if (!isRequesting && !isAdReady) {
             SplashAdManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atSplashAd = ATSplashAd(
-                    owner.context,
-                    placementId,
-                    atMediationRequestInfo,
-                    this,
-                    requestTimeOut.toInt()
-                ).apply {
-                    setLocalExtra(localExtra)
-                    loadAd()
+            try {
+                post(Schedulers.io()) {
+                    atSplashAd = ATSplashAd(
+                        owner.context,
+                        placementId,
+                        atMediationRequestInfo,
+                        this,
+                        requestTimeOut.toInt()
+                    ).apply {
+                        setLocalExtra(localExtra)
+                        loadAd()
+                    }
                 }
+            } catch (e: Exception) {
             }
 
             //开始进行超时倒计时

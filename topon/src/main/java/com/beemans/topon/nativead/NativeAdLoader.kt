@@ -170,8 +170,11 @@ class NativeAdLoader(
         if (!isRequesting && getNativeAd().also { nativeAd = it } == null) {
             NativeManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atNative?.makeAdRequest()
+            try {
+                post(Schedulers.io()) {
+                    atNative?.makeAdRequest()
+                }
+            } catch (e: Exception) {
             }
             return true
         }

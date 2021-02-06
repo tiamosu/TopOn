@@ -189,8 +189,11 @@ class BannerLoader(
             }
             BannerManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                atBannerView?.loadAd()
+            try {
+                post(Schedulers.io()) {
+                    atBannerView?.loadAd()
+                }
+            } catch (e: Exception) {
             }
             return true
         }

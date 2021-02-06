@@ -148,17 +148,20 @@ class NativeSplashLoader(
             }
             NativeManager.updateRequestStatus(placementId, true)
 
-            post(Schedulers.io()) {
-                ATNativeSplash(
-                    owner.context,
-                    flContainer,
-                    null,
-                    placementId,
-                    localExtra,
-                    requestTimeOut,
-                    fetchDelay,
-                    this
-                )
+            try {
+                post(Schedulers.io()) {
+                    ATNativeSplash(
+                        owner.context,
+                        flContainer,
+                        null,
+                        placementId,
+                        localExtra,
+                        requestTimeOut,
+                        fetchDelay,
+                        this
+                    )
+                }
+            } catch (e: Exception) {
             }
             return true
         }
