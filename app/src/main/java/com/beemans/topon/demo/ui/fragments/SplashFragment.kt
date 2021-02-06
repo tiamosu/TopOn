@@ -24,7 +24,7 @@ class SplashFragment : BaseFragment() {
             if (splashAdLoader == null) {
                 val config = SplashAdConfig(Constant.SPLASH_ID)
                 splashAdLoader = TopOn.loadSplash(this, config) {
-                    onAdRenderSuc { flAdView ->
+                    onAdRenderSuc { flAdView, _ ->
                         dataBinding.splashBtnLoad.isVisible = false
                         dataBinding.splashFlAd.addView(flAdView)
                     }

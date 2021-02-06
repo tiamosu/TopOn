@@ -17,7 +17,7 @@ class NativeAdCallback {
 
     var onAdLoadFail: ((adError: AdError?) -> Unit)? = null
 
-    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+    var onAdRenderSuc: ((flAdView: FrameLayout, info: ATAdInfo?) -> Unit)? = null
 
     var onAdShow: ((view: ATNativeAdView?, info: ATAdInfo?) -> Unit)? = null
 
@@ -55,7 +55,7 @@ class NativeAdCallback {
     /**
      * 广告渲染成功
      */
-    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
+    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout, info: ATAdInfo?) -> Unit) {
         this.onAdRenderSuc = onAdRenderSuc
     }
 

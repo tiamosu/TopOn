@@ -199,8 +199,10 @@ class NativeAdLoader(
      * 广告渲染成功
      */
     private fun onAdRenderSuc() {
+        val atAdInfo = nativeAd?.adInfo
+
         if (isDestroyed) return
-        Log.e(logTag, "onAdRenderSuc")
+        Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
         //自渲染广告需要加 LayoutParams，否则布局错乱
         if (!flAdView.contains(atNativeAdView)) {
@@ -214,7 +216,7 @@ class NativeAdLoader(
         if (parent is ViewGroup && parent.contains(flAdView)) {
             parent.removeView(flAdView)
         }
-        NativeAdCallback().apply(nativeAdCallback).onAdRenderSuc?.invoke(flAdView)
+        NativeAdCallback().apply(nativeAdCallback).onAdRenderSuc?.invoke(flAdView, atAdInfo)
     }
 
     /**

@@ -90,7 +90,7 @@ class NativeAdFragment : BaseFragment() {
                 isHighlyAdaptive = false
             )
             nativeAdLoader1 = TopOn.loadNativeAd(this, config) {
-                onAdRenderSuc { flAdView ->
+                onAdRenderSuc { flAdView, _ ->
                     dataBinding.nativeAdFlAd1.addView(flAdView)
                 }
             }
@@ -104,7 +104,7 @@ class NativeAdFragment : BaseFragment() {
 
         if (nativeAdLoader2 == null) {
             nativeAdLoader2 = TopOn.loadNativeAd(this, config) {
-                onAdRenderSuc { flAdView ->
+                onAdRenderSuc { flAdView, _ ->
                     dataBinding.nativeAdFlAd2.addView(flAdView)
                 }
             }
@@ -118,7 +118,7 @@ class NativeAdFragment : BaseFragment() {
 
         if (nativeAdLoader3 == null) {
             nativeAdLoader3 = TopOn.loadNativeAd(this, config) {
-                onAdRenderSuc { flAdView ->
+                onAdRenderSuc { flAdView, _ ->
                     dataBinding.nativeAdFlAd3.addView(flAdView)
                 }
             }

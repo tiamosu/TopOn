@@ -54,6 +54,9 @@ class SplashAdLoader(
     //是否进行广告请求回调
     private var isRequestAdCallback = false
 
+    //广告信息对象
+    private var atAdInfo: ATAdInfo? = null
+
     private val flContainer by lazy {
         FrameLayout(owner.context).apply {
             layoutParams = ViewGroup.LayoutParams(-1, -1)
@@ -169,7 +172,7 @@ class SplashAdLoader(
      */
     private fun onAdRenderSuc() {
         if (isDestroyed) return
-        Log.e(logTag, "onAdRenderSuc")
+        Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
         if (!flAdView.contains(flContainer)) {
             flAdView.addView(flContainer)
@@ -178,7 +181,7 @@ class SplashAdLoader(
         if (parent is ViewGroup && parent.contains(flAdView)) {
             parent.removeView(flAdView)
         }
-        SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView)
+        SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView, atAdInfo)
     }
 
     /**
@@ -197,12 +200,14 @@ class SplashAdLoader(
      * 广告加载成功回调
      */
     override fun onAdLoaded() {
+        atAdInfo = atSplashAd?.checkAdStatus()?.atTopAdInfo
+
         if (isDestroyed || isAdLoadTimeOut) return
-        Log.e(logTag, "onAdLoadSuc")
+        Log.e(logTag, "onAdLoadSuc:${atAdInfo?.toString()}")
 
         handler.removeCallbacksAndMessages(null)
         SplashAdManager.updateRequestStatus(placementId, false)
-        SplashAdCallback().apply(splashAdCallback).onAdLoadSuc?.invoke()
+        SplashAdCallback().apply(splashAdCallback).onAdLoadSuc?.invoke(atAdInfo)
 
         if (isShowAfterLoaded) {
             showAd(isManualShow = false)

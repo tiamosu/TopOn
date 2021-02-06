@@ -12,13 +12,13 @@ class SplashAdCallback {
 
     var onAdRequest: (() -> Unit)? = null
 
-    var onAdLoadSuc: (() -> Unit)? = null
+    var onAdLoadSuc: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdLoadFail: ((error: AdError?) -> Unit)? = null
 
     var onAdLoadTimeOut: (() -> Unit)? = null
 
-    var onAdRenderSuc: ((flAdView: FrameLayout) -> Unit)? = null
+    var onAdRenderSuc: ((flAdView: FrameLayout, info: ATAdInfo?) -> Unit)? = null
 
     var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
 
@@ -36,7 +36,7 @@ class SplashAdCallback {
     /**
      * 广告加载成功
      */
-    fun onAdLoadSuc(onAdLoadSuc: () -> Unit) {
+    fun onAdLoadSuc(onAdLoadSuc: (info: ATAdInfo?) -> Unit) {
         this.onAdLoadSuc = onAdLoadSuc
     }
 
@@ -57,7 +57,7 @@ class SplashAdCallback {
     /**
      * 广告渲染成功
      */
-    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout) -> Unit) {
+    fun onAdRenderSuc(onAdRenderSuc: (flAdView: FrameLayout, info: ATAdInfo?) -> Unit) {
         this.onAdRenderSuc = onAdRenderSuc
     }
 
