@@ -17,9 +17,9 @@ class BannerCallback {
 
     var onAdRenderSuc: ((info: ATAdInfo?) -> Unit)? = null
 
-    var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
-
     var onAdShow: ((info: ATAdInfo?) -> Unit)? = null
+
+    var onAdClick: ((info: ATAdInfo?) -> Unit)? = null
 
     var onAdClose: ((info: ATAdInfo?) -> Boolean)? = null
 
