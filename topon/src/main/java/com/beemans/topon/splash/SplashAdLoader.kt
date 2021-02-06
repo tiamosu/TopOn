@@ -54,11 +54,13 @@ class SplashAdLoader(
     //是否进行广告请求回调
     private var isRequestAdCallback = false
 
-    private var flContainer: FrameLayout? = null
+    private val flContainer by lazy {
+        FrameLayout(owner.context).apply {
+            layoutParams = ViewGroup.LayoutParams(-1, -1)
+        }
+    }
 
     private val flAdView by lazy { FrameLayout(owner.context) }
-
-    private val layoutParams by lazy { FrameLayout.LayoutParams(-1, -1) }
 
     //同时请求相同广告位ID时，会报错提示正在请求中，用于请求成功通知展示广告
     private val loadedLiveData by lazy {
@@ -110,9 +112,6 @@ class SplashAdLoader(
         }
 
         isShowAfterLoaded = false
-        flContainer = FrameLayout(owner.context).apply {
-            layoutParams = this@SplashAdLoader.layoutParams
-        }
         atSplashAd?.show(owner.context, flContainer)
         onAdRenderSuc()
         return this
@@ -172,9 +171,12 @@ class SplashAdLoader(
         if (isDestroyed) return
         Log.e(logTag, "onAdRenderSuc")
 
-        clearView()
-        if (flContainer != null && !flAdView.contains(flContainer!!)) {
+        if (!flAdView.contains(flContainer)) {
             flAdView.addView(flContainer)
+        }
+        val parent = flAdView.parent
+        if (parent is ViewGroup && parent.contains(flAdView)) {
+            parent.removeView(flAdView)
         }
         SplashAdCallback().apply(splashAdCallback).onAdRenderSuc?.invoke(flAdView)
     }
@@ -274,7 +276,6 @@ class SplashAdLoader(
         clearView()
         SplashAdManager.release(placementId)
         atSplashAd?.onDestory()
-        flContainer = null
         atSplashAd = null
     }
 }
