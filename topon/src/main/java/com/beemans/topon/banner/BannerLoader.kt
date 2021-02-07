@@ -94,6 +94,7 @@ class BannerLoader(
             setLocalExtra(localExtra)
             setBannerAdListener(this@BannerLoader)
         }
+        hideAd()
     }
 
     private fun createObserve() {
@@ -180,9 +181,6 @@ class BannerLoader(
     private fun makeAdRequest(): Boolean {
         val isRequesting = BannerManager.isRequesting(placementId) || isDestroyed
         if (!isRequesting && !isAdLoaded) {
-            //某些平台广告要求ATBannerView为VISIBLE状态才能正常获取广告
-            showAd()
-
             if (isRequestAdCallback) {
                 isRequestAdCallback = false
                 onAdRequest()
@@ -225,6 +223,7 @@ class BannerLoader(
         if (isDestroyed || !isRenderAd) return
         Log.e(logTag, "onAdRenderSuc:${atAdInfo?.toString()}")
 
+        showAd()
         isRenderAd = false
         if (atBannerView != null && !flContainer.contains(atBannerView!!)) {
             flContainer.addView(atBannerView)
